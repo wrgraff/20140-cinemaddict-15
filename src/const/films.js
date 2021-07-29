@@ -1,4 +1,4 @@
-export const filmsListsData = [
+export const FILM_LIST_DATA = [
   {
     title: 'All movies. Upcoming',
     amount: 5,

@@ -1,5 +1,5 @@
-export const renderPlace = {
-  BEFOREEND: 'beforeend',
+export const RenderPlace = {
+  BEFORE_END: 'beforeend',
 };
 
 export const render = ( container, template, place ) => {

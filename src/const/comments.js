@@ -1,1 +1,1 @@
-export const COMMENTS_COUNT = 4;
+export const COMMENT_COUNT = 4;
