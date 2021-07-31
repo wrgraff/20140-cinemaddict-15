@@ -1,14 +1,26 @@
+'use strict';
+
 const path = require('path');
+
+const publicDirectory = path.resolve(__dirname, 'public');
 
 module.exports = {
   entry: './src/main.js',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public')
+    path: publicDirectory
   },
   devtool: 'source-map',
   devServer: {
-    contentBase: path.resolve(__dirname, 'public'),
+    contentBase: publicDirectory,
     watchContentBase: true
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      '@utils': path.resolve(__dirname, 'src/utils'),
+      '@const': path.resolve(__dirname, 'src/const'),
+      '@view': path.resolve(__dirname, 'src/view')
+    },
   }
 };
