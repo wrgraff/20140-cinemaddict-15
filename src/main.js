@@ -17,14 +17,16 @@ import { createDetailsTemplate } from '@view/details.js';
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
 
-const renderFilmList = ( container, { title, amount, isExtra }) => {
+const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
+  const filmsToRender = sortingMethod ? [...films.sort(sortingMethod)] : films;
+
   render(container, createFilmsListTemplate( title, isExtra ), RenderPlace.BEFORE_END);
   const filmsContainerElement = container.querySelector('.films-list:last-child .films-list__container');
 
   let renderedFilmCount = 0;
   const addFilmCards = ( from, to ) => {
     for ( let i = from; i < to; i++ ) {
-      render(filmsContainerElement, createFilmCardTemplate(films[i]), RenderPlace.BEFORE_END);
+      render(filmsContainerElement, createFilmCardTemplate(filmsToRender[i]), RenderPlace.BEFORE_END);
     }
     renderedFilmCount = to;
   };
@@ -40,8 +42,8 @@ const renderFilmList = ( container, { title, amount, isExtra }) => {
     filmsListShowMoreButtonElement.addEventListener('click', () => {
       let renderTo = renderedFilmCount + amount;
 
-      if (renderTo >= films.length) {
-        renderTo = films.length;
+      if (renderTo >= filmsToRender.length) {
+        renderTo = filmsToRender.length;
         filmsListShowMoreButtonElement.remove();
       }
 
