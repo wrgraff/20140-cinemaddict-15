@@ -1,5 +1,9 @@
 import { render, RenderPlace } from '@utils/render.js';
+import { getRandomInteger } from '@utils/random.js';
+import { getFilters } from '@utils/filter.js';
+import { generateFilm } from '@mock/film.js';
 import { FILM_LIST_DATA } from '@const/films.js';
+import { COMMENT_COUNT } from '@const/comments.js';
 import { createProfileTemplate } from '@view/profile.js';
 import { createMainNavigationTemplate } from '@view/main-navigation.js';
 import { createSortTemplate } from '@view/sort.js';
@@ -9,9 +13,6 @@ import { createFilmsListShowMoreTemplate } from '@view/films-list-show-more.js';
 import { createFilmCardTemplate } from '@view/film-card.js';
 import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
 import { createDetailsTemplate } from '@view/details.js';
-import { getRandomInteger } from '@utils/random.js';
-import { generateFilm } from '@mock/film.js';
-import { COMMENT_COUNT } from '@const/comments.js';
 
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
@@ -53,7 +54,7 @@ const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 
 render(headerElement, createProfileTemplate(), RenderPlace.BEFORE_END);
-render(mainElement, createMainNavigationTemplate(), RenderPlace.BEFORE_END);
+render(mainElement, createMainNavigationTemplate( getFilters( films ) ), RenderPlace.BEFORE_END);
 render(mainElement, createSortTemplate(), RenderPlace.BEFORE_END);
 render(mainElement, createFilmsTemplate(), RenderPlace.BEFORE_END);
 
