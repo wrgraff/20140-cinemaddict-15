@@ -15,3 +15,11 @@ export const FILM_LIST_DATA = [
     isExtra: true,
   },
 ];
+
+export const MPA_VS_AGE = new Map([
+  ['G', '0+'],
+  ['PG', '0+'],
+  ['PG-13', '14+'],
+  ['R', '18+'],
+  ['NC-17', '18+'],
+]);

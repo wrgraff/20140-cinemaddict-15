@@ -8,6 +8,12 @@ import { createFilmsListTemplate } from '@view/films-list.js';
 import { createFilmCardTemplate } from '@view/film-card.js';
 import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
 import { createDetailsTemplate } from '@view/details.js';
+import { getRandomInteger } from '@utils/random.js';
+import { generateFilm } from '@mock/film.js';
+import { COMMENT_COUNT } from '@const/comments.js';
+
+const filmsCount = getRandomInteger(20, 40);
+const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
 
 const renderFilmList = ( container, { title, amount, isExtra }) => {
   render(container, createFilmsListTemplate( title, isExtra ), RenderPlace.BEFORE_END);
@@ -15,7 +21,7 @@ const renderFilmList = ( container, { title, amount, isExtra }) => {
   const filmsContainerElement = container.querySelector('.films-list:last-child .films-list__container');
 
   for ( let i = 0; i < amount; i++ ) {
-    render(filmsContainerElement, createFilmCardTemplate(), RenderPlace.BEFORE_END);
+    render(filmsContainerElement, createFilmCardTemplate(films[i]), RenderPlace.BEFORE_END);
   }
 };
 
@@ -35,4 +41,4 @@ const footerStatisticsElement = document.querySelector('.footer__statistics');
 
 render(footerStatisticsElement, createFooterStatisticsTemplate( FILM_LIST_DATA[0].amount ), RenderPlace.BEFORE_END);
 
-render(document.body, createDetailsTemplate(), RenderPlace.BEFORE_END);
+render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);

@@ -112,26 +112,28 @@ const mpaRatings = [
   'NC-17',
 ];
 
-export const generateFilm = () => {
-  const filmName = getRandomItems(names);
+export const generateFilm = ( commentsTotalAmount ) => {
+  const filmName = getRandomItems(names)[0];
+  const filmCommentsAmount = getRandomInteger(0, 5);
+  const filmComments = new Array(filmCommentsAmount).fill('').map(() => getRandomInteger(0, commentsTotalAmount));
 
   return {
     name: filmName,
     originalName: filmName,
-    poster: getRandomItems(posters),
+    poster: getRandomItems(posters)[0],
     rating: getRandomInteger(0, 100) / 10,
-    director: getRandomItems(directors),
+    director: getRandomItems(directors)[0],
     writers: getRandomItems(writers, 3),
     actors: getRandomItems(actors, 3),
     release: dayjs(new Date(getRandomInteger(1906, 2020), getRandomInteger(1, 12), getRandomInteger(1, 31))).format('YYYY-MM-DD'),
     runtime: getRandomInteger(70, 120),
-    country: getRandomItems(countries),
+    country: getRandomItems(countries)[0],
     genres: getRandomItems(genres, 3),
-    description: getRandomItems(descriptions),
-    mpaRating: getRandomItems(mpaRatings),
+    description: getRandomItems(descriptions)[0],
+    mpaRating: getRandomItems(mpaRatings)[0],
     isInWatchlist: Boolean(getRandomInteger(0, 1)),
     isWatched: Boolean(getRandomInteger(0, 1)),
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    // comments: commentsIds,
+    comments: filmComments,
   };
 };
