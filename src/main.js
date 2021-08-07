@@ -9,7 +9,7 @@ import { createFilmCardTemplate } from '@view/film-card.js';
 import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
 import { createDetailsTemplate } from '@view/details.js';
 
-const renderFilmsList = ( container, { title, amount, isExtra }) => {
+const renderFilmList = ( container, { title, amount, isExtra }) => {
   render(container, createFilmsListTemplate( title, isExtra ), RenderPlace.BEFORE_END);
 
   const filmsContainerElement = container.querySelector('.films-list:last-child .films-list__container');
@@ -29,7 +29,7 @@ render(mainElement, createFilmsTemplate(), RenderPlace.BEFORE_END);
 
 const filmsElement = mainElement.querySelector('.films');
 
-FILM_LIST_DATA.forEach(( filmsListData ) => renderFilmsList( filmsElement, filmsListData ));
+FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmListData ));
 
 const footerStatisticsElement = document.querySelector('.footer__statistics');
 
