@@ -74,7 +74,7 @@ export const generateComment = ( {index} ) => ({
       getRandomInteger(0, 23),
       getRandomInteger(0, 60),
     )).format('YYYY-MM-DD HH:MM'),
-  name: `${getRandomItems(names)} ${getRandomItems(surnames)}`,
-  text: getRandomItems(comments),
-  emotion: getRandomItems(EMOTIONS),
+  name: `${getRandomItems(names)[0]} ${getRandomItems(surnames)[0]}`,
+  text: getRandomItems(comments)[0],
+  emotion: getRandomItems(EMOTIONS)[0],
 });

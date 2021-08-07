@@ -5,6 +5,7 @@ import { createMainNavigationTemplate } from '@view/main-navigation.js';
 import { createSortTemplate } from '@view/sort.js';
 import { createFilmsTemplate } from '@view/films.js';
 import { createFilmsListTemplate } from '@view/films-list.js';
+import { createFilmsListShowMoreTemplate } from '@view/films-list-show-more.js';
 import { createFilmCardTemplate } from '@view/film-card.js';
 import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
 import { createDetailsTemplate } from '@view/details.js';
@@ -17,11 +18,34 @@ const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUN
 
 const renderFilmList = ( container, { title, amount, isExtra }) => {
   render(container, createFilmsListTemplate( title, isExtra ), RenderPlace.BEFORE_END);
-
   const filmsContainerElement = container.querySelector('.films-list:last-child .films-list__container');
 
-  for ( let i = 0; i < amount; i++ ) {
-    render(filmsContainerElement, createFilmCardTemplate(films[i]), RenderPlace.BEFORE_END);
+  let renderedFilmCount = 0;
+  const addFilmCards = ( from, to ) => {
+    for ( let i = from; i < to; i++ ) {
+      render(filmsContainerElement, createFilmCardTemplate(films[i]), RenderPlace.BEFORE_END);
+    }
+    renderedFilmCount = to;
+  };
+
+  addFilmCards(renderedFilmCount, amount);
+
+  if (!isExtra) {
+    const filmsListElement = container.querySelector('.films-list:last-child');
+    render(filmsListElement, createFilmsListShowMoreTemplate(), RenderPlace.BEFORE_END);
+
+    const filmsListShowMoreButtonElement = filmsListElement.querySelector('.films-list__show-more');
+
+    filmsListShowMoreButtonElement.addEventListener('click', () => {
+      let renderTo = renderedFilmCount + amount;
+
+      if (renderTo >= films.length) {
+        renderTo = films.length;
+        filmsListShowMoreButtonElement.remove();
+      }
+
+      addFilmCards(renderedFilmCount, renderTo);
+    });
   }
 };
 
@@ -39,6 +63,6 @@ FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmLis
 
 const footerStatisticsElement = document.querySelector('.footer__statistics');
 
-render(footerStatisticsElement, createFooterStatisticsTemplate( FILM_LIST_DATA[0].amount ), RenderPlace.BEFORE_END);
+render(footerStatisticsElement, createFooterStatisticsTemplate( films.length ), RenderPlace.BEFORE_END);
 
 render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);

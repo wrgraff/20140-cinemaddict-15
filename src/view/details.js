@@ -3,7 +3,7 @@ import { createDetailsControlsTemplate } from '@view/details-controls.js';
 import { createDetailsCommentsTemplate } from '@view/details-comments.js';
 
 export const createDetailsTemplate = ( film ) => (`
-  <section class="film-details">
+  <section class="film-details" style="display: none;">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
