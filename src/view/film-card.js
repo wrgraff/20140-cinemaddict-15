@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
+import { DESCRIPTION_MAX_LENGTH } from '@const/films.js';
+import { formatRuntime } from '@utils/format.js';
 
 export const createFilmCardTemplate = ( film ) => {
   const releaseYear = dayjs(film.release).format('YYYY');
-  const runtimeHours = Math.round(film.runtime / 60);
-  const runtimeMinutes = film.runtime % 60;
-  const descriptionAnons = film.description.length <= 140
+  const description = film.description.length <= DESCRIPTION_MAX_LENGTH
     ? film.description
-    : `${film.description.slice(0, 139)}…`;
+    : `${film.description.slice(0, DESCRIPTION_MAX_LENGTH - 1)}…`;
 
   return (`
     <article class="film-card">
@@ -16,13 +16,13 @@ export const createFilmCardTemplate = ( film ) => {
 
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${runtimeHours}h ${runtimeMinutes}m</span>
+        <span class="film-card__duration">${formatRuntime(film.runtime)}</span>
         <span class="film-card__genre">${film.genres[0]}</span>
       </p>
 
-      <img src="./images/posters/${film.poster}" alt="Poster for ${film.name}" class="film-card__poster">
+      <img src="./${film.poster}" alt="Poster for ${film.name}" class="film-card__poster">
 
-      <p class="film-card__description">${descriptionAnons}</p>
+      <p class="film-card__description">${description}</p>
 
       <a class="film-card__comments">${film.comments.length} comment${film.comments.length !== 1 ? 's' : ''}</a>
 

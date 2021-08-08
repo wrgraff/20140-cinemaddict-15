@@ -1,3 +1,3 @@
-import { formatNumber } from '@utils/format.js';
+import { formatAmount } from '@utils/format.js';
 
-export const createFooterStatisticsTemplate = ( amount ) => (`<p>${formatNumber(amount)} movies inside</p>`);
+export const createFooterStatisticsTemplate = ( amount ) => (`<p>${formatAmount(amount)} movies inside</p>`);

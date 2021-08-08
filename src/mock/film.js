@@ -12,13 +12,13 @@ const names = [
 ];
 
 const posters = [
-  'made-for-each-other.png',
-  'popeye-meets-sinbad.png',
-  'sagebrush-trail.jpg',
-  'santa-claus-conquers-the-martians.jpg',
-  'the-dance-of-life.jpg',
-  'the-great-flamarion.jpg',
-  'the-man-with-the-golden-arm.jpg',
+  'images/posters/made-for-each-other.png',
+  'images/posters/popeye-meets-sinbad.png',
+  'images/posters/sagebrush-trail.jpg',
+  'images/posters/santa-claus-conquers-the-martians.jpg',
+  'images/posters/the-dance-of-life.jpg',
+  'images/posters/the-great-flamarion.jpg',
+  'images/posters/the-man-with-the-golden-arm.jpg',
 ];
 
 const directors = [
@@ -104,12 +104,10 @@ const descriptions = [
   'When an organized-crime family patriarch barely survives an attempt on his life, his youngest son steps in to take care of the would-be killers.',
 ];
 
-const mpaRatings = [
-  'G',
-  'PG',
-  'PG-13',
-  'R',
-  'NC-17',
+const ageRatings = [
+  '0',
+  '14',
+  '18',
 ];
 
 export const generateFilm = ( commentsTotalAmount ) => {
@@ -130,7 +128,7 @@ export const generateFilm = ( commentsTotalAmount ) => {
     country: getRandomItems(countries)[0],
     genres: getRandomItems(genres, 3),
     description: getRandomItems(descriptions)[0],
-    mpaRating: getRandomItems(mpaRatings)[0],
+    ageRating: getRandomItems(ageRatings)[0],
     isInWatchlist: Boolean(getRandomInteger(0, 1)),
     isWatched: Boolean(getRandomInteger(0, 1)),
     isFavorite: Boolean(getRandomInteger(0, 1)),
