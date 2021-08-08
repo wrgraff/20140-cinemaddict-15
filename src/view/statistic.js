@@ -3,11 +3,11 @@ import { createStatisticFiltersTemplate } from '@view/statistic-filters.js';
 import { createStatisticListTemplate } from '@view/statistic-list.js';
 import { createStatisticChartTemplate } from '@view/statistic-chart.js';
 
-export const createStatisticTemplate = () => (`
+export const createStatisticTemplate = ({ amount, runtime, topGenre }) => (`
   <section class="statistic">
-    ${ createStatisticRankTemplate() }
+    ${ createStatisticRankTemplate( amount ) }
     ${ createStatisticFiltersTemplate() }
-    ${ createStatisticListTemplate() }
+    ${ createStatisticListTemplate( amount, runtime, topGenre ) }
     ${ createStatisticChartTemplate() }
   </section>
 `);

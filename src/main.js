@@ -1,6 +1,7 @@
 import { render, RenderPlace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { getFilters } from '@utils/filter.js';
+import { getStatistic } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { FILM_LIST_DATA } from '@const/films.js';
 import { COMMENT_COUNT } from '@const/comments.js';
@@ -13,6 +14,7 @@ import { createFilmsListShowMoreTemplate } from '@view/films-list-show-more.js';
 import { createFilmCardTemplate } from '@view/film-card.js';
 import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
 import { createDetailsTemplate } from '@view/details.js';
+import { createStatisticTemplate } from '@view/statistic.js';
 
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
@@ -69,3 +71,4 @@ const footerStatisticsElement = document.querySelector('.footer__statistics');
 render(footerStatisticsElement, createFooterStatisticsTemplate( films.length ), RenderPlace.BEFORE_END);
 
 render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);
+render(document.body, createStatisticTemplate( getStatistic(films) ), RenderPlace.BEFORE_END);
