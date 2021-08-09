@@ -5,15 +5,15 @@ import { getStatistic } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { FILM_LIST_DATA } from '@const/films.js';
 import { COMMENT_COUNT } from '@const/comments.js';
-import { createProfileTemplate } from '@view/profile.js';
-import { createMainNavigationTemplate } from '@view/main-navigation.js';
-import { createSortTemplate } from '@view/sort.js';
-import { createFilmsTemplate } from '@view/films.js';
-import { createFilmsListTemplate } from '@view/films-list.js';
-import { createFilmsListShowMoreTemplate } from '@view/films-list-show-more.js';
-import { createFilmCardTemplate } from '@view/film-card.js';
-import { createFooterStatisticsTemplate } from '@view/footer-statistics.js';
-import { createDetailsTemplate } from '@view/details.js';
+import ProfileView from '@view/profile.js';
+import MainNavigationView from '@view/main-navigation.js';
+import SortView from '@view/sort.js';
+import FilmsView from '@view/films.js';
+import FilmsListView from '@view/films-list.js';
+import FilmsListShowMoreView from '@view/films-list-show-more.js';
+import FilmCardView from '@view/film-card.js';
+import FooterStatisticsView from '@view/footer-statistics.js';
+import DetailsView from '@view/details.js';
 import { createStatisticTemplate } from '@view/statistic.js';
 
 const filmsCount = getRandomInteger(20, 40);
@@ -22,13 +22,13 @@ const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUN
 const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
   const filmsToRender = sortingMethod ? [...films.sort(sortingMethod)] : films;
 
-  render(container, createFilmsListTemplate( title, isExtra ), RenderPlace.BEFORE_END);
-  const filmsContainerElement = container.querySelector('.films-list:last-child .films-list__container');
+  const filmsConatainer = new FilmsListView( title, isExtra );
+  render(container, filmsConatainer.getElement(), RenderPlace.BEFORE_END);
 
   let renderedFilmCount = 0;
   const addFilmCards = ( from, to ) => {
     for ( let i = from; i < to; i++ ) {
-      render(filmsContainerElement, createFilmCardTemplate(filmsToRender[i]), RenderPlace.BEFORE_END);
+      render(filmsConatainer.getContainer(), new FilmCardView( filmsToRender[i] ).getElement(), RenderPlace.BEFORE_END);
     }
     renderedFilmCount = to;
   };
@@ -37,16 +37,15 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
 
   if (!isExtra) {
     const filmsListElement = container.querySelector('.films-list:last-child');
-    render(filmsListElement, createFilmsListShowMoreTemplate(), RenderPlace.BEFORE_END);
+    const filmsListShowMore = new FilmsListShowMoreView();
+    render(filmsListElement, filmsListShowMore.getElement(), RenderPlace.BEFORE_END);
 
-    const filmsListShowMoreButtonElement = filmsListElement.querySelector('.films-list__show-more');
-
-    filmsListShowMoreButtonElement.addEventListener('click', () => {
+    filmsListShowMore.getElement().addEventListener('click', () => {
       let renderTo = renderedFilmCount + amount;
 
       if (renderTo >= filmsToRender.length) {
         renderTo = filmsToRender.length;
-        filmsListShowMoreButtonElement.remove();
+        filmsListShowMore.removeElement();
       }
 
       addFilmCards(renderedFilmCount, renderTo);
@@ -57,18 +56,16 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 
-render(headerElement, createProfileTemplate(), RenderPlace.BEFORE_END);
-render(mainElement, createMainNavigationTemplate( getFilters( films ) ), RenderPlace.BEFORE_END);
-render(mainElement, createSortTemplate(), RenderPlace.BEFORE_END);
-render(mainElement, createFilmsTemplate(), RenderPlace.BEFORE_END);
+render(headerElement, new ProfileView().getElement(), RenderPlace.BEFORE_END);
+render(mainElement, new MainNavigationView( getFilters( films ) ).getElement(), RenderPlace.BEFORE_END);
+render(mainElement, new SortView().getElement(), RenderPlace.BEFORE_END);
 
-const filmsElement = mainElement.querySelector('.films');
-
+const filmsElement = new FilmsView().getElement();
+render(mainElement, filmsElement, RenderPlace.BEFORE_END);
 FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmListData ));
 
 const footerStatisticsElement = document.querySelector('.footer__statistics');
+render(footerStatisticsElement, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
 
-render(footerStatisticsElement, createFooterStatisticsTemplate( films.length ), RenderPlace.BEFORE_END);
-
-render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);
-render(document.body, createStatisticTemplate( getStatistic(films) ), RenderPlace.BEFORE_END);
+// render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);
+// render(document.body, createStatisticTemplate( getStatistic(films) ), RenderPlace.BEFORE_END);

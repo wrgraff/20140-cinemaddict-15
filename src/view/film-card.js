@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
+import { createElement } from '@utils/render.js';
 import { DESCRIPTION_MAX_LENGTH } from '@const/films.js';
 import { formatRuntime } from '@utils/format.js';
 
-export const createFilmCardTemplate = ( film ) => {
+const createFilmCardTemplate = ( film ) => {
   const releaseYear = dayjs(film.release).format('YYYY');
   const description = film.description.length <= DESCRIPTION_MAX_LENGTH
     ? film.description
@@ -48,3 +49,26 @@ export const createFilmCardTemplate = ( film ) => {
     </article>
   `);
 };
+
+export default class FilmsListContainer {
+  constructor( film ) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate( this._film );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement( this.getTemplate() );
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
