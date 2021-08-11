@@ -23,6 +23,7 @@ const renderDetails = (film) => {
   const details = new DetailsView(film);
   render(document.body, details.getElement(), RenderPlace.BEFORE_END);
   document.body.classList.add('hide-overflow');
+
   details.getElement().querySelector('.film-details__close-btn').addEventListener('click', () => {
     details.getElement().remove();
     details.removeElement();
@@ -51,6 +52,7 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
 
       render(filmsConatainer.getContainer(), filmCard, RenderPlace.BEFORE_END);
     }
+
     renderedFilmCount = to;
   };
 
