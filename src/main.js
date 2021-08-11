@@ -19,6 +19,17 @@ import StatisticView from '@view/statistic.js';
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
 
+const renderDetails = (film) => {
+  const details = new DetailsView(film);
+  render(document.body, details.getElement(), RenderPlace.BEFORE_END);
+  document.body.classList.add('hide-overflow');
+  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', () => {
+    details.getElement().remove();
+    details.removeElement();
+    document.body.classList.remove('hide-overflow');
+  });
+};
+
 const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
   const filmsToRender = sortingMethod ? [...films.sort(sortingMethod)] : films;
 
@@ -28,7 +39,17 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
   let renderedFilmCount = 0;
   const addFilmCards = ( from, to ) => {
     for ( let i = from; i < to; i++ ) {
-      render(filmsConatainer.getContainer(), new FilmCardView( filmsToRender[i] ).getElement(), RenderPlace.BEFORE_END);
+      const currentFilm = filmsToRender[i];
+      const filmCard = new FilmCardView( currentFilm ).getElement();
+      const filmCardTitle = filmCard.querySelector('.film-card__title');
+      const filmCardPoster = filmCard.querySelector('.film-card__poster');
+      const filmCardComments = filmCard.querySelector('.film-card__comments');
+
+      [filmCardTitle, filmCardPoster, filmCardComments].forEach((element) => {
+        element.addEventListener('click', () => renderDetails(currentFilm));
+      });
+
+      render(filmsConatainer.getContainer(), filmCard, RenderPlace.BEFORE_END);
     }
     renderedFilmCount = to;
   };
@@ -45,6 +66,7 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
 
       if (renderTo >= filmsToRender.length) {
         renderTo = filmsToRender.length;
+        filmsListShowMore.getElement().remove();
         filmsListShowMore.removeElement();
       }
 
@@ -67,5 +89,4 @@ FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmLis
 const footerStatisticsElement = document.querySelector('.footer__statistics');
 render(footerStatisticsElement, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
 
-render(document.body, new DetailsView(films[0]).getElement(), RenderPlace.BEFORE_END);
 render(document.body, new StatisticView( getStatistic(films) ).getElement(), RenderPlace.BEFORE_END);
