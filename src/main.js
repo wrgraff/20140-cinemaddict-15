@@ -34,8 +34,9 @@ const renderDetails = (film) => {
 const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
   const filmsToRender = sortingMethod ? [...films.sort(sortingMethod)] : films;
 
-  const filmsConatainer = new FilmsListView( title, isExtra );
-  render(container, filmsConatainer.getElement(), RenderPlace.BEFORE_END);
+  const filmsList = new FilmsListView( title, isExtra ).getElement();
+  const filmsListContainer = filmsList.querySelector('.films-list__container');
+  render(container, filmsList, RenderPlace.BEFORE_END);
 
   let renderedFilmCount = 0;
   const addFilmCards = ( from, to ) => {
@@ -50,7 +51,7 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
         element.addEventListener('click', () => renderDetails(currentFilm));
       });
 
-      render(filmsConatainer.getContainer(), filmCard, RenderPlace.BEFORE_END);
+      render(filmsListContainer, filmCard, RenderPlace.BEFORE_END);
     }
 
     renderedFilmCount = to;

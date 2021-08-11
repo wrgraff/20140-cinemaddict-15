@@ -12,7 +12,6 @@ export default class FilmsList {
     this._title = title;
     this._isExtra = isExtra;
     this._element = null;
-    this._container = null;
   }
 
   getTemplate() {
@@ -22,18 +21,10 @@ export default class FilmsList {
   getElement() {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
+      render( this._element, new FilmsListContainerView().getElement(), RenderPlace.BEFORE_END );
     }
 
     return this._element;
-  }
-
-  getContainer() {
-    if (!this._container) {
-      this._container = new FilmsListContainerView().getElement();
-      render( this.getElement(), this._container, RenderPlace.BEFORE_END );
-    }
-
-    return this._container;
   }
 
   removeElement() {
