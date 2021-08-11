@@ -6,7 +6,7 @@ import StatisticChartView from '@view/statistic-chart.js';
 
 export const createStatisticTemplate = () => ('<section class="statistic"></section>');
 
-export default class Profile {
+export default class Statistic {
   constructor({ amount, runtime, topGenre }) {
     this._amount = amount;
     this._runtime = runtime;

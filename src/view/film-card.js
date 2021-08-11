@@ -50,7 +50,7 @@ const createFilmCardTemplate = ( film ) => {
   `);
 };
 
-export default class FilmsListContainer {
+export default class FilmCard {
   constructor( film ) {
     this._film = film;
     this._element = null;

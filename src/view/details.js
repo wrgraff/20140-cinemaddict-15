@@ -30,9 +30,13 @@ export default class Details {
   getElement() {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
-      this._element.querySelector('.film-details__top-container').append( new DetailsInfoView(this._film).getElement() );
-      this._element.querySelector('.film-details__top-container').append( new DetailsControlsView(this._film).getElement() );
-      this._element.querySelector('.film-details__bottom-container').append( new DetailsCommentsView(this._film.comments).getElement() );
+
+      this._topContainer = this._element.querySelector('.film-details__top-container');
+      this._bottomContainer = this._element.querySelector('.film-details__bottom-container');
+
+      this._topContainer.append( new DetailsInfoView(this._film).getElement() );
+      this._topContainer.append( new DetailsControlsView(this._film).getElement() );
+      this._bottomContainer.append( new DetailsCommentsView(this._film.comments).getElement() );
     }
 
     return this._element;
