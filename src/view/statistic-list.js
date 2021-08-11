@@ -1,6 +1,7 @@
+import { createElement } from '@utils/render.js';
 import { formatRuntime } from '@utils/format.js';
 
-export const createStatisticListTemplate = ( amount, runtime, topGenre ) => (`
+const createStatisticListTemplate = ( amount, runtime, topGenre ) => (`
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
@@ -21,3 +22,28 @@ export const createStatisticListTemplate = ( amount, runtime, topGenre ) => (`
     </li>
   </ul>
 `);
+
+export default class StatisticList {
+  constructor( amount, runtime, topGenre ) {
+    this._amount = amount;
+    this._runtime = runtime;
+    this._topGenre = topGenre;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createStatisticListTemplate( this._amount, this._runtime, this._topGenre );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement( this.getTemplate() );
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

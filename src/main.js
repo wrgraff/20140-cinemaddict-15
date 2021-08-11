@@ -14,7 +14,7 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardView from '@view/film-card.js';
 import FooterStatisticsView from '@view/footer-statistics.js';
 import DetailsView from '@view/details.js';
-import { createStatisticTemplate } from '@view/statistic.js';
+import StatisticView from '@view/statistic.js';
 
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
@@ -68,4 +68,4 @@ const footerStatisticsElement = document.querySelector('.footer__statistics');
 render(footerStatisticsElement, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
 
 render(document.body, new DetailsView(films[0]).getElement(), RenderPlace.BEFORE_END);
-// render(document.body, createStatisticTemplate( getStatistic(films) ), RenderPlace.BEFORE_END);
+render(document.body, new StatisticView( getStatistic(films) ).getElement(), RenderPlace.BEFORE_END);
