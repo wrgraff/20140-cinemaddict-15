@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import { createElement } from '@utils/render.js';
 import { formatRuntime } from '@utils/format.js';
 
-export const createDetailsInfoTemplate = ( film ) => (`
+const createDetailsInfoTemplate = ( film ) => (`
   <div class="film-details__info-wrap">
     <div class="film-details__poster">
       <img class="film-details__poster-img" src="./${film.poster}" alt="Poster for ${film.name}">
@@ -58,3 +59,26 @@ export const createDetailsInfoTemplate = ( film ) => (`
     </div>
   </div>
 `);
+
+export default class DetailsInfo {
+  constructor( film ) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDetailsInfoTemplate( this._film );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement( this.getTemplate() );
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -67,5 +67,5 @@ FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmLis
 const footerStatisticsElement = document.querySelector('.footer__statistics');
 render(footerStatisticsElement, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
 
-// render(document.body, createDetailsTemplate(films[0]), RenderPlace.BEFORE_END);
+render(document.body, new DetailsView(films[0]).getElement(), RenderPlace.BEFORE_END);
 // render(document.body, createStatisticTemplate( getStatistic(films) ), RenderPlace.BEFORE_END);

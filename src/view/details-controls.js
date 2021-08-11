@@ -1,4 +1,6 @@
-export const createDetailsControlsTemplate = ( film ) => (`
+import { createElement } from '@utils/render.js';
+
+const createDetailsControlsTemplate = ( film ) => (`
   <section class="film-details__controls">
     <button
       type="button"
@@ -28,3 +30,26 @@ export const createDetailsControlsTemplate = ( film ) => (`
     </button>
   </section>
 `);
+
+export default class DetailsControls {
+  constructor( film ) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createDetailsControlsTemplate( this._film );
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement( this.getTemplate() );
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
