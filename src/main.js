@@ -39,6 +39,7 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
   render(container, filmsList, RenderPlace.BEFORE_END);
 
   let renderedFilmCount = 0;
+
   const addFilmCards = ( from, to ) => {
     for ( let i = from; i < to; i++ ) {
       const currentFilm = filmsToRender[i];
@@ -60,9 +61,9 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
   addFilmCards(renderedFilmCount, amount);
 
   if (!isExtra) {
-    const filmsListElement = container.querySelector('.films-list:last-child');
+    const lastFilmsList = container.querySelector('.films-list:last-child');
     const filmsListShowMore = new FilmsListShowMoreView();
-    render(filmsListElement, filmsListShowMore.getElement(), RenderPlace.BEFORE_END);
+    render(lastFilmsList, filmsListShowMore.getElement(), RenderPlace.BEFORE_END);
 
     filmsListShowMore.getElement().addEventListener('click', () => {
       let renderTo = renderedFilmCount + amount;
@@ -78,18 +79,18 @@ const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) =
   }
 };
 
-const headerElement = document.querySelector('.header');
-const mainElement = document.querySelector('.main');
+const pageHeader = document.querySelector('.header');
+const pageMain = document.querySelector('.main');
 
-render(headerElement, new ProfileView().getElement(), RenderPlace.BEFORE_END);
-render(mainElement, new MainNavigationView( getFilters( films ) ).getElement(), RenderPlace.BEFORE_END);
-render(mainElement, new SortView().getElement(), RenderPlace.BEFORE_END);
+render(pageHeader, new ProfileView().getElement(), RenderPlace.BEFORE_END);
+render(pageMain, new MainNavigationView( getFilters( films ) ).getElement(), RenderPlace.BEFORE_END);
+render(pageMain, new SortView().getElement(), RenderPlace.BEFORE_END);
 
-const filmsElement = new FilmsView().getElement();
-render(mainElement, filmsElement, RenderPlace.BEFORE_END);
-FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsElement, filmListData ));
+const filmsSection = new FilmsView().getElement();
+render(pageMain, filmsSection, RenderPlace.BEFORE_END);
+FILM_LIST_DATA.forEach(( filmListData ) => renderFilmList( filmsSection, filmListData ));
 
-const footerStatisticsElement = document.querySelector('.footer__statistics');
-render(footerStatisticsElement, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
+const footerStatistics = document.querySelector('.footer__statistics');
+render(footerStatistics, new FooterStatisticsView( films.length ).getElement(), RenderPlace.BEFORE_END);
 
 render(document.body, new StatisticView( getStatistic(films) ).getElement(), RenderPlace.BEFORE_END);
