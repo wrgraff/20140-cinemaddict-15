@@ -5,6 +5,7 @@ import { getStatistic } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { FILM_LIST_DATA } from '@const/films.js';
 import { COMMENT_COUNT } from '@const/comments.js';
+import { Keys } from '@const/common.js';
 import ProfileView from '@view/profile.js';
 import MainNavigationView from '@view/main-navigation.js';
 import SortView from '@view/sort.js';
@@ -21,14 +22,25 @@ const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUN
 
 const renderDetails = (film) => {
   const details = new DetailsView(film);
-  render(document.body, details.getElement(), RenderPlace.BEFORE_END);
-  document.body.classList.add('hide-overflow');
 
-  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', () => {
+  const removeDetails = () => {
     details.getElement().remove();
     details.removeElement();
     document.body.classList.remove('hide-overflow');
-  });
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === Keys.ESCAPE || evt.key === Keys.ESC) {
+      evt.preventDefault();
+      removeDetails();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  render(document.body, details.getElement(), RenderPlace.BEFORE_END);
+  document.body.classList.add('hide-overflow');
+  document.addEventListener('keydown', onEscKeyDown);
+  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', removeDetails);
 };
 
 const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
