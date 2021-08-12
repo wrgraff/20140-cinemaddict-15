@@ -43,10 +43,18 @@ const renderDetails = (film) => {
   details.getElement().querySelector('.film-details__close-btn').addEventListener('click', removeDetails);
 };
 
-const renderFilmList = ( container, { title, amount, isExtra, sortingMethod }) => {
+const renderFilmList = ( container, { title, isTitleHidden, amount, isExtra, sortingMethod }) => {
   const filmsToRender = sortingMethod ? [...films.sort(sortingMethod)] : films;
 
-  const filmsList = new FilmsListView( title, isExtra ).getElement();
+  if (!filmsToRender.length) {
+    if (!isExtra) {
+      render(container, new FilmsListView( 'There are no movies in our database', false, isExtra ).getElement(), RenderPlace.BEFORE_END);
+    }
+
+    return;
+  }
+
+  const filmsList = new FilmsListView( title, isTitleHidden, isExtra ).getElement();
   const filmsListContainer = filmsList.querySelector('.films-list__container');
   render(container, filmsList, RenderPlace.BEFORE_END);
 

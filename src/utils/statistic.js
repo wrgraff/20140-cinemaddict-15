@@ -19,7 +19,7 @@ const getTopGenre = ( watchedFilms ) => {
   const genreCounters = getGenreCounters( watchedFilms );
 
   const topGenre = {
-    name: null,
+    name: '—',
     count: null,
   };
 
