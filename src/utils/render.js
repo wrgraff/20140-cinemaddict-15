@@ -11,6 +11,8 @@ export const render = ( container, element, place ) => {
     case RenderPlace.BEFORE_END:
       container.append(element);
       break;
+    default:
+      throw new Error(`Unknown render position: ${place}. Possible values: ${Object.values(RenderPlace).join(', ')}`);
   }
 };
 
