@@ -2,10 +2,10 @@ import { render, RenderPlace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { getFilters } from '@utils/filter.js';
 import { getStatistic } from '@utils/statistic.js';
+import { isEscapeEvent } from '@utils/dom-event.js';
 import { generateFilm } from '@mock/film.js';
 import { FILM_LIST_DATA } from '@const/films.js';
 import { COMMENT_COUNT } from '@const/comments.js';
-import { Keys } from '@const/common.js';
 import ProfileView from '@view/profile.js';
 import MainNavigationView from '@view/main-navigation.js';
 import SortView from '@view/sort.js';
@@ -30,7 +30,7 @@ const renderDetails = (film) => {
   };
 
   const onEscKeyDown = (evt) => {
-    if (evt.key === Keys.ESCAPE || evt.key === Keys.ESC) {
+    if (isEscapeEvent(evt)) {
       evt.preventDefault();
       removeDetails();
       document.removeEventListener('keydown', onEscKeyDown);
