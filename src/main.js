@@ -37,10 +37,12 @@ const renderDetails = (film) => {
     }
   };
 
+  const onDetailsCloseButtonClick = () => removeDetails();
+
   render(document.body, details.getElement(), RenderPlace.BEFORE_END);
   document.body.classList.add('hide-overflow');
   document.addEventListener('keydown', onEscKeyDown);
-  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', removeDetails);
+  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', onDetailsCloseButtonClick);
 };
 
 const renderFilmList = ( container, { title, isTitleHidden, amount, isExtra, sortingMethod }) => {
