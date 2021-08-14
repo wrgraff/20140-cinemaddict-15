@@ -22,7 +22,7 @@ import DetailsView from '@view/details.js';
 import StatisticView from '@view/statistic.js';
 
 // Create mock data
-const filmsCount = getRandomInteger(0, 0);
+const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map(() => generateFilm(COMMENT_COUNT));
 
 // Details popup

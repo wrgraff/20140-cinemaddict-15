@@ -2,35 +2,25 @@ const getWatchedFilms = ( films ) => (
   films.filter(({ isWatched }) => isWatched)
 );
 
-const getGenreCounters = ( films ) => (
-  films.reduce(( accumulator, { genres } ) => {
+const getGenreAmounts = ( films ) => (
+  films.reduce(( genreAmounts, { genres } ) => {
     genres.forEach(( genre ) => {
-      if (accumulator[genre]) {
-        accumulator[genre]++;
+      if (genreAmounts[genre]) {
+        genreAmounts[genre]++;
       } else {
-        accumulator[genre] = 1;
+        genreAmounts[genre] = 1;
       }
     });
-    return accumulator;
+    return genreAmounts;
   }, {})
 );
 
 const getTopGenre = ( watchedFilms ) => {
-  const genreCounters = getGenreCounters( watchedFilms );
+  const genreAmounts = getGenreAmounts( watchedFilms );
 
-  const topGenre = {
-    name: '—',
-    count: null,
-  };
-
-  for (const [key, value] of Object.entries(genreCounters)) {
-    if (topGenre.count < value) {
-      topGenre.name = key;
-      topGenre.count = value;
-    }
-  }
-
-  return topGenre.name;
+  return Object.entries(genreAmounts).reduce((currentGenre, genre) => (
+    currentGenre[1] >= genre[1] ? currentGenre : genre
+  ))[0];
 };
 
 const getTotalRuntime = ( films ) => (
