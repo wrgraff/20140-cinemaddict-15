@@ -1,4 +1,4 @@
-import { chunk } from '@utils/common.js';
+import { splitToChunks } from '@utils/common.js';
 import { render, RenderPlace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { getFilmsByRating, getFilmsByComments } from '@utils/films.js';
@@ -83,7 +83,7 @@ render(pageMain, filmsSection, RenderPlace.BEFORE_END);
 
 const renderFilmsList = () => {
   let lineToRenderIndex = 0;
-  const filmsToRender = chunk(films, FilmListAmountInLine.BASE);
+  const filmsToRender = splitToChunks(films, FilmListAmountInLine.BASE);
   const filmsList = new FilmsListView(FilmListTitle.ALL).getElement();
   const filmsListContainer = filmsList.querySelector('.films-list__container');
   const filmsListShowMore = new FilmsListShowMoreView();
