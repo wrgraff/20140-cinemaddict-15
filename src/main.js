@@ -43,7 +43,10 @@ const renderDetails = (film) => {
     }
   };
 
-  const onDetailsCloseButtonClick = () => removeDetails();
+  const onDetailsCloseButtonClick = () => {
+    removeDetails();
+    document.removeEventListener('keydown', onEscKeyDown);
+  };
 
   render( document.body, details.getElement(), RenderPlace.BEFORE_END );
   document.body.classList.add('hide-overflow');
