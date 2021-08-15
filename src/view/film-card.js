@@ -51,13 +51,13 @@ const createFilmCardTemplate = ( film ) => {
 };
 
 export default class FilmCard {
-  constructor( film ) {
+  constructor(film) {
     this._film = film;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmCardTemplate( this._film );
+    return createFilmCardTemplate(this._film);
   }
 
   getElement() {

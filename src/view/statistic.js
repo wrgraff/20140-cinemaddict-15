@@ -21,9 +21,9 @@ export default class Statistic {
   getElement() {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
-      this._element.append( new StatisticRankView( this._amount ).getElement() );
+      this._element.append( new StatisticRankView(this._amount).getElement() );
       this._element.append( new StatisticFiltersView().getElement() );
-      this._element.append( new StatisticListView( this._amount, this._runtime, this._topGenre ).getElement() );
+      this._element.append( new StatisticListView(this._amount, this._runtime, this._topGenre).getElement() );
       this._element.append( new StatisticChartView().getElement() );
     }
 

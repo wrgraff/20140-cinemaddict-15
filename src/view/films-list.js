@@ -1,20 +1,20 @@
 import { render, RenderPlace, createElement } from '@utils/render.js';
 import FilmsListContainerView from '@view/films-list-container.js';
 
-const createFilmsListTemplate = ( title ) => (`
+const createFilmsListTemplate = (title) => (`
   <section class="films-list">
     <h2 class="films-list__title visually-hidden">${title}</h2>
   </section>
 `);
 
 export default class FilmsList {
-  constructor( title ) {
+  constructor(title) {
     this._title = title;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmsListTemplate( this._title );
+    return createFilmsListTemplate(this._title);
   }
 
   getElement() {

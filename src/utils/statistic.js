@@ -1,10 +1,10 @@
-const getWatchedFilms = ( films ) => (
+const getWatchedFilms = (films) => (
   films.filter(({ isWatched }) => isWatched)
 );
 
-const getGenreAmounts = ( films ) => (
-  films.reduce(( genreAmounts, { genres } ) => {
-    genres.forEach(( genre ) => {
+const getGenreAmounts = (films) => (
+  films.reduce((genreAmounts, { genres }) => {
+    genres.forEach((genre) => {
       if (genreAmounts[genre]) {
         genreAmounts[genre]++;
       } else {
@@ -15,26 +15,30 @@ const getGenreAmounts = ( films ) => (
   }, {})
 );
 
-const getTopGenre = ( watchedFilms ) => {
-  const genreAmounts = getGenreAmounts( watchedFilms );
+const getTopGenre = (watchedFilms) => {
+  if (!watchedFilms.length) {
+    return;
+  }
+
+  const genreAmounts = getGenreAmounts(watchedFilms);
 
   return Object.entries(genreAmounts).reduce((currentGenre, genre) => (
     currentGenre[1] >= genre[1] ? currentGenre : genre
   ))[0];
 };
 
-const getTotalRuntime = ( films ) => (
-  films.reduce(( accumulator, { runtime } ) => (
+const getTotalRuntime = (films) => (
+  films.reduce((accumulator, { runtime }) => (
     accumulator += runtime
   ), 0)
 );
 
-export const getStatistic = ( films ) => {
-  const watchedFilms = getWatchedFilms( films );
+export const getStatistic = (films) => {
+  const watchedFilms = getWatchedFilms(films);
 
   return {
     amount: watchedFilms.length,
-    runtime: getTotalRuntime( watchedFilms ),
-    topGenre: getTopGenre( watchedFilms ),
+    runtime: getTotalRuntime(watchedFilms),
+    topGenre: getTopGenre(watchedFilms),
   };
 };

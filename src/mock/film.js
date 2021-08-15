@@ -110,7 +110,7 @@ const ageRatings = [
   '18',
 ];
 
-export const generateFilm = ( commentsTotalAmount ) => {
+export const generateFilm = (commentsTotalAmount) => {
   const filmName = getRandomItems(names)[0];
   const filmCommentsAmount = getRandomInteger(0, 5);
   const filmComments = new Array(filmCommentsAmount).fill('').map(() => getRandomInteger(0, commentsTotalAmount));

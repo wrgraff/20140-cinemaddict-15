@@ -50,7 +50,7 @@ const createDetailsInfoTemplate = ( film ) => (`
         <tr class="film-details__row">
           <td class="film-details__term">${film.genres.length > 1 ? 'Genres' : 'Genre'}</td>
           <td class="film-details__cell">
-            ${film.genres.map(( genre ) => (`<span class="film-details__genre">${genre}</span>`)).join('')}
+            ${film.genres.map((genre) => (`<span class="film-details__genre">${genre}</span>`)).join('')}
           </td>
         </tr>
       </table>
@@ -61,13 +61,13 @@ const createDetailsInfoTemplate = ( film ) => (`
 `);
 
 export default class DetailsInfo {
-  constructor( film ) {
+  constructor(film) {
     this._film = film;
     this._element = null;
   }
 
   getTemplate() {
-    return createDetailsInfoTemplate( this._film );
+    return createDetailsInfoTemplate(this._film);
   }
 
   getElement() {

@@ -8,7 +8,7 @@ const comments = new Array(COMMENT_COUNT).fill('').map(generateComment);
 const createDetailsCommentsListTemplate = () => ('<ul class="film-details__comments-list"></ul>');
 
 export default class DetailsCommentsList {
-  constructor( filmComments ) {
+  constructor(filmComments) {
     this._filmComments = filmComments;
     this._element = null;
   }
@@ -21,7 +21,7 @@ export default class DetailsCommentsList {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
 
-      this._filmComments.forEach(( commentId ) => (
+      this._filmComments.forEach((commentId) => (
         this._element.append( new DetailsCommentView( comments[commentId] ).getElement() )
       ));
     }

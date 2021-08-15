@@ -2,22 +2,22 @@ import { createElement } from '@utils/render.js';
 import DetailsCommentNewView from '@view/details-comment-new.js';
 import DetailsCommentsListView from '@view/details-comments-list.js';
 
-const createDetailsCommentsTemplate = ( amount ) => (`
+const createDetailsCommentsTemplate = (amount) => (`
   <section class="film-details__comments-wrap">
     <h3 class="film-details__comments-title">
-      Comments <span class="film-details__comments-count">${ amount }</span>
+      Comments <span class="film-details__comments-count">${amount}</span>
     </h3>
   </section>
 `);
 
 export default class DetailsComments {
-  constructor( filmComments ) {
+  constructor(filmComments) {
     this._filmComments = filmComments;
     this._element = null;
   }
 
   getTemplate() {
-    return createDetailsCommentsTemplate( this._filmComments.length );
+    return createDetailsCommentsTemplate(this._filmComments.length);
   }
 
   getElement() {

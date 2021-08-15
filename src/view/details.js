@@ -18,7 +18,7 @@ const createDetailsTemplate = () => (`
 `);
 
 export default class Details {
-  constructor( film ) {
+  constructor(film) {
     this._film = film;
     this._element = null;
   }

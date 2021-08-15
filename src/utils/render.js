@@ -3,7 +3,7 @@ export const RenderPlace = {
   BEFORE_END: 'beforeend',
 };
 
-export const render = ( container, element, place ) => {
+export const render = (container, element, place) => {
   switch (place) {
     case RenderPlace.AFTER_BEGIN:
       container.prepend(element);
@@ -16,7 +16,7 @@ export const render = ( container, element, place ) => {
   }
 };
 
-export const createElement = ( template ) => {
+export const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
 
