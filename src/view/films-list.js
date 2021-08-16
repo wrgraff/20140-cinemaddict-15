@@ -1,5 +1,4 @@
-import { render, RenderPlace, createElement } from '@utils/render.js';
-import FilmsListContainerView from '@view/films-list-container.js';
+import { createElement } from '@utils/render.js';
 
 const createFilmsListTemplate = (title) => (`
   <section class="films-list">
@@ -20,7 +19,6 @@ export default class FilmsList {
   getElement() {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
-      render( this._element, new FilmsListContainerView().getElement(), RenderPlace.BEFORE_END );
     }
 
     return this._element;
