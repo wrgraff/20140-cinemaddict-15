@@ -22,15 +22,16 @@ const getTopGenre = (watchedFilms) => {
 
   const genreAmounts = getGenreAmounts(watchedFilms);
 
-  return Object.entries(genreAmounts).reduce((currentGenre, genre) => (
-    currentGenre[1] >= genre[1] ? currentGenre : genre
+  return Object.entries(genreAmounts).reduce((currentGenres, genres) => (
+    currentGenres[1] >= genres[1] ? currentGenres : genres
   ))[0];
 };
 
 const getTotalRuntime = (films) => (
-  films.reduce((accumulator, { runtime }) => (
-    accumulator += runtime
-  ), 0)
+  films.reduce((allRuntime, { runtime }) => {
+    allRuntime += runtime;
+    return allRuntime;
+  }, 0)
 );
 
 export const getStatistic = (films) => {

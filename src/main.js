@@ -1,4 +1,4 @@
-import { render, RenderPlace } from '@utils/render.js';
+import { render } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { getFilmsByRating, getFilmsByComments } from '@utils/films.js';
 import { getFilters } from '@utils/filter.js';
