@@ -1,3 +1,5 @@
+import { RANKS } from '@const/statistic.js';
+
 const getWatchedFilms = (films) => (
   films.filter(({ isWatched }) => isWatched)
 );
@@ -34,11 +36,24 @@ const getTotalRuntime = (films) => (
   }, 0)
 );
 
+const calcTextRank = (amount) => {
+  let textRank = '';
+
+  for (const [key, value] of Object.entries(RANKS)) {
+    if (amount > key) {
+      textRank = value;
+    }
+  }
+
+  return textRank;
+};
+
 export const getStatistic = (films) => {
   const watchedFilms = getWatchedFilms(films);
 
   return {
     amount: watchedFilms.length,
+    rank: calcTextRank(watchedFilms.length),
     runtime: getTotalRuntime(watchedFilms),
     topGenre: getTopGenre(watchedFilms),
   };

@@ -1,17 +1,4 @@
 import { createElement } from '@utils/render.js';
-import { RANKS } from '@const/statistic.js';
-
-const calcTextRank = (amount) => {
-  let textRank = '';
-
-  for (const [key, value] of Object.entries(RANKS)) {
-    if (amount > key) {
-      textRank = value;
-    }
-  }
-
-  return textRank;
-};
 
 const createStatisticRankTemplate = (rank) => (`
   <p class="statistic__rank">
@@ -22,8 +9,8 @@ const createStatisticRankTemplate = (rank) => (`
 `);
 
 export default class StatisticRank {
-  constructor(amount) {
-    this._rank = calcTextRank(amount);
+  constructor(rank) {
+    this._rank = rank;
     this._element = null;
   }
 

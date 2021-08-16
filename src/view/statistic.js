@@ -7,8 +7,9 @@ import StatisticChartView from '@view/statistic-chart.js';
 export const createStatisticTemplate = () => ('<section class="statistic"></section>');
 
 export default class Statistic {
-  constructor({ amount, runtime, topGenre }) {
+  constructor({ amount, rank, runtime, topGenre }) {
     this._amount = amount;
+    this._rank = rank;
     this._runtime = runtime;
     this._topGenre = topGenre;
     this._element = null;
@@ -21,7 +22,7 @@ export default class Statistic {
   getElement() {
     if (!this._element) {
       this._element = createElement( this.getTemplate() );
-      this._element.append( new StatisticRankView(this._amount).getElement() );
+      this._element.append( new StatisticRankView(this._rank).getElement() );
       this._element.append( new StatisticFiltersView().getElement() );
       this._element.append( new StatisticListView(this._amount, this._runtime, this._topGenre).getElement() );
       this._element.append( new StatisticChartView().getElement() );
