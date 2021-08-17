@@ -1,7 +1,14 @@
 import { createElement } from '@utils/render.js';
 import { formatRuntime } from '@utils/format.js';
 
-const createStatisticListTemplate = ( amount, runtime, topGenre ) => (`
+const createTopGenreTemplate = (topGenre) => (`
+  <li class="statistic__text-item">
+    <h4 class="statistic__item-title">Top genre</h4>
+    <p class="statistic__item-text">${topGenre}</p>
+  </li>
+`);
+
+const createStatisticListTemplate = (amount, runtime, topGenre) => (`
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
@@ -10,21 +17,18 @@ const createStatisticListTemplate = ( amount, runtime, topGenre ) => (`
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
       <p class="statistic__item-text">
-      ${formatRuntime( runtime, ( hours, minutes ) => (`
+      ${formatRuntime( runtime, (hours, minutes) => (`
         ${hours} <span class="statistic__item-description">h</span>
         ${minutes} <span class="statistic__item-description">m</span>
       `) )}
       </p>
     </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${topGenre}</p>
-    </li>
+    ${topGenre ? createTopGenreTemplate(topGenre) : ''}
   </ul>
 `);
 
 export default class StatisticList {
-  constructor( amount, runtime, topGenre ) {
+  constructor(amount, runtime, topGenre) {
     this._amount = amount;
     this._runtime = runtime;
     this._topGenre = topGenre;
@@ -32,7 +36,7 @@ export default class StatisticList {
   }
 
   getTemplate() {
-    return createStatisticListTemplate( this._amount, this._runtime, this._topGenre );
+    return createStatisticListTemplate(this._amount, this._runtime, this._topGenre);
   }
 
   getElement() {

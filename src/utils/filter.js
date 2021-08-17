@@ -1,10 +1,11 @@
-const countFilters = ( accumulator, film ) => ({
-  watchlist: film.isInWatchlist ? ++accumulator.watchlist : accumulator.watchlist,
-  history: film.isWatched ? ++accumulator.history : accumulator.history,
-  favorites: film.isFavorite ? ++accumulator.favorites : accumulator.favorites,
-});
+const countFilters = (counter, film) => {
+  counter.watchlist = film.isInWatchlist ? ++counter.watchlist : counter.watchlist;
+  counter.history = film.isWatched ? ++counter.history : counter.history;
+  counter.favorites = film.isFavorite ? ++counter.favorites : counter.favorites;
+  return counter;
+};
 
-export const getFilters = ( films ) => (
+export const getFilters = (films) => (
   films.reduce(countFilters, {
     watchlist: 0,
     history: 0,

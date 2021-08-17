@@ -64,7 +64,7 @@ const comments = [
   'This guy went from chasing down Hamilton for an autograph almost a decade ago, to filling in for Hamilton in his 7th WDC and WCC car and locking out front row with Bottas.',
 ];
 
-export const generateComment = ( {index} ) => ({
+export const generateComment = ({ index }) => ({
   id: index,
   date: dayjs(
     new Date(

@@ -2,11 +2,11 @@ import { createElement } from '@utils/render.js';
 
 const createFilmsListTemplate = (title) => (`
   <section class="films-list">
-    <h2 class="films-list__title visually-hidden">${title}</h2>
+    <h2 class="films-list__title">${title}</h2>
   </section>
 `);
 
-export default class FilmsList {
+export default class FilmsListEmpty {
   constructor(title) {
     this._title = title;
     this._element = null;

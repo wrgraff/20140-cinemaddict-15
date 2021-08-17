@@ -1,50 +1,60 @@
-const getWatchedFilms = ( films ) => (
+import { RANKS } from '@const/statistic.js';
+
+const getWatchedFilms = (films) => (
   films.filter(({ isWatched }) => isWatched)
 );
 
-const getGenreCounters = ( films ) => (
-  films.reduce(( accumulator, { genres } ) => {
-    genres.forEach(( genre ) => {
-      if (accumulator[genre]) {
-        accumulator[genre]++;
+const getGenreAmounts = (films) => (
+  films.reduce((genreAmounts, { genres }) => {
+    genres.forEach((genre) => {
+      if (genreAmounts[genre]) {
+        genreAmounts[genre]++;
       } else {
-        accumulator[genre] = 1;
+        genreAmounts[genre] = 1;
       }
     });
-    return accumulator;
+    return genreAmounts;
   }, {})
 );
 
-const getTopGenre = ( watchedFilms ) => {
-  const genreCounters = getGenreCounters( watchedFilms );
+const getTopGenre = (watchedFilms) => {
+  if (!watchedFilms.length) {
+    return;
+  }
 
-  const topGenre = {
-    name: null,
-    count: null,
-  };
+  const genreAmounts = getGenreAmounts(watchedFilms);
 
-  for (const [key, value] of Object.entries(genreCounters)) {
-    if (topGenre.count < value) {
-      topGenre.name = key;
-      topGenre.count = value;
+  return Object.entries(genreAmounts).reduce((currentGenres, genres) => (
+    currentGenres[1] >= genres[1] ? currentGenres : genres
+  ))[0];
+};
+
+const getTotalRuntime = (films) => (
+  films.reduce((allRuntime, { runtime }) => {
+    allRuntime += runtime;
+    return allRuntime;
+  }, 0)
+);
+
+const calcTextRank = (amount) => {
+  let textRank = '';
+
+  for (const [key, value] of Object.entries(RANKS)) {
+    if (amount > key) {
+      textRank = value;
     }
   }
 
-  return topGenre.name;
+  return textRank;
 };
 
-const getTotalRuntime = ( films ) => (
-  films.reduce(( accumulator, { runtime } ) => (
-    accumulator += runtime
-  ), 0)
-);
-
-export const getStatistic = ( films ) => {
-  const watchedFilms = getWatchedFilms( films );
+export const getStatistic = (films) => {
+  const watchedFilms = getWatchedFilms(films);
 
   return {
     amount: watchedFilms.length,
-    runtime: getTotalRuntime( watchedFilms ),
-    topGenre: getTopGenre( watchedFilms ),
+    rank: calcTextRank(watchedFilms.length),
+    runtime: getTotalRuntime(watchedFilms),
+    topGenre: getTopGenre(watchedFilms),
   };
 };

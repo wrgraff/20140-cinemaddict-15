@@ -1,6 +1,6 @@
 import { createElement } from '@utils/render.js';
 
-const createDetailsCommentTemplate = ( comment ) => (`
+const createDetailsCommentTemplate = (comment) => (`
   <li class="film-details__comment">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
@@ -17,13 +17,13 @@ const createDetailsCommentTemplate = ( comment ) => (`
 `);
 
 export default class DetailsComment {
-  constructor( comment ) {
+  constructor(comment) {
     this._comment = comment;
     this._element = null;
   }
 
   getTemplate() {
-    return createDetailsCommentTemplate( this._comment );
+    return createDetailsCommentTemplate(this._comment);
   }
 
   getElement() {

@@ -1,6 +1,6 @@
 import { createElement } from '@utils/render.js';
 
-const createMainNavigationTemplate = ( { watchlist, history, favorites } ) => (`
+const createMainNavigationTemplate = ({ watchlist, history, favorites }) => (`
   <nav class="main-navigation">
     <div class="main-navigation__items">
       <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
@@ -26,7 +26,7 @@ export default class MainNavigation {
   }
 
   getTemplate() {
-    return createMainNavigationTemplate( this._amount );
+    return createMainNavigationTemplate(this._amount);
   }
 
   getElement() {
