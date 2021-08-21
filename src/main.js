@@ -43,30 +43,21 @@ const renderDetails = (film) => {
     }
   };
 
-  const onDetailsCloseButtonClick = () => {
-    removeDetails();
-    document.removeEventListener('keydown', onEscKeyDown);
-  };
-
   render( document.body, details.getElement() );
   document.body.classList.add('hide-overflow');
   document.addEventListener('keydown', onEscKeyDown);
-  details.getElement().querySelector('.film-details__close-btn').addEventListener('click', onDetailsCloseButtonClick);
+  details.setOnCloseButtonClick(() => {
+    removeDetails();
+    document.removeEventListener('keydown', onEscKeyDown);
+  });
 };
 
 // Add cards
 const renderFilmCards = (container, filmsToRender) => {
   filmsToRender.forEach((film) => {
-    const filmCard = new FilmCardView(film).getElement();
-    const filmCardTitle = filmCard.querySelector('.film-card__title');
-    const filmCardPoster = filmCard.querySelector('.film-card__poster');
-    const filmCardComments = filmCard.querySelector('.film-card__comments');
-
-    [filmCardTitle, filmCardPoster, filmCardComments].forEach((element) => {
-      element.addEventListener('click', () => renderDetails(film));
-    });
-
-    render(container, filmCard);
+    const filmCard = new FilmCardView(film);
+    filmCard.setOnCardClick(() => renderDetails(film));
+    render(container, filmCard.getElement());
   });
 };
 
