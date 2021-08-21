@@ -1,3 +1,4 @@
+import AbstractView from '@view/abstract.js';
 import { createElement } from '@utils/render.js';
 import DetailsInfoView from '@view/details-info.js';
 import DetailsControlsView from '@view/details-controls.js';
@@ -17,10 +18,10 @@ const createDetailsTemplate = () => (`
   </section>
 `);
 
-export default class Details {
+export default class Details extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
@@ -42,7 +43,4 @@ export default class Details {
     return this._element;
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

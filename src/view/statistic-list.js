@@ -1,4 +1,4 @@
-import { createElement } from '@utils/render.js';
+import AbstractView from '@view/abstract.js';
 import { formatRuntime } from '@utils/format.js';
 
 const createTopGenreTemplate = (topGenre) => (`
@@ -27,27 +27,15 @@ const createStatisticListTemplate = (amount, runtime, topGenre) => (`
   </ul>
 `);
 
-export default class StatisticList {
+export default class StatisticList extends AbstractView {
   constructor(amount, runtime, topGenre) {
+    super();
     this._amount = amount;
     this._runtime = runtime;
     this._topGenre = topGenre;
-    this._element = null;
   }
 
   getTemplate() {
     return createStatisticListTemplate(this._amount, this._runtime, this._topGenre);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement( this.getTemplate() );
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

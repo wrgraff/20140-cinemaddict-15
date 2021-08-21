@@ -1,3 +1,4 @@
+import AbstractView from '@view/abstract.js';
 import { createElement } from '@utils/render.js';
 import StatisticRankView from '@view/statistic-rank.js';
 import StatisticFiltersView from '@view/statistic-filters.js';
@@ -6,13 +7,13 @@ import StatisticChartView from '@view/statistic-chart.js';
 
 export const createStatisticTemplate = () => ('<section class="statistic"></section>');
 
-export default class Statistic {
+export default class Statistic extends AbstractView {
   constructor({ amount, rank, runtime, topGenre }) {
+    super();
     this._amount = amount;
     this._rank = rank;
     this._runtime = runtime;
     this._topGenre = topGenre;
-    this._element = null;
   }
 
   getTemplate() {
@@ -29,9 +30,5 @@ export default class Statistic {
     }
 
     return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

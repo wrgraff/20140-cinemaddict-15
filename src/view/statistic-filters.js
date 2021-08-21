@@ -1,4 +1,4 @@
-import { createElement } from '@utils/render.js';
+import AbstractView from '@view/abstract.js';
 
 const createStatisticFiltersTemplate = () => (`
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
@@ -21,24 +21,8 @@ const createStatisticFiltersTemplate = () => (`
   </form>
 `);
 
-export default class StatisticFilters {
-  constructor() {
-    this._element = null;
-  }
-
+export default class StatisticFilters extends AbstractView {
   getTemplate() {
     return createStatisticFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement( this.getTemplate() );
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

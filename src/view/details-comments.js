@@ -1,3 +1,4 @@
+import AbstractView from '@view/abstract.js';
 import { createElement } from '@utils/render.js';
 import DetailsCommentNewView from '@view/details-comment-new.js';
 import DetailsCommentsListView from '@view/details-comments-list.js';
@@ -10,10 +11,10 @@ const createDetailsCommentsTemplate = (amount) => (`
   </section>
 `);
 
-export default class DetailsComments {
+export default class DetailsComments extends AbstractView {
   constructor(filmComments) {
+    super();
     this._filmComments = filmComments;
-    this._element = null;
   }
 
   getTemplate() {
@@ -28,9 +29,5 @@ export default class DetailsComments {
     }
 
     return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

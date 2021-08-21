@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { createElement } from '@utils/render.js';
+import AbstractView from '@view/abstract.js';
 import { formatRuntime } from '@utils/format.js';
 
 const createDetailsInfoTemplate = ( film ) => (`
@@ -60,25 +60,13 @@ const createDetailsInfoTemplate = ( film ) => (`
   </div>
 `);
 
-export default class DetailsInfo {
+export default class DetailsInfo extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createDetailsInfoTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement( this.getTemplate() );
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
