@@ -98,7 +98,7 @@ const renderFilmsList = (container, filmsToRender) => {
     const filmsListShowMore = new FilmsListShowMoreView();
     render( container, filmsListShowMore.getElement() );
 
-    filmsListShowMore.getElement().addEventListener('click', () => {
+    filmsListShowMore.setOnClick(() => {
       renderFilms();
 
       if (shownFilms >= filmsToRender.length) {
@@ -119,7 +119,6 @@ if (films.length > 0) {
   renderFilmsList( filmsListByComments, getFilmsByComments(films).slice(0, FilmListAmountInLine.EXTRA) );
 } else {
   render( filmsSection, new FilmsListEmptyView(FilmListTitle.EMPTY).getElement() );
-
 }
 
 const footerStatistics = document.querySelector('.footer__statistics');
