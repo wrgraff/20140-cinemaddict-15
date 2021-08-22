@@ -1,4 +1,4 @@
-import { createElement } from '@utils/render.js';
+import AbstractView from '@view/abstract.js';
 
 const createMainNavigationTemplate = ({ watchlist, history, favorites }) => (`
   <nav class="main-navigation">
@@ -19,25 +19,13 @@ const createMainNavigationTemplate = ({ watchlist, history, favorites }) => (`
 `);
 
 
-export default class MainNavigation {
+export default class MainNavigation extends AbstractView {
   constructor({ watchlist, history, favorites }) {
+    super();
     this._amount = { watchlist, history, favorites };
-    this._element = null;
   }
 
   getTemplate() {
     return createMainNavigationTemplate(this._amount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement( this.getTemplate() );
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

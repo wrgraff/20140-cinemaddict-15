@@ -1,9 +1,19 @@
+import AbstractView from '@view/abstract.js';
+
 export const RenderPlace = {
   BEFORE_AFTER: 'afterbegin',
   BEFORE_END: 'beforeend',
 };
 
 export const render = (container, element, place = RenderPlace.BEFORE_END) => {
+  if (container instanceof AbstractView) {
+    container = container.getElement();
+  }
+
+  if (element instanceof AbstractView) {
+    element = element.getElement();
+  }
+
   switch (place) {
     case RenderPlace.BEFORE_END:
       container.append(element);
@@ -16,9 +26,18 @@ export const render = (container, element, place = RenderPlace.BEFORE_END) => {
   }
 };
 
-export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
+export const remove = (component) => {
+  if (!(component instanceof AbstractView)) {
+    throw new Error('Can remove only components');
+  }
 
-  return newElement.firstElementChild;
+  component.getElement().remove();
+  component.removeElement();
+};
+
+export const createElement = (template) => {
+  const element = document.createElement('div');
+  element.innerHTML = template;
+
+  return element.firstElementChild;
 };
