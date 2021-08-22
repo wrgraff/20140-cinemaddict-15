@@ -22,7 +22,7 @@ export default class DetailsComments extends AbstractView {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement( this.getTemplate() );
       this._element.append( new DetailsCommentsListView(this._filmComments).getElement() );
       this._element.append( new DetailsCommentNewView().getElement() );

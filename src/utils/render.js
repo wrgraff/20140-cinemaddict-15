@@ -1,4 +1,4 @@
-import Abstract from '@view/abstract.js';
+import AbstractView from '@view/abstract.js';
 
 export const RenderPlace = {
   BEFORE_AFTER: 'afterbegin',
@@ -6,11 +6,11 @@ export const RenderPlace = {
 };
 
 export const render = (container, element, place = RenderPlace.BEFORE_END) => {
-  if (container instanceof Abstract) {
+  if (container instanceof AbstractView) {
     container = container.getElement();
   }
 
-  if (element instanceof Abstract) {
+  if (element instanceof AbstractView) {
     element = element.getElement();
   }
 
@@ -27,7 +27,7 @@ export const render = (container, element, place = RenderPlace.BEFORE_END) => {
 };
 
 export const remove = (component) => {
-  if (!(component instanceof Abstract)) {
+  if (!(component instanceof AbstractView)) {
     throw new Error('Can remove only components');
   }
 

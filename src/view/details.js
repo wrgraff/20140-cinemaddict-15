@@ -29,7 +29,7 @@ export default class Details extends AbstractView {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement( this.getTemplate() );
       this._closeButton = new DetailsCloseButtonView();
       this._info = new DetailsInfoView(this._film);

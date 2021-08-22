@@ -19,7 +19,7 @@ export default class DetailsCommentsList extends AbstractView {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement( this.getTemplate() );
 
       this._filmComments.forEach((commentId) => (

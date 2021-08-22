@@ -22,7 +22,7 @@ export default class Statistic extends AbstractView {
   }
 
   getElement() {
-    if (!this._element) {
+    if (this._element === null) {
       this._element = createElement( this.getTemplate() );
       this._element.append( new StatisticRankView(this._rank).getElement() );
       this._element.append( new StatisticFiltersView().getElement() );
