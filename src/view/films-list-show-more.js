@@ -12,13 +12,13 @@ export default class FilmsListShowMore extends AbstractView {
     return createFilmsListShowMoreTemplate();
   }
 
-  _onClick(evt) {
-    evt.preventDefault();
-    this._callback.click();
-  }
-
   setOnClick(callback) {
     this._callback.click = callback;
     this.getElement().addEventListener('click', this._onClick);
+  }
+
+  _onClick(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 }

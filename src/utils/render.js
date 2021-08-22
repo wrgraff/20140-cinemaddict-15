@@ -36,8 +36,8 @@ export const remove = (component) => {
 };
 
 export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
+  const element = document.createElement('div');
+  element.innerHTML = template;
 
-  return newElement.firstElementChild;
+  return element.firstElementChild;
 };
