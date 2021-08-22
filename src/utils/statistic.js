@@ -15,13 +15,16 @@ export const calcTextRank = (amount) => {
 export const getStatistic = (films) => (
   films.reduce((statistic, film) => {
     if (film.isWatched) {
-      statistic.watched += 1;
+      statistic.watched++;
       statistic.runtime += film.runtime;
-      film.genres.forEach((genre) => (
-        statistic.genres[genre]
-          ? statistic.genres[genre] += 1
-          : statistic.genres[genre] = 1
-      ));
+      statistic.genres = film.genres.reduce((statisticGenres, genre) => {
+        if (!statisticGenres[genre]) {
+          statisticGenres[genre] = 1;
+        } else {
+          statisticGenres[genre]++;
+        }
+        return statisticGenres;
+      }, statistic.genres);
     }
     return statistic;
   }, {
