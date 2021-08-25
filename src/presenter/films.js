@@ -16,6 +16,7 @@ import DetailsView from '@view/details.js';
 export default class Films {
   constructor(container) {
     this._container = container;
+    this._shownFilms = FilmListAmountInLine.BASE;
 
     this._sectionComponent = new FilmsView();
     this._sortComponent = new SortView();
@@ -23,6 +24,7 @@ export default class Films {
     this._listByRatingComponent = new FilmsListExtraView(FilmListTitle.TOP_RATED);
     this._listByCommentsComponent = new FilmsListExtraView(FilmListTitle.MOST_COMMENTED);
     this._listEmptyComponent = new FilmsListEmptyView(FilmListTitle.EMPTY);
+    this._showMoreComponent = new FilmsListShowMoreView();
     this._cardComponent = new FilmCardView();
   }
 
@@ -64,26 +66,26 @@ export default class Films {
   }
 
   _renderShowMore(container, listContainer, filmsToRender) {
-    let shownFilms = FilmListAmountInLine.BASE;
-    const filmsListShowMore = new FilmsListShowMoreView();
-    render(container, filmsListShowMore);
+    render(container, this._showMoreComponent);
 
-    filmsListShowMore.setOnClick(() => {
-      this._renderCards(listContainer, filmsToRender.slice( shownFilms, Math.min(shownFilms + FilmListAmountInLine.BASE, filmsToRender.length) ));
-      shownFilms += FilmListAmountInLine.BASE;
+    this._showMoreComponent.setOnClick(() => {
+      this._renderCards(listContainer, filmsToRender, this._shownFilms, this._shownFilms + FilmListAmountInLine.BASE);
+      this._shownFilms += FilmListAmountInLine.BASE;
 
-      if (shownFilms >= filmsToRender.length) {
-        remove(filmsListShowMore);
+      if (this._shownFilms >= filmsToRender.length) {
+        remove(this._showMoreComponent);
       }
     });
   }
 
-  _renderCards(container, filmsToRender) {
-    filmsToRender.forEach((film) => {
-      const filmCard = new FilmCardView(film);
-      filmCard.setOnCardClick(() => this._renderDetails(film));
-      render(container, filmCard);
-    });
+  _renderCards(container, list, from, to) {
+    list
+      .slice(from, to)
+      .forEach((film) => {
+        const filmCard = new FilmCardView(film);
+        filmCard.setOnCardClick(() => this._renderDetails(film));
+        render(container, filmCard);
+      });
   }
 
   _renderListEmpty() {
@@ -94,10 +96,10 @@ export default class Films {
     const listContainer = new FilmsListContainerView();
     render(container, listContainer);
 
-    this._renderCards(listContainer, filmsToRender.slice( 0, Math.min(FilmListAmountInLine.BASE, filmsToRender.length) ));
+    this._renderCards(listContainer, filmsToRender, 0, this._shownFilms);
     render(this._sectionComponent, container);
 
-    if (FilmListAmountInLine.BASE < filmsToRender.length) {
+    if (this._shownFilms < filmsToRender.length) {
       this._renderShowMore(container, listContainer, filmsToRender);
     }
   }
