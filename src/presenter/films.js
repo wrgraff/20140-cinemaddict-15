@@ -121,4 +121,9 @@ export default class Films {
     this._renderSort();
     this._renderSection();
   }
+
+  static create(container, films) {
+    const filmsPresenter = new this(container);
+    filmsPresenter.init(films);
+  }
 }

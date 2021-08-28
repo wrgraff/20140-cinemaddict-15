@@ -21,8 +21,7 @@ const pageMain = document.querySelector('.main');
 render( pageHeader, new ProfileView() );
 render( pageMain, new MainNavigationView( getFilters(films) ) );
 
-const filmsPresenter = new FilmsPresenter(pageMain);
-filmsPresenter.init(films);
+FilmsPresenter.create(pageMain, films);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render( footerStatistics, new FooterStatisticsView(films.length) );
