@@ -27,7 +27,9 @@ export default class Films {
     this._showMoreComponent = new FilmsListShowMoreView();
 
     this._detailsPresenter = new DetailsPresenter();
-    this._filmPresenter = new Map();
+    this._filmPresenter = [];
+
+    this._onFilmChange = this._onFilmChange.bind(this);
   }
 
   init(films) {
@@ -59,8 +61,11 @@ export default class Films {
     list
       .slice(from, to)
       .forEach((film) => {
-        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film);
-        this._filmPresenter.set(film.id, filmPresenter);
+        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film, this._onFilmChange);
+        this._filmPresenter.push({
+          id: film.id,
+          presenter: filmPresenter,
+        });
       });
   }
 
@@ -102,7 +107,9 @@ export default class Films {
     this._films = updateItem(this._films, changedFilm);
     this._filmsByComments = updateItem(this._filmsByComments, changedFilm);
     this._filmsByRating = updateItem(this._filmsByRating, changedFilm);
-    this._filmPresenter.get(changedFilm.id).init(changedFilm);
+    this._filmPresenter
+      .filter((presenterItem) => presenterItem.id === changedFilm.id)
+      .forEach((presenterItem) => presenterItem.presenter.update(changedFilm));
   }
 
   static create(container, films) {

@@ -11,7 +11,7 @@ import StatisticView from '@view/statistic.js';
 import FilmsPresenter from '@presenter/films.js';
 
 // Create mock data
-const filmsCount = getRandomInteger(20, 40);
+const filmsCount = getRandomInteger(5, 5);
 const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COUNT) );
 
 // Rendering
