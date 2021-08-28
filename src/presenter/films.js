@@ -1,6 +1,6 @@
 import { render, remove } from '@utils/render.js';
 import { getFilmsByRating, getFilmsByComments } from '@utils/films.js';
-import { isEscapeEvent } from '@utils/dom-event.js';
+import { updateItem } from '@utils/common.js';
 import { FilmListTitle, FilmListAmountInLine } from '@const/films.js';
 
 import SortView from '@view/sort.js';
@@ -10,8 +10,8 @@ import FilmsListExtraView from '@view/films-list-extra.js';
 import FilmsListEmptyView from '@view/films-list-empty.js';
 import FilmsListContainerView from '@view/films-list-container.js';
 import FilmsListShowMoreView from '@view/films-list-show-more.js';
-import FilmCardView from '@view/film-card.js';
-import DetailsView from '@view/details.js';
+import DetailsPresenter from '@presenter/details.js';
+import FilmPresenter from '@presenter/film.js';
 
 export default class Films {
   constructor(container) {
@@ -25,7 +25,9 @@ export default class Films {
     this._listByCommentsComponent = new FilmsListExtraView(FilmListTitle.MOST_COMMENTED);
     this._listEmptyComponent = new FilmsListEmptyView(FilmListTitle.EMPTY);
     this._showMoreComponent = new FilmsListShowMoreView();
-    this._cardComponent = new FilmCardView();
+
+    this._detailsPresenter = new DetailsPresenter();
+    this._filmPresenter = new Map();
   }
 
   init(films) {
@@ -38,31 +40,6 @@ export default class Films {
 
   _renderSort() {
     render(this._container, this._sortComponent);
-  }
-
-  _renderDetails(film) {
-    const details = new DetailsView(film);
-
-    const removeDetails = () => {
-      remove(details);
-      document.body.classList.remove('hide-overflow');
-    };
-
-    const onEscKeyDown = (evt) => {
-      if ( isEscapeEvent(evt) ) {
-        evt.preventDefault();
-        removeDetails();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    render(document.body, details);
-    document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', onEscKeyDown);
-    details.setOnCloseButtonClick(() => {
-      removeDetails();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
   }
 
   _renderShowMore(container, listContainer, filmsToRender) {
@@ -82,9 +59,8 @@ export default class Films {
     list
       .slice(from, to)
       .forEach((film) => {
-        const filmCard = new FilmCardView(film);
-        filmCard.setOnCardClick(() => this._renderDetails(film));
-        render(container, filmCard);
+        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film);
+        this._filmPresenter.set(film.id, filmPresenter);
       });
   }
 
@@ -120,6 +96,13 @@ export default class Films {
   _render() {
     this._renderSort();
     this._renderSection();
+  }
+
+  _onFilmChange(changedFilm) {
+    this._films = updateItem(this._films, changedFilm);
+    this._filmsByComments = updateItem(this._filmsByComments, changedFilm);
+    this._filmsByRating = updateItem(this._filmsByRating, changedFilm);
+    this._filmPresenter.get(changedFilm.id).init(changedFilm);
   }
 
   static create(container, films) {
