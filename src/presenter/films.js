@@ -26,7 +26,7 @@ export default class Films {
     this._listEmptyComponent = new FilmsListEmptyView(FilmListTitle.EMPTY);
     this._showMoreComponent = new FilmsListShowMoreView();
 
-    this._detailsPresenter = new DetailsPresenter();
+    this._detailsPresenter = null;
     this._filmPresenter = [];
 
     this._onFilmChange = this._onFilmChange.bind(this);
@@ -36,6 +36,7 @@ export default class Films {
     this._films = films.slice();
     this._filmsByRating = getFilmsByRating(films).slice(0, FilmListAmountInLine.EXTRA);
     this._filmsByComments = getFilmsByComments(films).slice(0, FilmListAmountInLine.EXTRA);
+    this._detailsPresenter = new DetailsPresenter(this._onFilmChange);
 
     this._render();
   }
@@ -110,6 +111,7 @@ export default class Films {
     this._filmPresenter
       .filter((presenterItem) => presenterItem.id === changedFilm.id)
       .forEach((presenterItem) => presenterItem.presenter.update(changedFilm));
+    this._detailsPresenter.update(changedFilm);
   }
 
   static create(container, films) {

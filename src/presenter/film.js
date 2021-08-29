@@ -23,9 +23,9 @@ export default class Film {
 
   update(film) {
     this._film = film;
-    this._oldCardComponent = this._cardComponent;
+    const oldCardComponent = this._cardComponent;
     this._createComponent();
-    replace(this._cardComponent, this._oldCardComponent);
+    replace(this._cardComponent, oldCardComponent);
   }
 
   _createComponent() {
