@@ -36,9 +36,9 @@ export default class DetailsControls extends AbstractView {
     super();
     this._film = film;
 
-    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -47,30 +47,30 @@ export default class DetailsControls extends AbstractView {
 
   setWatchlistClickHandler(callback) {
     this._callback.clickWatchlist = callback;
-    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._handleWatchlistClick);
+    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._watchlistClickHandler);
   }
 
   setWatchedClickHandler(callback) {
     this._callback.clickWatched = callback;
-    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._handleWatchedClick);
+    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._watchedClickHandler);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.clickFavorite = callback;
-    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._handleFavoriteClick);
+    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
   }
 
-  _handleWatchlistClick(evt) {
+  _watchlistClickHandler(evt) {
     evt.preventDefault();
     this._callback.clickWatchlist();
   }
 
-  _handleWatchedClick(evt) {
+  _watchedClickHandler(evt) {
     evt.preventDefault();
     this._callback.clickWatched();
   }
 
-  _handleFavoriteClick(evt) {
+  _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.clickFavorite();
   }

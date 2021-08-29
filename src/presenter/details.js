@@ -22,7 +22,7 @@ export default class Details {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(film) {
@@ -58,7 +58,7 @@ export default class Details {
     render(closeButtonContainer, this._closeButtonComponent);
     render(document.body, this._popupComponent);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._handleEscKeyDown);
+    document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
   _remove() {
@@ -68,7 +68,7 @@ export default class Details {
     remove(this._closeButtonComponent);
     remove(this._popupComponent);
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._handleEscKeyDown);
+    document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _createControls() {
@@ -114,11 +114,11 @@ export default class Details {
     );
   }
 
-  _handleEscKeyDown(evt) {
+  _escKeyDownHandler(evt) {
     if ( isEscapeEvent(evt) ) {
       evt.preventDefault();
       this._remove();
-      document.removeEventListener('keydown', this._handleEscKeyDown);
+      document.removeEventListener('keydown', this._escKeyDownHandler);
     }
   }
 }

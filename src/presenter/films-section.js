@@ -1,6 +1,6 @@
 import { render, remove } from '@utils/render.js';
 import { getFilmsByRating, getFilmsByComments } from '@utils/films.js';
-import { updateItem } from '@utils/common.js';
+import { updateItemById } from '@utils/common.js';
 import { FilmListTitle, FilmListAmountInLine } from '@const/films.js';
 
 import SortView from '@view/sort.js';
@@ -34,8 +34,8 @@ export default class FilmsSection {
 
   init(films) {
     this._films = films.slice();
-    this._filmsByRating = getFilmsByRating(films).slice(0, FilmListAmountInLine.EXTRA);
-    this._filmsByComments = getFilmsByComments(films).slice(0, FilmListAmountInLine.EXTRA);
+    this._topRatedFilms = getFilmsByRating(films).slice(0, FilmListAmountInLine.EXTRA);
+    this._commentFilms = getFilmsByComments(films).slice(0, FilmListAmountInLine.EXTRA);
     this._detailsPresenter = new DetailsPresenter(this._handleFilmChange);
 
     this._render();
@@ -45,21 +45,21 @@ export default class FilmsSection {
     render(this._container, this._sortComponent);
   }
 
-  _renderShowMore(container, listContainer, filmsToRender) {
+  _renderShowMore(container, listContainer, renderingFilms) {
     render(container, this._showMoreComponent);
 
     this._showMoreComponent.setClickHandler(() => {
-      this._renderCards(listContainer, filmsToRender, this._shownFilms, this._shownFilms + FilmListAmountInLine.BASE);
+      this._renderCards(listContainer, renderingFilms, this._shownFilms, this._shownFilms + FilmListAmountInLine.BASE);
       this._shownFilms += FilmListAmountInLine.BASE;
 
-      if (this._shownFilms >= filmsToRender.length) {
+      if (this._shownFilms >= renderingFilms.length) {
         remove(this._showMoreComponent);
       }
     });
   }
 
-  _renderCards(container, list, from, to) {
-    list
+  _renderCards(container, cards, from, to) {
+    cards
       .slice(from, to)
       .forEach((film) => {
         const filmCardPresenter = FilmCardPresenter.create(container, this._detailsPresenter, film, this._handleFilmChange);
@@ -74,15 +74,15 @@ export default class FilmsSection {
     render(this._container, this._listEmptyComponent);
   }
 
-  _renderList(container, filmsToRender) {
+  _renderList(container, renderingFilms) {
     const listContainer = new FilmsListContainerView();
     render(container, listContainer);
 
-    this._renderCards(listContainer, filmsToRender, 0, this._shownFilms);
+    this._renderCards(listContainer, renderingFilms, 0, this._shownFilms);
     render(this._sectionComponent, container);
 
-    if (this._shownFilms < filmsToRender.length) {
-      this._renderShowMore(container, listContainer, filmsToRender);
+    if (this._shownFilms < renderingFilms.length) {
+      this._renderShowMore(container, listContainer, renderingFilms);
     }
   }
 
@@ -93,8 +93,8 @@ export default class FilmsSection {
     }
 
     this._renderList(this._listComponent, this._films);
-    this._renderList(this._listByCommentsComponent, this._filmsByComments);
-    this._renderList(this._listByRatingComponent, this._filmsByRating);
+    this._renderList(this._listByCommentsComponent, this._topCommentedFilms);
+    this._renderList(this._listByRatingComponent, this._topRatedFilms);
 
     render(this._container, this._sectionComponent);
   }
@@ -105,9 +105,9 @@ export default class FilmsSection {
   }
 
   _handleFilmChange(changedFilm) {
-    this._films = updateItem(this._films, changedFilm);
-    this._filmsByComments = updateItem(this._filmsByComments, changedFilm);
-    this._filmsByRating = updateItem(this._filmsByRating, changedFilm);
+    this._films = updateItemById(this._films, changedFilm);
+    this._topCommentedFilms = updateItemById(this._topCommentedFilms, changedFilm);
+    this._topRatedFilms = updateItemById(this._topRatedFilms, changedFilm);
     this._filmCardPresenters
       .filter((presenterItem) => presenterItem.id === changedFilm.id)
       .forEach((presenterItem) => presenterItem.presenter.update(changedFilm));
