@@ -1,7 +1,7 @@
 import { render, replace } from '@utils/render.js';
 import FilmCardView from '@view/film-card.js';
 
-export default class Film {
+export default class FilmCard {
   constructor(container, detailsPresenter, changeData) {
     this._container = container;
     this._changeData = changeData;
@@ -17,18 +17,18 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    this._createComponent();
+    this._createCard();
     render(this._container, this._cardComponent);
   }
 
   update(film) {
     this._film = film;
     const oldCardComponent = this._cardComponent;
-    this._createComponent();
+    this._createCard();
     replace(this._cardComponent, oldCardComponent);
   }
 
-  _createComponent() {
+  _createCard() {
     this._cardComponent = new FilmCardView(this._film);
     this._cardComponent.setCardClickHandler(() => this._detailsPresenter.init(this._film));
     this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);

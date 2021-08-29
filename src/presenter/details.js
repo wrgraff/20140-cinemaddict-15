@@ -19,10 +19,10 @@ export default class Details {
     this._closeButtonComponent = new DetailsCloseButtonView();
 
     this._remove = this._remove.bind(this);
-    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
   }
 
   init(film) {
@@ -78,14 +78,6 @@ export default class Details {
     this._controlsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
   }
 
-  _handleEscKeyDown(evt) {
-    if ( isEscapeEvent(evt) ) {
-      evt.preventDefault();
-      this._remove();
-      document.removeEventListener('keydown', this._handleEscKeyDown);
-    }
-  }
-
   _handleWatchlistClick() {
     this._changeData(
       Object.assign(
@@ -120,5 +112,13 @@ export default class Details {
         },
       ),
     );
+  }
+
+  _handleEscKeyDown(evt) {
+    if ( isEscapeEvent(evt) ) {
+      evt.preventDefault();
+      this._remove();
+      document.removeEventListener('keydown', this._handleEscKeyDown);
+    }
   }
 }

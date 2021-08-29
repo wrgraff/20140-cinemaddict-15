@@ -11,9 +11,9 @@ import FilmsListEmptyView from '@view/films-list-empty.js';
 import FilmsListContainerView from '@view/films-list-container.js';
 import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import DetailsPresenter from '@presenter/details.js';
-import FilmPresenter from '@presenter/film.js';
+import FilmCardPresenter from '@presenter/film-card.js';
 
-export default class Films {
+export default class FilmsSection {
   constructor(container) {
     this._container = container;
     this._shownFilms = FilmListAmountInLine.BASE;
@@ -27,7 +27,7 @@ export default class Films {
     this._showMoreComponent = new FilmsListShowMoreView();
 
     this._detailsPresenter = null;
-    this._filmPresenter = [];
+    this._filmCardPresenters = [];
 
     this._handleFilmChange = this._handleFilmChange.bind(this);
   }
@@ -62,10 +62,10 @@ export default class Films {
     list
       .slice(from, to)
       .forEach((film) => {
-        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film, this._handleFilmChange);
-        this._filmPresenter.push({
+        const filmCardPresenter = FilmCardPresenter.create(container, this._detailsPresenter, film, this._handleFilmChange);
+        this._filmCardPresenters.push({
           id: film.id,
-          presenter: filmPresenter,
+          presenter: filmCardPresenter,
         });
       });
   }
@@ -87,7 +87,7 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._films.length <= 0) {
+    if (this._films.length === 0) {
       this._renderListEmpty();
       return;
     }
@@ -108,7 +108,7 @@ export default class Films {
     this._films = updateItem(this._films, changedFilm);
     this._filmsByComments = updateItem(this._filmsByComments, changedFilm);
     this._filmsByRating = updateItem(this._filmsByRating, changedFilm);
-    this._filmPresenter
+    this._filmCardPresenters
       .filter((presenterItem) => presenterItem.id === changedFilm.id)
       .forEach((presenterItem) => presenterItem.presenter.update(changedFilm));
     this._detailsPresenter.update(changedFilm);
