@@ -49,6 +49,11 @@ export const replace = (newChild, oldChild) => {
   }
 
   const parent = oldChild.parentElement;
+
+  if (parent === null) {
+    throw new Error('Can\'t replace elements without parent element');
+  }
+
   parent.replaceChild(newChild, oldChild);
 };
 
