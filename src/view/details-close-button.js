@@ -5,19 +5,19 @@ const createDetailsCloseButtonTemplate = () => ('<button class="film-details__cl
 export default class DetailsCloseButton extends AbstractView {
   constructor() {
     super();
-    this._onClick = this._onClick.bind(this);
+    this._handleClick = this._handleClick.bind(this);
   }
 
   getTemplate() {
     return createDetailsCloseButtonTemplate();
   }
 
-  setOnClick(callback) {
+  setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener('click', this._onClick);
+    this.getElement().addEventListener('click', this._handleClick);
   }
 
-  _onClick(evt) {
+  _handleClick(evt) {
     evt.preventDefault();
     this._callback.click();
   }

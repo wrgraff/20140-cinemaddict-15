@@ -12,22 +12,22 @@ export default class Details {
     this._film = null;
     this._changeData = changeData;
 
-    this._detailsComponent = new DetailsView();
+    this._popupComponent = new DetailsView();
     this._infoComponent = null;
     this._controlsComponent = null;
     this._commentsComponent = null;
     this._closeButtonComponent = new DetailsCloseButtonView();
 
     this._remove = this._remove.bind(this);
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
-    this._onAddWatchlistClick = this._onAddWatchlistClick.bind(this);
-    this._onAddWatchedClick = this._onAddWatchedClick.bind(this);
-    this._onAddFavoriteClick = this._onAddFavoriteClick.bind(this);
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
+    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
-    if (this._detailsComponent !== null) {
-      remove(this._detailsComponent);
+    if (this._popupComponent !== null) {
+      remove(this._popupComponent);
     }
 
     this._film = film;
@@ -35,7 +35,7 @@ export default class Details {
     this._commentsComponent = new DetailsCommentsView(this._film.comments);
     this._createControls();
 
-    this._closeButtonComponent.setOnClick(this._remove);
+    this._closeButtonComponent.setClickHandler(this._remove);
 
     this._open();
   }
@@ -48,17 +48,17 @@ export default class Details {
   }
 
   _open() {
-    const topContainer = this._detailsComponent.getElement().querySelector('.film-details__top-container');
-    const bottomContainer = this._detailsComponent.getElement().querySelector('.film-details__bottom-container');
-    const closeButtonContainer = this._detailsComponent.getElement().querySelector('.film-details__close');
+    const topContainer = this._popupComponent.getElement().querySelector('.film-details__top-container');
+    const bottomContainer = this._popupComponent.getElement().querySelector('.film-details__bottom-container');
+    const closeButtonContainer = this._popupComponent.getElement().querySelector('.film-details__close');
 
     render(topContainer, this._infoComponent);
     render(topContainer, this._controlsComponent);
     render(bottomContainer, this._commentsComponent);
     render(closeButtonContainer, this._closeButtonComponent);
-    render(document.body, this._detailsComponent);
+    render(document.body, this._popupComponent);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._onEscKeyDown);
+    document.addEventListener('keydown', this._handleEscKeyDown);
   }
 
   _remove() {
@@ -66,27 +66,27 @@ export default class Details {
     remove(this._controlsComponent);
     remove(this._commentsComponent);
     remove(this._closeButtonComponent);
-    remove(this._detailsComponent);
+    remove(this._popupComponent);
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._onEscKeyDown);
+    document.removeEventListener('keydown', this._handleEscKeyDown);
   }
 
   _createControls() {
     this._controlsComponent = new DetailsControlsView(this._film);
-    this._controlsComponent.setOnAddWatchlistClick(this._onAddWatchlistClick);
-    this._controlsComponent.setOnAddWatchedClick(this._onAddWatchedClick);
-    this._controlsComponent.setOnAddFavoriteClick(this._onAddFavoriteClick);
+    this._controlsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._controlsComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._controlsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
   }
 
-  _onEscKeyDown(evt) {
+  _handleEscKeyDown(evt) {
     if ( isEscapeEvent(evt) ) {
       evt.preventDefault();
       this._remove();
-      document.removeEventListener('keydown', this._onEscKeyDown);
+      document.removeEventListener('keydown', this._handleEscKeyDown);
     }
   }
 
-  _onAddWatchlistClick() {
+  _handleWatchlistClick() {
     this._changeData(
       Object.assign(
         {},
@@ -98,7 +98,7 @@ export default class Details {
     );
   }
 
-  _onAddWatchedClick() {
+  _handleWatchedClick() {
     this._changeData(
       Object.assign(
         {},
@@ -110,7 +110,7 @@ export default class Details {
     );
   }
 
-  _onAddFavoriteClick() {
+  _handleFavoriteClick() {
     this._changeData(
       Object.assign(
         {},

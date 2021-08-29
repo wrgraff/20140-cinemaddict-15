@@ -29,14 +29,14 @@ export default class Films {
     this._detailsPresenter = null;
     this._filmPresenter = [];
 
-    this._onFilmChange = this._onFilmChange.bind(this);
+    this._handleFilmChange = this._handleFilmChange.bind(this);
   }
 
   init(films) {
     this._films = films.slice();
     this._filmsByRating = getFilmsByRating(films).slice(0, FilmListAmountInLine.EXTRA);
     this._filmsByComments = getFilmsByComments(films).slice(0, FilmListAmountInLine.EXTRA);
-    this._detailsPresenter = new DetailsPresenter(this._onFilmChange);
+    this._detailsPresenter = new DetailsPresenter(this._handleFilmChange);
 
     this._render();
   }
@@ -48,7 +48,7 @@ export default class Films {
   _renderShowMore(container, listContainer, filmsToRender) {
     render(container, this._showMoreComponent);
 
-    this._showMoreComponent.setOnClick(() => {
+    this._showMoreComponent.setClickHandler(() => {
       this._renderCards(listContainer, filmsToRender, this._shownFilms, this._shownFilms + FilmListAmountInLine.BASE);
       this._shownFilms += FilmListAmountInLine.BASE;
 
@@ -62,7 +62,7 @@ export default class Films {
     list
       .slice(from, to)
       .forEach((film) => {
-        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film, this._onFilmChange);
+        const filmPresenter = FilmPresenter.create(container, this._detailsPresenter, film, this._handleFilmChange);
         this._filmPresenter.push({
           id: film.id,
           presenter: filmPresenter,
@@ -104,7 +104,7 @@ export default class Films {
     this._renderSection();
   }
 
-  _onFilmChange(changedFilm) {
+  _handleFilmChange(changedFilm) {
     this._films = updateItem(this._films, changedFilm);
     this._filmsByComments = updateItem(this._filmsByComments, changedFilm);
     this._filmsByRating = updateItem(this._filmsByRating, changedFilm);

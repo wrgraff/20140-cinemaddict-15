@@ -10,9 +10,9 @@ export default class Film {
     this._cardComponent = null;
     this._detailsPresenter = detailsPresenter;
 
-    this._onAddWatchlistClick = this._onAddWatchlistClick.bind(this);
-    this._onAddWatchedClick = this._onAddWatchedClick.bind(this);
-    this._onAddFavoriteClick = this._onAddFavoriteClick.bind(this);
+    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -30,13 +30,13 @@ export default class Film {
 
   _createComponent() {
     this._cardComponent = new FilmCardView(this._film);
-    this._cardComponent.setOnCardClick(() => this._detailsPresenter.init(this._film));
-    this._cardComponent.setOnAddWatchlistClick(this._onAddWatchlistClick);
-    this._cardComponent.setOnAddWatchedClick(this._onAddWatchedClick);
-    this._cardComponent.setOnAddFavoriteClick(this._onAddFavoriteClick);
+    this._cardComponent.setCardClickHandler(() => this._detailsPresenter.init(this._film));
+    this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
   }
 
-  _onAddWatchlistClick() {
+  _handleWatchlistClick() {
     this._changeData(
       Object.assign(
         {},
@@ -48,7 +48,7 @@ export default class Film {
     );
   }
 
-  _onAddWatchedClick() {
+  _handleWatchedClick() {
     this._changeData(
       Object.assign(
         {},
@@ -60,7 +60,7 @@ export default class Film {
     );
   }
 
-  _onAddFavoriteClick() {
+  _handleFavoriteClick() {
     this._changeData(
       Object.assign(
         {},

@@ -5,19 +5,19 @@ const createFilmsListShowMoreTemplate = () => ('<button class="films-list__show-
 export default class FilmsListShowMore extends AbstractView {
   constructor() {
     super();
-    this._onClick = this._onClick.bind(this);
+    this._handleClick = this._handleClick.bind(this);
   }
 
   getTemplate() {
     return createFilmsListShowMoreTemplate();
   }
 
-  setOnClick(callback) {
+  setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener('click', this._onClick);
+    this.getElement().addEventListener('click', this._handleClick);
   }
 
-  _onClick(evt) {
+  _handleClick(evt) {
     evt.preventDefault();
     this._callback.click();
   }
