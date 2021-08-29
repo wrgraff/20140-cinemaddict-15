@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import { getRandomInteger, getRandomItems } from '@utils/random.js';
 
@@ -116,6 +117,7 @@ export const generateFilm = (commentsTotalAmount) => {
   const filmComments = new Array(filmCommentsAmount).fill('').map(() => getRandomInteger(0, commentsTotalAmount));
 
   return {
+    id: nanoid(),
     name: filmName,
     originalName: filmName,
     poster: getRandomItems(posters)[0],

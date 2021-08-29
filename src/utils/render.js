@@ -35,6 +35,28 @@ export const remove = (component) => {
   component.removeElement();
 };
 
+export const replace = (newChild, oldChild) => {
+  if (oldChild instanceof AbstractView) {
+    oldChild = oldChild.getElement();
+  }
+
+  if (newChild instanceof AbstractView) {
+    newChild = newChild.getElement();
+  }
+
+  if (oldChild === null || newChild === null) {
+    throw new Error('Can\'t replace unexisting elements');
+  }
+
+  const parent = oldChild.parentElement;
+
+  if (parent === null) {
+    throw new Error('Can\'t replace elements without parent element');
+  }
+
+  parent.replaceChild(newChild, oldChild);
+};
+
 export const createElement = (template) => {
   const element = document.createElement('div');
   element.innerHTML = template;
