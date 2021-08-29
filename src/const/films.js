@@ -14,3 +14,9 @@ export const FilmListAmountInLine = {
 };
 
 export const DESCRIPTION_MAX_LENGTH = 140;
+
+export const SortType = {
+  DEFAULT: 'default',
+  DATE: 'date',
+  RATING: 'rating',
+};
