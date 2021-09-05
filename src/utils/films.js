@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 export const sortByRating = (items) => (
   items.sort((a, b) => b.rating - a.rating)
 );
@@ -9,5 +7,5 @@ export const sortByComments = (items) => (
 );
 
 export const sortByDate = (items) => (
-  items.sort((a, b) => dayjs(b.release).diff(dayjs(a.release)))
+  items.sort((a, b) => b.release - a.release)
 );
