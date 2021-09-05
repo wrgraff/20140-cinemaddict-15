@@ -41,7 +41,7 @@ export default class Details {
   }
 
   update(film) {
-    if (this._popupComponent !== null) {
+    if (this._controlsComponent !== null && film.id === this._film.id) {
       this._film = film;
       const oldControlsComponent = this._controlsComponent;
       this._createControls();
@@ -64,6 +64,7 @@ export default class Details {
   }
 
   _remove() {
+    this._film = null;
     remove(this._infoComponent);
     remove(this._controlsComponent);
     remove(this._commentsComponent);

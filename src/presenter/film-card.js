@@ -35,11 +35,11 @@ export default class FilmCard {
 
   setCardClickHandler(callback) {
     this._callback.clickCard = callback;
-    this._cardComponent.setCardClickHandler(this._handleCardClick);
   }
 
   _createCard() {
     this._cardComponent = new FilmCardView(this._film);
+    this._cardComponent.setCardClickHandler(this._handleCardClick);
     this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
