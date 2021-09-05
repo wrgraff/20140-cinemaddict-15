@@ -41,7 +41,7 @@ export default class Details {
   }
 
   update(film) {
-    if (this._popupComponent === null) {
+    if (this._popupComponent !== null) {
       this._film = film;
       const oldControlsComponent = this._controlsComponent;
       this._createControls();

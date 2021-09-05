@@ -63,6 +63,7 @@ export default class Films {
 
   _handleItemChange(changedFilm) {
     this._itemsListPresenter.forEach((presenter) => presenter.update(changedFilm));
+    this._detailsPresenter.update(changedFilm);
   }
 
   _handleSortTypeChange(sortType) {
