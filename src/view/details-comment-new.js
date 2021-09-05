@@ -12,14 +12,14 @@ const createDetailsEmotionsList = (activeEmotion) => (
     .join('')
 );
 
-const createDetailsCommentNewTemplate = ({ isActiveEmotion, activeEmotion }) => (`
+const createDetailsCommentNewTemplate = ({ isActiveEmotion, activeEmotion, text }) => (`
   <div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
       ${isActiveEmotion ? `<img src="images/emoji/${activeEmotion}.png" width="55" height="55" alt="emoji-smile">` : ''}
     </div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${text}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -38,6 +38,7 @@ export default class DetailsCommentNew extends AbstractView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
+    this._textInputHandler = this._textInputHandler.bind(this);
     this._emotionSelectHandler = this._emotionSelectHandler.bind(this);
 
     this._setInnerHandlers();
@@ -47,7 +48,7 @@ export default class DetailsCommentNew extends AbstractView {
     return createDetailsCommentNewTemplate(this._data);
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating = false) {
     if (!update) {
       return;
     }
@@ -58,7 +59,9 @@ export default class DetailsCommentNew extends AbstractView {
       update,
     );
 
-    this.updateElement();
+    if (!justDataUpdating) {
+      this.updateElement();
+    }
   }
 
   updateElement() {
@@ -83,6 +86,9 @@ export default class DetailsCommentNew extends AbstractView {
       .forEach((item) => (
         item.addEventListener('change', this._emotionSelectHandler)
       ));
+
+    this.getElement()
+      .querySelector('.film-details__comment-input').addEventListener('input', this._textInputHandler);
   }
 
   _emotionSelectHandler(evt) {
@@ -90,6 +96,12 @@ export default class DetailsCommentNew extends AbstractView {
       activeEmotion: evt.target.value,
       isActiveEmotion: Boolean(evt.target.value),
     });
+  }
+
+  _textInputHandler(evt) {
+    this.updateData({
+      text: evt.target.value,
+    }, true);
   }
 
   static parseCommentToData(comment) {
