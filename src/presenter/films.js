@@ -19,6 +19,7 @@ export default class Films {
 
     this._handleItemChange = this._handleItemChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
   }
 
   init(items) {
@@ -26,9 +27,9 @@ export default class Films {
 
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
-    this._itemsListPresenter.set(Type.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._detailsPresenter));
-    this._itemsListPresenter.set(Type.RATING, new FilmsListPresenter(this._sectionComponent, this._detailsPresenter, Type.RATING, Title.RATING, SortType.RATING, StepAmount.EXTRA, StepAmount.EXTRA));
-    this._itemsListPresenter.set(Type.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._detailsPresenter, Type.COMMENTS, Title.COMMENTS, SortType.COMMENTS, StepAmount.EXTRA, StepAmount.EXTRA));
+    this._itemsListPresenter.set(Type.DEFAULT, new FilmsListPresenter(this._sectionComponent));
+    this._itemsListPresenter.set(Type.RATING, new FilmsListPresenter(this._sectionComponent, Type.RATING, Title.RATING, SortType.RATING, StepAmount.EXTRA, StepAmount.EXTRA));
+    this._itemsListPresenter.set(Type.COMMENTS, new FilmsListPresenter(this._sectionComponent, Type.COMMENTS, Title.COMMENTS, SortType.COMMENTS, StepAmount.EXTRA, StepAmount.EXTRA));
 
     this._render();
   }
@@ -51,6 +52,7 @@ export default class Films {
     this._itemsListPresenter.forEach((presenter) => {
       presenter.init(this._items);
       presenter.setFilmChangeHandler(this._handleItemChange);
+      presenter.setDetailsOpenHandler(this._handleDetailsOpen);
     });
 
     render(this._container, this._sectionComponent);
@@ -64,6 +66,10 @@ export default class Films {
   _handleItemChange(changedFilm) {
     this._itemsListPresenter.forEach((presenter) => presenter.update(changedFilm));
     this._detailsPresenter.update(changedFilm);
+  }
+
+  _handleDetailsOpen(item) {
+    this._detailsPresenter.init(item);
   }
 
   _handleSortTypeChange(sortType) {

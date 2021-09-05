@@ -10,7 +10,7 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, detailsPresenter, type, title, sortType, stepAmount, maxAmount) {
+  constructor(container, type, title, sortType, stepAmount, maxAmount) {
     this._container = container;
     this._items = null;
     this._sourcedItems = null;
@@ -32,11 +32,11 @@ export default class FilmsList {
     this._itemsComponent = new FilmsListContainerView();
     this._showMoreComponent = new FilmsListShowMoreView();
 
-    this._detailsPresenter = detailsPresenter;
     this._cardPresenter = new Map();
 
     this._callback = {};
-    this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleItemChange = this._handleItemChange.bind(this);
+    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
   }
 
   init(items) {
@@ -77,6 +77,10 @@ export default class FilmsList {
     this._callback.changeFilm = callback;
   }
 
+  setDetailsOpenHandler(callback) {
+    this._callback.detailsOpen = callback;
+  }
+
   _sortItems(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -103,7 +107,8 @@ export default class FilmsList {
     this._items
       .slice(from, to)
       .forEach((item) => {
-        const cardPresenter = FilmCardPresenter.create(this._itemsComponent, this._detailsPresenter, item, this._handleFilmChange);
+        const cardPresenter = FilmCardPresenter.create(this._itemsComponent, item, this._handleItemChange);
+        cardPresenter.setCardClickHandler(() => this._handleDetailsOpen(item));
         this._cardPresenter.set(item.id, cardPresenter);
       });
     this._shownItems = to;
@@ -126,7 +131,11 @@ export default class FilmsList {
     });
   }
 
-  _handleFilmChange(changedFilm) {
+  _handleItemChange(changedFilm) {
     this._callback.changeFilm(changedFilm);
+  }
+
+  _handleDetailsOpen(item) {
+    this._callback.detailsOpen(item);
   }
 }
