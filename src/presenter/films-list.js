@@ -1,7 +1,7 @@
 import { render, remove } from '@utils/render.js';
 import { updateItemById } from '@utils/common.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { Type, DefaultListSettings } from '@const/films.js';
+import { Type, DefaultListSetting } from '@const/films.js';
 import { SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
@@ -10,7 +10,7 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, settings = DefaultListSettings) {
+  constructor(container, settings = DefaultListSetting) {
     this._container = container;
     this._items = null;
     this._sourcedItems = null;
@@ -78,7 +78,7 @@ export default class FilmsList {
   }
 
   setDetailsOpenHandler(callback) {
-    this._callback.detailsOpen = callback;
+    this._callback.openDetails = callback;
   }
 
   _renderCards(from, to) {
@@ -136,6 +136,6 @@ export default class FilmsList {
   }
 
   _handleDetailsOpen(item) {
-    this._callback.detailsOpen(item);
+    this._callback.openDetails(item);
   }
 }

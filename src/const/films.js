@@ -28,7 +28,7 @@ export const SortType = {
 
 export const DESCRIPTION_MAX_LENGTH = 140;
 
-export const DefaultListSettings = {
+export const DefaultListSetting = {
   TYPE: Type.DEFAULT,
   TITLE: Title.DEFAULT,
   SORT_TYPE: SortType.DEFAULT,
@@ -36,7 +36,7 @@ export const DefaultListSettings = {
   MAX_COUNT: 0,
 };
 
-export const RatingListSettings = {
+export const RatingListSetting = {
   TYPE: Type.RATING,
   TITLE: Title.RATING,
   SORT_TYPE: SortType.RATING,
@@ -44,7 +44,7 @@ export const RatingListSettings = {
   MAX_COUNT: StepAmount.EXTRA,
 };
 
-export const CommentsListSettings = {
+export const CommentsListSetting = {
   TYPE: Type.COMMENTS,
   TITLE: Title.COMMENTS,
   SORT_TYPE: SortType.COMMENTS,
