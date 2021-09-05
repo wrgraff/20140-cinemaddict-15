@@ -1,7 +1,7 @@
 import { render, remove } from '@utils/render.js';
 import { updateItemById } from '@utils/common.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { Type, DefaultListSetting } from '@const/films.js';
+import { FilmListType, DefaultListSetting } from '@const/films.js';
 import { SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
@@ -21,8 +21,8 @@ export default class FilmsList {
     this._currentSortType = SortType.DEFAULT;
 
     switch (settings.SORT_TYPE) {
-      case Type.RATING:
-      case Type.COMMENTS:
+      case FilmListType.RATING:
+      case FilmListType.COMMENTS:
         this._sectionComponent = new FilmsListExtraView(settings.TITLE);
         break;
       default:

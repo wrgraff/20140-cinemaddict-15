@@ -1,10 +1,10 @@
-export const Type = {
+export const FilmListType = {
   DEFAULT: 'default',
   RATING: 'rating',
   COMMENTS: 'comments',
 };
 
-export const Title = {
+const FilmListTitle = {
   DEFAULT: 'All movies. Upcoming',
   RATING: 'Top rated',
   COMMENTS: 'Most commented',
@@ -14,7 +14,7 @@ export const Title = {
   EMPTY_FAVORITES: 'There are no favorite movies now',
 };
 
-export const StepAmount = {
+const FilmListStepAmount = {
   DEFAULT: 5,
   EXTRA: 2,
 };
@@ -29,25 +29,25 @@ export const SortType = {
 export const DESCRIPTION_MAX_LENGTH = 140;
 
 export const DefaultListSetting = {
-  TYPE: Type.DEFAULT,
-  TITLE: Title.DEFAULT,
+  TYPE: FilmListType.DEFAULT,
+  TITLE: FilmListTitle.DEFAULT,
   SORT_TYPE: SortType.DEFAULT,
-  STEP_AMOUNT: StepAmount.DEFAULT,
+  STEP_AMOUNT: FilmListStepAmount.DEFAULT,
   MAX_COUNT: 0,
 };
 
 export const RatingListSetting = {
-  TYPE: Type.RATING,
-  TITLE: Title.RATING,
+  TYPE: FilmListType.RATING,
+  TITLE: FilmListTitle.RATING,
   SORT_TYPE: SortType.RATING,
-  STEP_AMOUNT: StepAmount.EXTRA,
-  MAX_COUNT: StepAmount.EXTRA,
+  STEP_AMOUNT: FilmListStepAmount.EXTRA,
+  MAX_COUNT: FilmListStepAmount.EXTRA,
 };
 
 export const CommentsListSetting = {
-  TYPE: Type.COMMENTS,
-  TITLE: Title.COMMENTS,
+  TYPE: FilmListType.COMMENTS,
+  TITLE: FilmListTitle.COMMENTS,
   SORT_TYPE: SortType.COMMENTS,
-  STEP_AMOUNT: StepAmount.EXTRA,
-  MAX_COUNT: StepAmount.EXTRA,
+  STEP_AMOUNT: FilmListStepAmount.EXTRA,
+  MAX_COUNT: FilmListStepAmount.EXTRA,
 };

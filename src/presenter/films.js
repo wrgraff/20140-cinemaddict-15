@@ -1,5 +1,5 @@
 import { render } from '@utils/render.js';
-import { Type, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
+import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
 
 import SortView from '@view/sort.js';
 import FilmsView from '@view/films.js';
@@ -26,9 +26,9 @@ export default class Films {
 
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
-    this._itemsListPresenter.set(Type.DEFAULT, new FilmsListPresenter(this._sectionComponent, DefaultListSetting));
-    this._itemsListPresenter.set(Type.RATING, new FilmsListPresenter(this._sectionComponent, RatingListSetting));
-    this._itemsListPresenter.set(Type.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSetting));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, DefaultListSetting));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, RatingListSetting));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSetting));
 
     this._render();
   }
@@ -72,7 +72,7 @@ export default class Films {
   }
 
   _handleSortTypeChange(sortType) {
-    this._itemsListPresenter.get(Type.DEFAULT).sort(sortType);
+    this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
   static create(container, films) {
