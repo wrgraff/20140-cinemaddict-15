@@ -1,7 +1,7 @@
 import { render, remove } from '@utils/render.js';
 import { updateItemById } from '@utils/common.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { Title, StepAmount, Type } from '@const/films.js';
+import { Type, DefaultListSettings } from '@const/films.js';
 import { SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
@@ -10,23 +10,23 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, type, title, sortType, stepAmount, maxAmount) {
+  constructor(container, settings = DefaultListSettings) {
     this._container = container;
     this._items = null;
     this._sourcedItems = null;
-    this._stepAmount = stepAmount || StepAmount.DEFAULT;
-    this._maxAmount = maxAmount || 0;
+    this._stepAmount = settings.STEP_AMOUNT;
+    this._maxAmount = settings.MAX_AMOUNT;
     this._shownItems = 0;
-    this._defaultSortType = sortType;
+    this._defaultSortType = settings.SORT_TYPE;
     this._currentSortType = SortType.DEFAULT;
 
-    switch (type) {
+    switch (settings.SORT_TYPE) {
       case Type.RATING:
       case Type.COMMENTS:
-        this._sectionComponent = new FilmsListExtraView(title || Title.DEFAULT);
+        this._sectionComponent = new FilmsListExtraView(settings.TITLE);
         break;
       default:
-        this._sectionComponent = new FilmsListView(title || Title.DEFAULT);
+        this._sectionComponent = new FilmsListView(settings.TITLE);
     }
 
     this._itemsComponent = new FilmsListContainerView();
@@ -58,12 +58,6 @@ export default class FilmsList {
     render(this._container, this._sectionComponent);
   }
 
-  sort(sortType) {
-    this._sortItems(sortType);
-    this._clearCards();
-    this._renderCards(0, this._shownItems);
-  }
-
   update(changedFilm) {
     this._items = updateItemById(this._items, changedFilm);
     this._sourcedItems = updateItemById(this._sourcedItems, changedFilm);
@@ -73,34 +67,18 @@ export default class FilmsList {
     }
   }
 
+  sort(sortType) {
+    this._sortItems(sortType);
+    this._clearCards();
+    this._renderCards(0, this._shownItems);
+  }
+
   setFilmChangeHandler(callback) {
     this._callback.changeFilm = callback;
   }
 
   setDetailsOpenHandler(callback) {
     this._callback.detailsOpen = callback;
-  }
-
-  _sortItems(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-
-    switch (sortType) {
-      case SortType.DATE:
-        this._items = sortByDate(this._items);
-        break;
-      case SortType.RATING:
-        this._items = sortByRating(this._items);
-        break;
-      case SortType.COMMENTS:
-        this._items = sortByComments(this._items);
-        break;
-      default:
-        this._items = this._sourcedItems.slice();
-    }
-
-    this._currentSortType = sortType;
   }
 
   _renderCards(from, to) {
@@ -129,6 +107,28 @@ export default class FilmsList {
         remove(this._showMoreComponent);
       }
     });
+  }
+
+  _sortItems(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    switch (sortType) {
+      case SortType.DATE:
+        this._items = sortByDate(this._items);
+        break;
+      case SortType.RATING:
+        this._items = sortByRating(this._items);
+        break;
+      case SortType.COMMENTS:
+        this._items = sortByComments(this._items);
+        break;
+      default:
+        this._items = this._sourcedItems.slice();
+    }
+
+    this._currentSortType = sortType;
   }
 
   _handleItemChange(changedFilm) {

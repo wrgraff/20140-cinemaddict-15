@@ -1,6 +1,5 @@
 import { render } from '@utils/render.js';
-import { Title, StepAmount, Type } from '@const/films.js';
-import { SortType } from '@const/films.js';
+import { Type, DefaultListSettings, RatingListSettings, CommentsListSettings } from '@const/films.js';
 
 import SortView from '@view/sort.js';
 import FilmsView from '@view/films.js';
@@ -27,9 +26,9 @@ export default class Films {
 
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
-    this._itemsListPresenter.set(Type.DEFAULT, new FilmsListPresenter(this._sectionComponent));
-    this._itemsListPresenter.set(Type.RATING, new FilmsListPresenter(this._sectionComponent, Type.RATING, Title.RATING, SortType.RATING, StepAmount.EXTRA, StepAmount.EXTRA));
-    this._itemsListPresenter.set(Type.COMMENTS, new FilmsListPresenter(this._sectionComponent, Type.COMMENTS, Title.COMMENTS, SortType.COMMENTS, StepAmount.EXTRA, StepAmount.EXTRA));
+    this._itemsListPresenter.set(Type.DEFAULT, new FilmsListPresenter(this._sectionComponent, DefaultListSettings));
+    this._itemsListPresenter.set(Type.RATING, new FilmsListPresenter(this._sectionComponent, RatingListSettings));
+    this._itemsListPresenter.set(Type.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSettings));
 
     this._render();
   }
