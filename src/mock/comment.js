@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRandomInteger, getRandomItems } from '@utils/random.js';
-import { EMOTIONS } from '@const/comments.js';
+import { Emotion } from '@const/comments.js';
 
 const names = [
   'Max',
@@ -76,5 +76,5 @@ export const generateComment = ({ index }) => ({
     )).format('YYYY-MM-DD HH:MM'),
   name: `${getRandomItems(names)[0]} ${getRandomItems(surnames)[0]}`,
   text: getRandomItems(comments)[0],
-  emotion: getRandomItems(EMOTIONS)[0],
+  emotion: getRandomItems(Object.values(Emotion))[0],
 });
