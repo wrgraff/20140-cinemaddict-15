@@ -1,15 +1,16 @@
-import { render, replace } from '@utils/render.js';
+import { render, remove, replace } from '@utils/render.js';
 import FilmCardView from '@view/film-card.js';
 
 export default class FilmCard {
-  constructor(container, detailsPresenter, changeData) {
+  constructor(container, changeData) {
     this._container = container;
     this._changeData = changeData;
 
     this._film = null;
     this._cardComponent = null;
-    this._detailsPresenter = detailsPresenter;
 
+    this._callback = {};
+    this._handleCardClick = this._handleCardClick.bind(this);
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
@@ -28,12 +29,24 @@ export default class FilmCard {
     replace(this._cardComponent, oldCardComponent);
   }
 
+  destroy() {
+    remove(this._cardComponent);
+  }
+
+  setCardClickHandler(callback) {
+    this._callback.clickCard = callback;
+  }
+
   _createCard() {
     this._cardComponent = new FilmCardView(this._film);
-    this._cardComponent.setCardClickHandler(() => this._detailsPresenter.init(this._film));
+    this._cardComponent.setCardClickHandler(this._handleCardClick);
     this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+  }
+
+  _handleCardClick(activeFilm) {
+    this._callback.clickCard(activeFilm);
   }
 
   _handleWatchlistClick() {
@@ -72,8 +85,8 @@ export default class FilmCard {
     );
   }
 
-  static create(container, detailsPresenter, film, changeData) {
-    const filmPresenter = new this(container, detailsPresenter, changeData);
+  static create(container, film, changeData) {
+    const filmPresenter = new this(container, changeData);
     filmPresenter.init(film);
     return filmPresenter;
   }

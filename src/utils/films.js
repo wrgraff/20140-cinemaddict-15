@@ -1,7 +1,11 @@
-export const getFilmsByRating = (items) => (
+export const sortByRating = (items) => (
   items.sort((a, b) => b.rating - a.rating)
 );
 
-export const getFilmsByComments = (items) => (
+export const sortByComments = (items) => (
   items.sort((a, b) => b.comments.length - a.comments.length)
+);
+
+export const sortByDate = (items) => (
+  items.sort((a, b) => b.release - a.release)
 );

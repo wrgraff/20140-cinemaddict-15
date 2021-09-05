@@ -1,5 +1,4 @@
 import { nanoid } from 'nanoid';
-import dayjs from 'dayjs';
 import { getRandomInteger, getRandomItems } from '@utils/random.js';
 
 const names = [
@@ -125,7 +124,7 @@ export const generateFilm = (commentsTotalAmount) => {
     director: getRandomItems(directors)[0],
     writers: getRandomItems(writers, 3),
     actors: getRandomItems(actors, 3),
-    release: dayjs(new Date(getRandomInteger(1906, 2020), getRandomInteger(1, 12), getRandomInteger(1, 31))).format('YYYY-MM-DD'),
+    release: new Date(getRandomInteger(1906, 2020), getRandomInteger(1, 12), getRandomInteger(1, 31)),
     runtime: getRandomInteger(70, 120),
     country: getRandomItems(countries)[0],
     genres: getRandomItems(genres, 3),
