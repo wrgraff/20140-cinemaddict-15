@@ -1,4 +1,3 @@
-import { createElement } from '@utils/render.js';
 import AbstractView from '@view/abstract.js';
 import DetailsCommentNewView from '@view/details-comment-new.js';
 import DetailsCommentsListView from '@view/details-comments-list.js';
@@ -22,12 +21,10 @@ export default class DetailsComments extends AbstractView {
   }
 
   getElement() {
-    if (this._element === null) {
-      this._element = createElement( this.getTemplate() );
-    }
+    const element = super.getElement();
 
-    this._element.append( new DetailsCommentsListView(this._filmComments).getElement() );
-    this._element.append( new DetailsCommentNewView().getElement() );
+    element.append( new DetailsCommentsListView(this._filmComments).getElement() );
+    element.append( new DetailsCommentNewView().getElement() );
 
     return this._element;
   }
