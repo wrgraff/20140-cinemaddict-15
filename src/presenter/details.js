@@ -41,10 +41,12 @@ export default class Details {
   }
 
   update(film) {
-    this._film = film;
-    const oldControlsComponent = this._controlsComponent;
-    this._createControls();
-    replace(this._controlsComponent, oldControlsComponent);
+    if (this._popupComponent === null) {
+      this._film = film;
+      const oldControlsComponent = this._controlsComponent;
+      this._createControls();
+      replace(this._controlsComponent, oldControlsComponent);
+    }
   }
 
   _open() {

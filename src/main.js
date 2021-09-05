@@ -8,7 +8,7 @@ import ProfileView from '@view/profile.js';
 import MainNavigationView from '@view/main-navigation.js';
 import FooterStatisticsView from '@view/footer-statistics.js';
 import StatisticView from '@view/statistic.js';
-import FilmsSectionPresenter from '@presenter/films-section.js';
+import FilmsPresenter from '@presenter/films.js';
 
 // Create mock data
 const filmsCount = getRandomInteger(20, 40);
@@ -21,7 +21,7 @@ const pageMain = document.querySelector('.main');
 render( pageHeader, new ProfileView() );
 render( pageMain, new MainNavigationView( getFilters(films) ) );
 
-FilmsSectionPresenter.create(pageMain, films);
+FilmsPresenter.create(pageMain, films);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render( footerStatistics, new FooterStatisticsView(films.length) );

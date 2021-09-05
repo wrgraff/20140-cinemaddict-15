@@ -1,4 +1,4 @@
-import { render, replace } from '@utils/render.js';
+import { render, remove, replace } from '@utils/render.js';
 import FilmCardView from '@view/film-card.js';
 
 export default class FilmCard {
@@ -26,6 +26,10 @@ export default class FilmCard {
     const oldCardComponent = this._cardComponent;
     this._createCard();
     replace(this._cardComponent, oldCardComponent);
+  }
+
+  destroy() {
+    remove(this._cardComponent);
   }
 
   _createCard() {
