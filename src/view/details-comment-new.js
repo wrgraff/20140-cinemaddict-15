@@ -1,5 +1,5 @@
 import { Emotion } from '@const/comments.js';
-import AbstractView from '@view/abstract.js';
+import SmartView from '@view/smart.js';
 
 const createDetailsEmotionsList = (activeEmotion) => (
   Object.values(Emotion)
@@ -33,7 +33,7 @@ const BLANK_COMMENT = {
   activeEmotion: null,
 };
 
-export default class DetailsCommentNew extends AbstractView {
+export default class DetailsCommentNew extends SmartView {
   constructor(comment = BLANK_COMMENT) {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
@@ -46,34 +46,6 @@ export default class DetailsCommentNew extends AbstractView {
 
   getTemplate() {
     return createDetailsCommentNewTemplate(this._data);
-  }
-
-  updateData(update, justDataUpdating = false) {
-    if (!update) {
-      return;
-    }
-
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
-    );
-
-    if (!justDataUpdating) {
-      this.updateElement();
-    }
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
