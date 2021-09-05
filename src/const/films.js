@@ -33,7 +33,7 @@ export const DefaultListSetting = {
   TITLE: FilmListTitle.DEFAULT,
   SORT_TYPE: SortType.DEFAULT,
   STEP_AMOUNT: FilmListStepAmount.DEFAULT,
-  MAX_COUNT: 0,
+  MAX_AMOUNT: 0,
 };
 
 export const RatingListSetting = {
@@ -41,7 +41,7 @@ export const RatingListSetting = {
   TITLE: FilmListTitle.RATING,
   SORT_TYPE: SortType.RATING,
   STEP_AMOUNT: FilmListStepAmount.EXTRA,
-  MAX_COUNT: FilmListStepAmount.EXTRA,
+  MAX_AMOUNT: FilmListStepAmount.EXTRA,
 };
 
 export const CommentsListSetting = {
@@ -49,5 +49,5 @@ export const CommentsListSetting = {
   TITLE: FilmListTitle.COMMENTS,
   SORT_TYPE: SortType.COMMENTS,
   STEP_AMOUNT: FilmListStepAmount.EXTRA,
-  MAX_COUNT: FilmListStepAmount.EXTRA,
+  MAX_AMOUNT: FilmListStepAmount.EXTRA,
 };
