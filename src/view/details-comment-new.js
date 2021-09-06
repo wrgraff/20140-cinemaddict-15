@@ -54,18 +54,18 @@ export default class DetailsCommentNew extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionSelectHandler);
-    element.querySelector('.film-details__comment-input').addEventListener('input', this._textInputHandler);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionChangeHandler);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
   }
 
-  _emotionSelectHandler(evt) {
+  _emotionChangeHandler(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
     });
   }
 
-  _textInputHandler(evt) {
+  _commentInputHandler(evt) {
     this.updateData({
       text: evt.target.value,
     }, true);
