@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { getRandomInteger, getRandomItems } from '@utils/random.js';
 import { EMOTIONS } from '@const/comments.js';
 
@@ -66,14 +65,21 @@ const comments = [
 
 export const generateComment = ({ index }) => ({
   id: index,
-  date: dayjs(
-    new Date(
-      getRandomInteger(1906, 2020),
-      getRandomInteger(1, 12),
-      getRandomInteger(1, 31),
-      getRandomInteger(0, 23),
-      getRandomInteger(0, 60),
-    )).format('YYYY-MM-DD HH:MM'),
+  date: [
+    `${getRandomInteger(1906, 2020)}`,
+    '-',
+    `${getRandomInteger(1, 12)}`.padStart(2, '0'),
+    '-',
+    `${getRandomInteger(1, 31)}`.padStart(2, '0'),
+    'T',
+    `${getRandomInteger(0, 23)}`.padStart(2, '0'),
+    ':',
+    `${getRandomInteger(0, 60)}`.padStart(2, '0'),
+    ':',
+    `${getRandomInteger(0, 60)}`.padStart(2, '0'),
+    '.',
+    `${getRandomInteger(0, 999)}Z`.padStart(4, '0'),
+  ].join(''),
   name: `${getRandomItems(names)[0]} ${getRandomItems(surnames)[0]}`,
   text: getRandomItems(comments)[0],
   emotion: getRandomItems(EMOTIONS)[0],
