@@ -38,8 +38,8 @@ export default class DetailsCommentNew extends SmartView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
-    this._textInputHandler = this._textInputHandler.bind(this);
-    this._emotionSelectHandler = this._emotionSelectHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._emotionListChangeHandler = this._emotionListChangeHandler.bind(this);
 
     this._setInnerHandlers();
   }
