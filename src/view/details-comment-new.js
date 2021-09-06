@@ -1,8 +1,8 @@
-import { Emotion } from '@const/comments.js';
+import { EMOTIONS } from '@const/comments.js';
 import SmartView from '@view/smart.js';
 
 const createDetailsEmotionsList = (activeEmotion) => (
-  Object.values(Emotion)
+  EMOTIONS
     .map((emotion) => (`
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}" ${emotion === activeEmotion ? 'checked' : ''}>
       <label class="film-details__emoji-label" for="emoji-${emotion}">
@@ -12,10 +12,10 @@ const createDetailsEmotionsList = (activeEmotion) => (
     .join('')
 );
 
-const createDetailsCommentNewTemplate = ({ isActiveEmotion, activeEmotion, text }) => (`
+const createDetailsCommentNewTemplate = ({ isActiveEmotion, emotion, text }) => (`
   <div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
-      ${isActiveEmotion ? `<img src="images/emoji/${activeEmotion}.png" width="55" height="55" alt="emoji-smile">` : ''}
+      ${isActiveEmotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">` : ''}
     </div>
 
     <label class="film-details__comment-label">
@@ -23,14 +23,14 @@ const createDetailsCommentNewTemplate = ({ isActiveEmotion, activeEmotion, text 
     </label>
 
     <div class="film-details__emoji-list">
-      ${createDetailsEmotionsList(activeEmotion)}
+      ${createDetailsEmotionsList(emotion)}
     </div>
   </div>
 `);
 
 const BLANK_COMMENT = {
   text: '',
-  activeEmotion: null,
+  emotion: '',
 };
 
 export default class DetailsCommentNew extends SmartView {
@@ -65,7 +65,7 @@ export default class DetailsCommentNew extends SmartView {
 
   _emotionSelectHandler(evt) {
     this.updateData({
-      activeEmotion: evt.target.value,
+      emotion: evt.target.value,
       isActiveEmotion: Boolean(evt.target.value),
     });
   }
@@ -81,16 +81,16 @@ export default class DetailsCommentNew extends SmartView {
       {},
       comment,
       {
-        isActiveEmotion: comment.activeEmotion !== null,
+        isActiveEmotion: comment.emotion !== '',
       },
     );
   }
 
-  static parseDataToTask(data) {
+  static parseDataToComment(data) {
     data = Object.assign({}, data);
 
     if (!data.isActiveEmotion) {
-      data.activeEmotion = null;
+      data.emotion = '';
     }
 
     delete data.isActiveEmotion;
