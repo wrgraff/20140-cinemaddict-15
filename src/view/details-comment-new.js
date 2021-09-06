@@ -1,6 +1,11 @@
 import { EMOTIONS } from '@const/comments.js';
 import SmartView from '@view/smart.js';
 
+const BLANK_COMMENT = {
+  text: '',
+  emotion: '',
+};
+
 const createDetailsEmotionsList = (activeEmotion) => (
   EMOTIONS
     .map((emotion) => (`
@@ -28,11 +33,6 @@ const createDetailsCommentNewTemplate = ({ isActiveEmotion, emotion, text }) => 
   </div>
 `);
 
-const BLANK_COMMENT = {
-  text: '',
-  emotion: '',
-};
-
 export default class DetailsCommentNew extends SmartView {
   constructor(comment = BLANK_COMMENT) {
     super();
@@ -53,20 +53,15 @@ export default class DetailsCommentNew extends SmartView {
   }
 
   _setInnerHandlers() {
-    this.getElement()
-      .querySelectorAll('.film-details__emoji-item')
-      .forEach((item) => (
-        item.addEventListener('change', this._emotionSelectHandler)
-      ));
-
-    this.getElement()
-      .querySelector('.film-details__comment-input').addEventListener('input', this._textInputHandler);
+    const element = this.getElement();
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionSelectHandler);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._textInputHandler);
   }
 
   _emotionSelectHandler(evt) {
     this.updateData({
       emotion: evt.target.value,
-      isActiveEmotion: Boolean(evt.target.value),
+      isActiveEmotion: true,
     });
   }
 
