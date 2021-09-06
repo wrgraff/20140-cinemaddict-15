@@ -54,11 +54,11 @@ export default class DetailsCommentNew extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionChangeHandler);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionListChangeHandler);
     element.querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
   }
 
-  _emotionChangeHandler(evt) {
+  _emotionListChangeHandler(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
@@ -81,15 +81,11 @@ export default class DetailsCommentNew extends SmartView {
     );
   }
 
-  static parseDataToComment(data) {
-    data = Object.assign({}, data);
-
-    if (!data.isActiveEmotion) {
-      data.emotion = '';
+  static parseDataToComment({ isActiveEmotion, ...comment }) {
+    if (!isActiveEmotion) {
+      comment.emotion = '';
     }
 
-    delete data.isActiveEmotion;
-
-    return data;
+    return comment;
   }
 }
