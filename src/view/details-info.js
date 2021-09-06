@@ -2,60 +2,60 @@ import dayjs from 'dayjs';
 import AbstractView from '@view/abstract.js';
 import { formatRuntime } from '@utils/format.js';
 
-const createDetailsInfoTemplate = ( film ) => (`
+const createDetailsInfoTemplate = (data) => (`
   <div class="film-details__info-wrap">
     <div class="film-details__poster">
-      <img class="film-details__poster-img" src="./${film.poster}" alt="Poster for ${film.name}">
+      <img class="film-details__poster-img" src="./${data.poster}" alt="Poster for ${data.name}">
 
-      <p class="film-details__age">${film.ageRating}+</p>
+      <p class="film-details__age">${data.ageRating}+</p>
     </div>
 
     <div class="film-details__info">
       <div class="film-details__info-head">
         <div class="film-details__title-wrap">
-          <h3 class="film-details__title">${film.name}</h3>
-          <p class="film-details__title-original">Original: ${film.originalName}</p>
+          <h3 class="film-details__title">${data.name}</h3>
+          <p class="film-details__title-original">Original: ${data.originalName}</p>
         </div>
 
         <div class="film-details__rating">
-          <p class="film-details__total-rating">${film.rating.toFixed(1)}</p>
+          <p class="film-details__total-rating">${data.rating.toFixed(1)}</p>
         </div>
       </div>
 
       <table class="film-details__table">
         <tr class="film-details__row">
           <td class="film-details__term">Director</td>
-          <td class="film-details__cell">${film.director}</td>
+          <td class="film-details__cell">${data.director}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Writers</td>
-          <td class="film-details__cell">${film.writers.join(', ')}</td>
+          <td class="film-details__cell">${data.writers.join(', ')}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Actors</td>
-          <td class="film-details__cell">${film.actors.join(', ')}</td>
+          <td class="film-details__cell">${data.actors.join(', ')}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Release Date</td>
-          <td class="film-details__cell">${dayjs(film.release).format('DD MMMM YYYY')}</td>
+          <td class="film-details__cell">${data.release}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Runtime</td>
-          <td class="film-details__cell">${formatRuntime(film.runtime)}</td>
+          <td class="film-details__cell">${data.runtime}</td>
         </tr>
         <tr class="film-details__row">
           <td class="film-details__term">Country</td>
-          <td class="film-details__cell">${film.country}</td>
+          <td class="film-details__cell">${data.country}</td>
         </tr>
         <tr class="film-details__row">
-          <td class="film-details__term">${film.genres.length > 1 ? 'Genres' : 'Genre'}</td>
+          <td class="film-details__term">${data.genres.length > 1 ? 'Genres' : 'Genre'}</td>
           <td class="film-details__cell">
-            ${film.genres.map((genre) => (`<span class="film-details__genre">${genre}</span>`)).join('')}
+            ${data.genres.map((genre) => (`<span class="film-details__genre">${genre}</span>`)).join('')}
           </td>
         </tr>
       </table>
 
-      <p class="film-details__film-description">${film.description}</p>
+      <p class="film-details__film-description">${data.description}</p>
     </div>
   </div>
 `);
@@ -63,10 +63,21 @@ const createDetailsInfoTemplate = ( film ) => (`
 export default class DetailsInfo extends AbstractView {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = DetailsInfo.parseFilmToData(film);
   }
 
   getTemplate() {
-    return createDetailsInfoTemplate(this._film);
+    return createDetailsInfoTemplate(this._data);
+  }
+
+  static parseFilmToData(film) {
+    return Object.assign(
+      {},
+      film,
+      {
+        release: dayjs(film.release).format('DD MMMM YYYY'),
+        runtime: formatRuntime(film.runtime),
+      },
+    );
   }
 }
