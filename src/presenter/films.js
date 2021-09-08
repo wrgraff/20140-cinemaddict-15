@@ -7,7 +7,8 @@ import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
-  constructor(container) {
+  constructor(container, model) {
+    this._model = model;
     this._container = container;
 
     this._sectionComponent = new FilmsView();
@@ -31,6 +32,10 @@ export default class Films {
     this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSetting));
 
     this._render();
+  }
+
+  _getItems() {
+    return this._model.getItems();
   }
 
   _renderSort() {
@@ -75,8 +80,8 @@ export default class Films {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
-  static create(container, films) {
-    const filmsPresenter = new this(container);
+  static create(container, model, films) {
+    const filmsPresenter = new this(container, model);
     filmsPresenter.init(films);
   }
 }

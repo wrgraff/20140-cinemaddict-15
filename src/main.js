@@ -9,10 +9,14 @@ import MainNavigationView from '@view/main-navigation.js';
 import FooterStatisticsView from '@view/footer-statistics.js';
 import StatisticView from '@view/statistic.js';
 import FilmsPresenter from '@presenter/films.js';
+import FilmsModel from '@model/films.js';
 
 // Create mock data
 const filmsCount = getRandomInteger(20, 40);
 const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COUNT) );
+
+const filmsModel = new FilmsModel();
+filmsModel.setItems(films);
 
 // Rendering
 const pageHeader = document.querySelector('.header');
@@ -21,7 +25,7 @@ const pageMain = document.querySelector('.main');
 render( pageHeader, new ProfileView() );
 render( pageMain, new MainNavigationView( getFilters(films) ) );
 
-FilmsPresenter.create(pageMain, films);
+FilmsPresenter.create(pageMain, filmsModel, films);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render( footerStatistics, new FooterStatisticsView(films.length) );
