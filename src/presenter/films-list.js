@@ -10,15 +10,14 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, settings = DefaultListSetting) {
+  constructor(container, model, settings = DefaultListSetting) {
+    this._model = model;
     this._container = container;
-    this._items = null;
     this._sourcedItems = null;
     this._stepAmount = settings.STEP_AMOUNT;
     this._maxAmount = settings.MAX_AMOUNT;
     this._shownItems = 0;
-    this._defaultSortType = settings.SORT_TYPE;
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = settings.SORT_TYPE;
 
     switch (settings.SORT_TYPE) {
       case FilmListType.RATING:
@@ -39,13 +38,9 @@ export default class FilmsList {
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
   }
 
-  init(items) {
-    this._items = items.slice();
-    this._sourcedItems = items.slice();
-    this._sortItems(this._defaultSortType);
-
+  init() {
     if (this._maxAmount === 0) {
-      this._maxAmount = items.length;
+      this._maxAmount = this._model.getItems().length;
     }
 
     render(this._sectionComponent, this._itemsComponent);
@@ -58,6 +53,18 @@ export default class FilmsList {
     render(this._container, this._sectionComponent);
   }
 
+  _getItems() {
+    switch (this._currentSortType) {
+      case SortType.DATE:
+        return sortByDate( this._model.getItems().slice() );
+      case SortType.RATING:
+        return sortByRating( this._model.getItems().slice() );
+      case SortType.COMMENTS:
+        return sortByComments( this._model.getItems().slice() );
+    }
+    return this._model.getItems().slice();
+  }
+
   update(changedFilm) {
     this._items = updateItemById(this._items, changedFilm);
     this._sourcedItems = updateItemById(this._sourcedItems, changedFilm);
@@ -68,7 +75,7 @@ export default class FilmsList {
   }
 
   sort(sortType) {
-    this._sortItems(sortType);
+    this._currentSortType = sortType;
     this._clearCards();
     this._renderCards(0, this._shownItems);
   }
@@ -82,7 +89,7 @@ export default class FilmsList {
   }
 
   _renderCards(from, to) {
-    this._items
+    this._getItems()
       .slice(from, to)
       .forEach((item) => {
         const cardPresenter = FilmCardPresenter.create(this._itemsComponent, item, this._handleItemChange);
@@ -103,32 +110,10 @@ export default class FilmsList {
     this._showMoreComponent.setClickHandler(() => {
       this._renderCards(this._shownItems, this._shownItems + this._stepAmount);
 
-      if (this._shownItems >= this._items.length) {
+      if (this._shownItems >= this._model.getItems().length) {
         remove(this._showMoreComponent);
       }
     });
-  }
-
-  _sortItems(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
-
-    switch (sortType) {
-      case SortType.DATE:
-        this._items = sortByDate(this._items);
-        break;
-      case SortType.RATING:
-        this._items = sortByRating(this._items);
-        break;
-      case SortType.COMMENTS:
-        this._items = sortByComments(this._items);
-        break;
-      default:
-        this._items = this._sourcedItems.slice();
-    }
-
-    this._currentSortType = sortType;
   }
 
   _handleItemChange(changedFilm) {

@@ -22,20 +22,14 @@ export default class Films {
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
   }
 
-  init(items) {
-    this._items = items;
-
+  init() {
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, DefaultListSetting));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, RatingListSetting));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSetting));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting));
 
     this._render();
-  }
-
-  _getItems() {
-    return this._model.getItems();
   }
 
   _renderSort() {
@@ -48,13 +42,13 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._items.length === 0) {
+    if (this._model.getItems().length === 0) {
       this._createList();
       return;
     }
 
     this._itemsListPresenter.forEach((presenter) => {
-      presenter.init(this._items);
+      presenter.init();
       presenter.setFilmChangeHandler(this._handleItemChange);
       presenter.setDetailsOpenHandler(this._handleDetailsOpen);
     });
@@ -80,8 +74,8 @@ export default class Films {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
-  static create(container, model, films) {
+  static create(container, model) {
     const filmsPresenter = new this(container, model);
-    filmsPresenter.init(films);
+    filmsPresenter.init();
   }
 }
