@@ -1,4 +1,4 @@
-import AbstractObserver from '@utils/abstract-observer';
+import AbstractObserver from '@utils/abstract-observer.js';
 
 export default class Films extends AbstractObserver {
   constructor() {
