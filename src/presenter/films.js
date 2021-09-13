@@ -1,4 +1,5 @@
-import { render } from '@utils/render.js';
+import { render, remove } from '@utils/render.js';
+import { UpdateType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
 
 import SortView from '@view/sort.js';
@@ -12,7 +13,7 @@ export default class Films {
     this._container = container;
 
     this._sectionComponent = new FilmsView();
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
 
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
@@ -20,9 +21,12 @@ export default class Films {
     this._handleItemChange = this._handleItemChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
   }
 
   init() {
+    this._model.addObserver(this._handleModelEvent);
+
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
     this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting));
@@ -33,8 +37,14 @@ export default class Films {
   }
 
   _renderSort() {
-    render(this._container, this._sortComponent);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView();
     this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._container, this._sortComponent);
   }
 
   _renderListEmpty() {
@@ -72,6 +82,13 @@ export default class Films {
 
   _handleSortTypeChange(sortType) {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
+  }
+
+  _handleModelEvent(updateType) {
+    if (updateType === UpdateType.MAJOR) {
+      remove(this._sortComponent);
+      this._renderSort();
+    }
   }
 
   static create(container, model) {
