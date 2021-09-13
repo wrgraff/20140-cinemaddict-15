@@ -1,5 +1,5 @@
 import { UpdateType } from '@const/common.js';
-import { render, replace } from '@utils/render.js';
+import { render, remove, replace } from '@utils/render.js';
 import { getFilters } from '@utils/filter.js';
 import MainNavigationView from '@view/main-navigation.js';
 
@@ -10,21 +10,31 @@ export default class Filter {
     this._filmsModel = filmsModel;
 
     this._navigationComponent = null;
+
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleTypeChange = this._handleTypeChange.bind(this);
+
+    this._filterModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    const filters = getFilters( this._filmsModel.getItems() );
-    this._navigationComponent = new MainNavigationView(filters);
+    this._createNavigationComponent();
     render(this._container, this._navigationComponent);
   }
 
   update() {
-    const filters = getFilters( this._filmsModel.getItems() );
     const prevNavigationComponent = this._navigationComponent;
 
-    this._navigationComponent = new MainNavigationView(filters);
+    this._createNavigationComponent();
     replace(this._navigationComponent, prevNavigationComponent);
-    removeEventListener(prevNavigationComponent);
+    remove(prevNavigationComponent);
+  }
+
+  _createNavigationComponent() {
+    const filters = getFilters( this._filmsModel.getItems() );
+    this._navigationComponent = new MainNavigationView( filters, this._filterModel.getType() );
+    this._navigationComponent.setFilterTypeChangeHandler(this._handleTypeChange);
   }
 
   _handleModelEvent() {
