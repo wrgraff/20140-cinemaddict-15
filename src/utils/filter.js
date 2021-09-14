@@ -1,3 +1,5 @@
+import { FilterType } from '@const/common.js';
+
 const countFilters = (counter, film) => {
   counter.watchlist = film.isInWatchlist ? ++counter.watchlist : counter.watchlist;
   counter.history = film.isWatched ? ++counter.history : counter.history;
@@ -12,3 +14,9 @@ export const getFilters = (films) => (
     favorites: 0,
   })
 );
+
+export const filter = {
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isInWatchlist),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.isWatched),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
+};

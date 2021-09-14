@@ -24,7 +24,7 @@ const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.setItems(films);
 FilterPresenter.create(pageMain, filterModel, filmsModel);
-FilmsPresenter.create(pageMain, filmsModel, films);
+FilmsPresenter.create(pageMain, filmsModel, filterModel);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render( footerStatistics, new FooterStatisticsView(films.length) );

@@ -8,8 +8,9 @@ import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
-  constructor(container, model) {
-    this._model = model;
+  constructor(container, filmsModel, filterModel) {
+    this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._container = container;
 
     this._sectionComponent = new FilmsView();
@@ -25,13 +26,13 @@ export default class Films {
   }
 
   init() {
-    this._model.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
 
     this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting));
 
     this._render();
   }
@@ -52,7 +53,7 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._model.getItems().length === 0) {
+    if (this._filmsModel.getItems().length === 0) {
       this._createList();
       return;
     }
@@ -91,8 +92,8 @@ export default class Films {
     }
   }
 
-  static create(container, model) {
-    const filmsPresenter = new this(container, model);
+  static create(container, filmsModel, filterModel) {
+    const filmsPresenter = new this(container, filmsModel, filterModel);
     filmsPresenter.init();
   }
 }

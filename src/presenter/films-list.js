@@ -1,6 +1,7 @@
 import { render, remove } from '@utils/render.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { UserAction, UpdateType } from '@const/common.js';
+import { filter } from '@utils/filter.js';
+import { UserAction, UpdateType, FilterType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
@@ -9,8 +10,9 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, model, settings = DefaultListSetting) {
-    this._model = model;
+  constructor(container, filmsModel, settings = DefaultListSetting, filerModel) {
+    this._filmsModel = filmsModel;
+    this._filterModel = filerModel || null;
     this._container = container;
     this._sourcedItems = null;
     this._type = settings.TYPE;
@@ -35,13 +37,18 @@ export default class FilmsList {
     this._cardPresenter = new Map();
 
     this._callback = {};
-    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
+    if (this._filterModel !== null) {
+      this._filterModel.addObserver(this._handleModelEvent);
+    }
   }
 
   init() {
-    this._model.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
     this._render();
   }
 
@@ -60,20 +67,32 @@ export default class FilmsList {
   }
 
   _getItems() {
+    const films = this._filmsModel.getItems();
+    let filterType = null;
+    let filteredFilms = films;
+
+    if (this._filterModel !== null) {
+      filterType = this._filterModel.getType();
+    }
+
+    if (filterType !== FilterType.ALL && this._filterModel !== null) {
+      filteredFilms = filter[filterType](films);
+    }
+
     switch (this._currentSortType) {
       case SortType.DATE:
-        return sortByDate( this._model.getItems().slice() );
+        return sortByDate( filteredFilms );
       case SortType.RATING:
-        return sortByRating( this._model.getItems().slice() );
+        return sortByRating( filteredFilms );
       case SortType.COMMENTS:
-        return sortByComments( this._model.getItems().slice() );
+        return sortByComments( filteredFilms );
     }
-    return this._model.getItems().slice();
+    return filteredFilms;
   }
 
   _render() {
     if (this._maxAmount === 0) {
-      this._maxAmount = this._model.getItems().length;
+      this._maxAmount = this._filmsModel.getItems().length;
     }
 
     render(this._sectionComponent, this._itemsComponent);
@@ -92,9 +111,9 @@ export default class FilmsList {
     }
     this._clearCards();
 
-    this._maxAmount = this._getItems().length;
+    // this._maxAmount = this._getItems().length;
     if (resetRenderedTaskCount) {
-      this._shownItems = 0;
+      this._shownItems = this._stepAmount;
     } else {
       this._shownItems = Math.min(this._shownItems, this._maxAmount);
     }
@@ -131,7 +150,7 @@ export default class FilmsList {
     this._showMoreComponent.setClickHandler(() => {
       this._renderCards(this._shownItems, this._shownItems + this._stepAmount);
 
-      if (this._shownItems >= this._model.getItems().length) {
+      if (this._shownItems >= this._filmsModel.getItems().length) {
         remove(this._showMoreComponent);
       }
     });
@@ -140,7 +159,7 @@ export default class FilmsList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._model.updateItemById(updateType, update);
+        this._filmsModel.updateItemById(updateType, update);
         break;
     }
   }
@@ -148,7 +167,10 @@ export default class FilmsList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        this._cardPresenter.get(data.id).update(data);
+        const cardPresenter = this._cardPresenter.get(data.id);
+        if (cardPresenter) {
+          cardPresenter.update(data);
+        }
         break;
       case UpdateType.MINOR:
         this._clear();
