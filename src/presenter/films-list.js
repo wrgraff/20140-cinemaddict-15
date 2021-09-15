@@ -10,14 +10,14 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, filmsModel, settings = DefaultListSetting, filerModel) {
+  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null) {
     this._filmsModel = filmsModel;
-    this._filterModel = filerModel || null;
+    this._filterModel = filerModel;
     this._container = container;
 
     this._type = settings.TYPE;
     this._stepAmount = settings.STEP_AMOUNT;
-    this._maxAmount = settings.MAX_AMOUNT || this._filmsModel.getItems().length;
+    this._maxAmount = settings.MAX_AMOUNT || this._filmsModel.getAll().length;
     this._shownAmount = 0;
     this._defaultSortType = settings.SORT_TYPE;
     this._currentSortType = settings.SORT_TYPE;
@@ -91,7 +91,7 @@ export default class FilmsList {
   }
 
   _getItems() {
-    const films = this._filmsModel.getItems();
+    const films = this._filmsModel.getAll();
     let filterType = null;
     let filteredFilms = films;
 

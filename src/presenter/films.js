@@ -52,7 +52,7 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._filmsModel.getItems().length === 0) {
+    if (this._filmsModel.getAll().length === 0) {
       this._createList();
       return;
     }

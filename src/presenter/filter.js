@@ -32,7 +32,7 @@ export default class Filter {
   }
 
   _createNavigationComponent() {
-    const filters = getFilters( this._filmsModel.getItems() );
+    const filters = getFilters( this._filmsModel.getAll() );
     this._navigationComponent = new MainNavigationView( filters, this._filterModel.getType() );
     this._navigationComponent.setFilterTypeChangeHandler(this._handleTypeChange);
   }

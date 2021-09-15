@@ -1,5 +1,5 @@
 import AbstractView from '@view/abstract.js';
-import { sortGenres, calcTextRank } from '@utils/statistic.js';
+import { sortGenres, getRatingTitle } from '@utils/statistic.js';
 import StatisticRankView from '@view/statistic-rank.js';
 import StatisticFiltersView from '@view/statistic-filters.js';
 import StatisticListView from '@view/statistic-list.js';
@@ -13,7 +13,7 @@ export default class Statistic extends AbstractView {
     this._watched = watched;
     this._sortedGenres = sortGenres(genres);
     this._runtime = runtime;
-    this._rank = calcTextRank(watched);
+    this._rank = getRatingTitle(watched);
   }
 
   getTemplate() {

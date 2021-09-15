@@ -12,7 +12,7 @@ import FilmsModel from '@model/films.js';
 import FilterModel from '@model/filter.js';
 
 // Create mock data
-const filmsCount = getRandomInteger(20, 40);
+const filmsCount = getRandomInteger(5, 10);
 const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COUNT) );
 
 // Rendering
@@ -22,7 +22,7 @@ render( pageHeader, new ProfileView() );
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
-filmsModel.setItems(films);
+filmsModel.set(films);
 FilterPresenter.create(pageMain, filterModel, filmsModel);
 FilmsPresenter.create(pageMain, filmsModel, filterModel);
 
