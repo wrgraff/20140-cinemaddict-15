@@ -1,7 +1,7 @@
 import AbstractView from '@view/abstract.js';
 
 export const RenderPlace = {
-  BEFORE_AFTER: 'afterbegin',
+  AFTER_BEGIN: 'afterbegin',
   BEFORE_END: 'beforeend',
 };
 

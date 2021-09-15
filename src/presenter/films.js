@@ -19,7 +19,6 @@ export default class Films {
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
 
-    this._handleItemChange = this._handleItemChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -60,7 +59,6 @@ export default class Films {
 
     this._itemsListPresenter.forEach((presenter) => {
       presenter.init();
-      presenter.setFilmChangeHandler(this._handleItemChange);
       presenter.setDetailsOpenHandler(this._handleDetailsOpen);
     });
 
@@ -70,11 +68,6 @@ export default class Films {
   _render() {
     this._renderSort();
     this._renderSection();
-  }
-
-  _handleItemChange(changedFilm) {
-    this._itemsListPresenter.forEach((presenter) => presenter.update(changedFilm));
-    this._detailsPresenter.update(changedFilm);
   }
 
   _handleDetailsOpen(item) {
