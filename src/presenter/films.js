@@ -27,7 +27,7 @@ export default class Films {
   init() {
     this._filmsModel.addObserver(this._handleModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
+    this._detailsPresenter = new DetailsPresenter(this._filmsModel);
 
     this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
     this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting));

@@ -1,3 +1,4 @@
+import { UpdateType } from '@const/common.js';
 import { render, remove, replace } from '@utils/render.js';
 import { isEscapeEvent } from '@utils/dom-event.js';
 import DetailsInfoView from '@view/details-info.js';
@@ -8,9 +9,9 @@ import DetailsCloseButtonView from '@view/details-close-button.js';
 import DetailsView from '@view/details.js';
 
 export default class Details {
-  constructor(changeData) {
+  constructor(filmsModel) {
     this._film = null;
-    this._changeData = changeData;
+    this._filmsModel = filmsModel;
 
     this._popupComponent = new DetailsView();
     this._infoComponent = null;
@@ -19,10 +20,13 @@ export default class Details {
     this._closeButtonComponent = new DetailsCloseButtonView();
 
     this._remove = this._remove.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init(film) {
@@ -82,7 +86,8 @@ export default class Details {
   }
 
   _handleWatchlistClick() {
-    this._changeData(
+    this._filmsModel.updateItemById(
+      UpdateType.PATCH_WATCHLIST,
       Object.assign(
         {},
         this._film,
@@ -94,7 +99,8 @@ export default class Details {
   }
 
   _handleWatchedClick() {
-    this._changeData(
+    this._filmsModel.updateItemById(
+      UpdateType.PATCH_WATCHED,
       Object.assign(
         {},
         this._film,
@@ -106,7 +112,8 @@ export default class Details {
   }
 
   _handleFavoriteClick() {
-    this._changeData(
+    this._filmsModel.updateItemById(
+      UpdateType.PATCH_FAVORITE,
       Object.assign(
         {},
         this._film,
@@ -115,6 +122,18 @@ export default class Details {
         },
       ),
     );
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH_WATCHLIST:
+      case UpdateType.PATCH_WATCHED:
+      case UpdateType.PATCH_FAVORITE:
+      case UpdateType.MINOR:
+      case UpdateType.MAJOR:
+        this.update(data);
+        break;
+    }
   }
 
   _escKeyDownHandler(evt) {
