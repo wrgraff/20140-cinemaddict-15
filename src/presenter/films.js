@@ -36,6 +36,11 @@ export default class Films {
     this._render();
   }
 
+  destroy() {
+    remove(this._sortComponent);
+    remove(this._sectionComponent);
+  }
+
   _renderSort() {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
@@ -84,5 +89,6 @@ export default class Films {
   static create(container, filmsModel, filterModel) {
     const filmsPresenter = new this(container, filmsModel, filterModel);
     filmsPresenter.init();
+    return filmsPresenter;
   }
 }

@@ -1,4 +1,4 @@
-import { render } from '@utils/render.js';
+import { render, remove } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { getStatistic } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
@@ -18,15 +18,26 @@ const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COU
 // Rendering
 const pageHeader = document.querySelector('.header');
 const pageMain = document.querySelector('.main');
+const statisticsComponent = new StatisticView( getStatistic(films) );
 render( pageHeader, new ProfileView() );
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.set(films);
-FilterPresenter.create(pageMain, filterModel, filmsModel);
-FilmsPresenter.create(pageMain, filmsModel, filterModel);
+
+const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel);
+const filmsPresenter = FilmsPresenter.create(pageMain, filmsModel, filterModel);
+
+filterPresenter.setStatisticsMenuItemClickHandler(() => {
+  filmsPresenter.destroy();
+  render(pageMain, statisticsComponent);
+});
+
+filterPresenter.setFilterMenuItemClickHandler(() => {
+  filmsPresenter.init();
+  remove(statisticsComponent);
+});
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render( footerStatistics, new FooterStatisticsView(films.length) );
 
-render( document.body, new StatisticView( getStatistic(films) ) );
