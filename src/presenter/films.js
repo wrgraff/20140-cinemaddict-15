@@ -47,10 +47,6 @@ export default class Films {
     render(this._container, this._sortComponent);
   }
 
-  _renderListEmpty() {
-    render(this._container, this._listEmptyComponent);
-  }
-
   _renderSection() {
     if (this._filmsModel.getAll().length === 0) {
       this._createList();

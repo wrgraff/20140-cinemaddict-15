@@ -1,10 +1,7 @@
-import { EMOTIONS } from '@const/comments.js';
+import he from 'he';
+import { EMOTIONS, BLANK_COMMENT } from '@const/comments.js';
 import SmartView from '@view/smart.js';
-
-const BLANK_COMMENT = {
-  text: '',
-  emotion: '',
-};
+import { isCommandEnterEvent, isControlEnterEvent } from '@utils/dom-event.js';
 
 const createDetailsEmotionsList = (activeEmotion) => (
   EMOTIONS
@@ -20,11 +17,11 @@ const createDetailsEmotionsList = (activeEmotion) => (
 const createDetailsCommentNewTemplate = ({ isActiveEmotion, emotion, text }) => (`
   <div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
-      ${isActiveEmotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-smile">` : ''}
+      ${isActiveEmotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">` : ''}
     </div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${text}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(text)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -38,8 +35,9 @@ export default class DetailsCommentNew extends SmartView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
-    this._commentInputHandler = this._commentInputHandler.bind(this);
-    this._emotionListChangeHandler = this._emotionListChangeHandler.bind(this);
+    this._handleCommentInput = this._handleCommentInput.bind(this);
+    this._handleEmotionListChange = this._handleEmotionListChange.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
 
     this._setInnerHandlers();
   }
@@ -48,27 +46,41 @@ export default class DetailsCommentNew extends SmartView {
     return createDetailsCommentNewTemplate(this._data);
   }
 
+  setFormSubmitHandler(callback) {
+    this._callback.submitForm = callback;
+  }
+
   restoreHandlers() {
     this._setInnerHandlers();
   }
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._emotionListChangeHandler);
-    element.querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._handleEmotionListChange);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._handleCommentInput);
+    element.querySelector('.film-details__comment-input').addEventListener('keydown', this._handleFormSubmit);
   }
 
-  _emotionListChangeHandler(evt) {
+  _handleEmotionListChange(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
     });
   }
 
-  _commentInputHandler(evt) {
+  _handleCommentInput(evt) {
     this.updateData({
       text: evt.target.value,
     }, true);
+  }
+
+  _handleFormSubmit(evt) {
+    if ( isCommandEnterEvent(evt) || isControlEnterEvent(evt) ) {
+      evt.preventDefault();
+      if (this._data.text && this._data.emotion) {
+        this._callback.submitForm(this._data);
+      }
+    }
   }
 
   static parseCommentToData(comment) {
