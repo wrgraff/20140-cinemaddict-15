@@ -2,7 +2,7 @@ import { render, remove } from '@utils/render.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
 import { filter } from '@utils/filter.js';
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
+import { FilmListType, DefaultListSetting, SortType, actionTypeToFilterType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
 import FilmsListContainerView from '@view/films-list-container.js';
@@ -161,12 +161,6 @@ export default class FilmsList {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    const actionTypeToFilterType = {
-      [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
-      [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
-      [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
-    };
-
     switch (actionType) {
       case UserAction.UPDATE_WATCHED:
       case UserAction.UPDATE_FAVORITE:
