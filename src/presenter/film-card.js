@@ -1,4 +1,5 @@
 import { render, remove, replace } from '@utils/render.js';
+import { UserAction, UpdateType } from '@const/common.js';
 import FilmCardView from '@view/film-card.js';
 
 export default class FilmCard {
@@ -51,6 +52,8 @@ export default class FilmCard {
 
   _handleWatchlistClick() {
     this._changeData(
+      UserAction.UPDATE_WATCHLIST,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -63,6 +66,8 @@ export default class FilmCard {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_WATCHED,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -75,6 +80,8 @@ export default class FilmCard {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_FAVORITE,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,

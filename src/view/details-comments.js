@@ -1,6 +1,4 @@
 import AbstractView from '@view/abstract.js';
-import DetailsCommentNewView from '@view/details-comment-new.js';
-import DetailsCommentsListView from '@view/details-comments-list.js';
 
 const createDetailsCommentsTemplate = (amount) => (`
   <section class="film-details__comments-wrap">
@@ -18,14 +16,5 @@ export default class DetailsComments extends AbstractView {
 
   getTemplate() {
     return createDetailsCommentsTemplate(this._filmComments.length);
-  }
-
-  getElement() {
-    const element = super.getElement();
-
-    element.append( new DetailsCommentsListView(this._filmComments).getElement() );
-    element.append( new DetailsCommentNewView().getElement() );
-
-    return this._element;
   }
 }

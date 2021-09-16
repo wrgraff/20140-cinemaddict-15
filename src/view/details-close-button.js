@@ -1,6 +1,10 @@
 import AbstractView from '@view/abstract.js';
 
-const createDetailsCloseButtonTemplate = () => ('<button class="film-details__close-btn" type="button">close</button>');
+const createDetailsCloseButtonTemplate = () => (`
+  <div class="film-details__close">
+    <button class="film-details__close-btn" type="button">close</button>
+  </div>
+`);
 
 export default class DetailsCloseButton extends AbstractView {
   constructor() {
@@ -14,7 +18,7 @@ export default class DetailsCloseButton extends AbstractView {
 
   setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener('click', this._clickHandler);
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._clickHandler);
   }
 
   _clickHandler(evt) {

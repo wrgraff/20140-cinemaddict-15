@@ -1,8 +1,8 @@
 import { render, remove } from '@utils/render.js';
-import { updateItemById } from '@utils/common.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { FilmListType, DefaultListSetting } from '@const/films.js';
-import { SortType } from '@const/films.js';
+import { filter } from '@utils/filter.js';
+import { UserAction, UpdateType, FilterType } from '@const/common.js';
+import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
 import FilmsListContainerView from '@view/films-list-container.js';
@@ -10,86 +10,131 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, settings = DefaultListSetting) {
+  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null) {
+    this._filmsModel = filmsModel;
+    this._filterModel = filerModel;
     this._container = container;
-    this._items = null;
-    this._sourcedItems = null;
-    this._stepAmount = settings.STEP_AMOUNT;
-    this._maxAmount = settings.MAX_AMOUNT;
-    this._shownItems = 0;
-    this._defaultSortType = settings.SORT_TYPE;
-    this._currentSortType = SortType.DEFAULT;
 
-    switch (settings.SORT_TYPE) {
+    this._type = settings.TYPE;
+    this._stepAmount = settings.STEP_AMOUNT;
+    this._maxAmount = settings.MAX_AMOUNT || this._filmsModel.getAll().length;
+    this._shownAmount = 0;
+    this._defaultSortType = settings.SORT_TYPE;
+    this._currentSortType = settings.SORT_TYPE;
+
+    switch (settings.TYPE) {
       case FilmListType.RATING:
       case FilmListType.COMMENTS:
-        this._sectionComponent = new FilmsListExtraView(settings.TITLE);
+        this._listComponent = new FilmsListExtraView(settings.TITLE);
         break;
       default:
-        this._sectionComponent = new FilmsListView(settings.TITLE);
+        this._listComponent = new FilmsListView(settings.TITLE);
     }
 
-    this._itemsComponent = new FilmsListContainerView();
-    this._showMoreComponent = new FilmsListShowMoreView();
+    this._listContainerComponent = new FilmsListContainerView();
+    this._showMoreComponent = null;
 
     this._cardPresenter = new Map();
 
     this._callback = {};
-    this._handleItemChange = this._handleItemChange.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleViewAction = this._handleViewAction.bind(this);
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  init(items) {
-    this._items = items.slice();
-    this._sourcedItems = items.slice();
-    this._sortItems(this._defaultSortType);
+  init() {
+    this._render();
+  }
 
-    if (this._maxAmount === 0) {
-      this._maxAmount = items.length;
+  update({resetShownAmount = false, resetSortType = false} = {}) {
+    this._clearCards();
+
+    if (resetShownAmount) {
+      this._shownAmount = this._stepAmount;
     }
 
-    render(this._sectionComponent, this._itemsComponent);
-    this._renderCards(this._shownItems, this._shownItems + this._stepAmount);
+    if (resetSortType) {
+      this._currentSortType = this._defaultSortType;
+    }
 
-    if (this._shownItems < this._maxAmount) {
+    this._renderCards(0, this._shownAmount);
+
+    if (this._type !== FilmListType.DEFAULT) {
+      return;
+    }
+
+    this._maxAmount = this._getItems().length;
+
+    if (this._shownAmount >= this._maxAmount && this._showMoreComponent !== null) {
+      remove(this._showMoreComponent);
+      this._showMoreComponent = null;
+    }
+
+    if (this._shownAmount < this._maxAmount && this._showMoreComponent === null) {
       this._renderShowMore();
-    }
-
-    render(this._container, this._sectionComponent);
-  }
-
-  update(changedFilm) {
-    this._items = updateItemById(this._items, changedFilm);
-    this._sourcedItems = updateItemById(this._sourcedItems, changedFilm);
-    const changedPresenter = this._cardPresenter.get(changedFilm.id);
-    if (changedPresenter) {
-      changedPresenter.update(changedFilm);
     }
   }
 
   sort(sortType) {
-    this._sortItems(sortType);
+    this._currentSortType = sortType;
     this._clearCards();
-    this._renderCards(0, this._shownItems);
-  }
-
-  setFilmChangeHandler(callback) {
-    this._callback.changeFilm = callback;
+    this._renderCards(0, this._shownAmount);
   }
 
   setDetailsOpenHandler(callback) {
     this._callback.openDetails = callback;
   }
 
+  _getItems() {
+    const films = this._filmsModel.getAll();
+    let filterType = null;
+    let filteredFilms = films;
+
+    if (this._filterModel !== null) {
+      filterType = this._filterModel.getType();
+    }
+
+    if (filterType !== FilterType.ALL && this._type === FilmListType.DEFAULT) {
+      filteredFilms = filter[filterType](films);
+    }
+
+    switch (this._currentSortType) {
+      case SortType.DATE:
+        return sortByDate( filteredFilms );
+      case SortType.RATING:
+        return sortByRating( filteredFilms );
+      case SortType.COMMENTS:
+        return sortByComments( filteredFilms );
+    }
+    return filteredFilms;
+  }
+
+  _render() {
+    render(this._listComponent, this._listContainerComponent);
+    this._renderCards(0, this._shownAmount + this._stepAmount);
+    render(this._container, this._listComponent);
+
+    if (this._type !== FilmListType.DEFAULT) {
+      return;
+    }
+
+    if (this._shownAmount < this._maxAmount) {
+      this._renderShowMore();
+    }
+  }
+
   _renderCards(from, to) {
-    this._items
+    this._getItems()
       .slice(from, to)
       .forEach((item) => {
-        const cardPresenter = FilmCardPresenter.create(this._itemsComponent, item, this._handleItemChange);
+        const cardPresenter = FilmCardPresenter.create(this._listContainerComponent, item, this._handleViewAction);
         cardPresenter.setCardClickHandler(() => this._handleDetailsOpen(item));
         this._cardPresenter.set(item.id, cardPresenter);
       });
-    this._shownItems = to;
+    this._shownAmount = to;
   }
 
   _clearCards() {
@@ -98,41 +143,52 @@ export default class FilmsList {
   }
 
   _renderShowMore() {
-    render(this._sectionComponent, this._showMoreComponent);
+    if (this._showMoreComponent !== null) {
+      this._showMoreComponent = null;
+    }
+
+    this._showMoreComponent = new FilmsListShowMoreView();
+    render(this._listComponent, this._showMoreComponent);
 
     this._showMoreComponent.setClickHandler(() => {
-      this._renderCards(this._shownItems, this._shownItems + this._stepAmount);
+      this._renderCards(this._shownAmount, this._shownAmount + this._stepAmount);
 
-      if (this._shownItems >= this._items.length) {
+      if (this._shownAmount >= this._maxAmount) {
         remove(this._showMoreComponent);
+        this._showMoreComponent = null;
       }
     });
   }
 
-  _sortItems(sortType) {
-    if (this._currentSortType === sortType) {
-      return;
-    }
+  _handleViewAction(actionType, updateType, update) {
+    const actionTypeToFilterType = {
+      [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
+      [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
+      [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
+    };
 
-    switch (sortType) {
-      case SortType.DATE:
-        this._items = sortByDate(this._items);
+    switch (actionType) {
+      case UserAction.UPDATE_WATCHED:
+      case UserAction.UPDATE_FAVORITE:
+      case UserAction.UPDATE_WATCHLIST:
+        updateType = actionTypeToFilterType[actionType] === this._filterModel.getType() ? UpdateType.MINOR : updateType;
+        this._filmsModel.updateById(updateType, update);
         break;
-      case SortType.RATING:
-        this._items = sortByRating(this._items);
-        break;
-      case SortType.COMMENTS:
-        this._items = sortByComments(this._items);
-        break;
-      default:
-        this._items = this._sourcedItems.slice();
     }
-
-    this._currentSortType = sortType;
   }
 
-  _handleItemChange(changedFilm) {
-    this._callback.changeFilm(changedFilm);
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
+        break;
+      case UpdateType.MINOR:
+        this.update();
+        break;
+      case UpdateType.MAJOR:
+        this.update({resetShownAmount: true, resetSortType: true});
+        break;
+    }
   }
 
   _handleDetailsOpen(item) {

@@ -6,3 +6,8 @@ export const EMOTIONS = [
   'sleeping',
   'smile',
 ];
+
+export const BLANK_COMMENT = {
+  text: '',
+  emotion: '',
+};

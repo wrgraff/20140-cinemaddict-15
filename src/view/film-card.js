@@ -19,7 +19,7 @@ const createFilmCardTemplate = ( data ) => (`
 
     <p class="film-card__description">${data.description}</p>
 
-    <a class="film-card__comments">${data.commentsAmount} ${data.commentsPostfix}}</a>
+    <a class="film-card__comments">${data.commentsAmount} ${data.commentsPostfix}</a>
 
     <div class="film-card__controls">
       <button class="

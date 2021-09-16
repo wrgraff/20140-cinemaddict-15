@@ -1,16 +1,7 @@
-import { RANKS } from '@const/statistic.js';
+import { RANK_TITLES } from '@const/statistic.js';
 
-export const calcTextRank = (amount) => {
-  let textRank = '';
-
-  for (const [key, value] of Object.entries(RANKS)) {
-    if (amount > key) {
-      textRank = value;
-    }
-  }
-
-  return textRank;
-};
+export const getRatingTitle = (value) => RANK_TITLES
+  .find(({ rating }) => rating >= value).title || '';
 
 export const getStatistic = (films) => (
   films.reduce((statistic, film) => {

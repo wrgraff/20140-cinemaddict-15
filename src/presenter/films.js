@@ -1,4 +1,5 @@
-import { render } from '@utils/render.js';
+import { render, remove } from '@utils/render.js';
+import { UpdateType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
 
 import SortView from '@view/sort.js';
@@ -7,50 +8,53 @@ import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
-  constructor(container) {
+  constructor(container, filmsModel, filterModel) {
+    this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._container = container;
 
     this._sectionComponent = new FilmsView();
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
 
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
 
-    this._handleItemChange = this._handleItemChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
   }
 
-  init(items) {
-    this._items = items;
+  init() {
+    this._filmsModel.addObserver(this._handleModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._handleItemChange);
+    this._detailsPresenter = new DetailsPresenter(this._filmsModel);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, DefaultListSetting));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, RatingListSetting));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, CommentsListSetting));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting, this._filterModel));
 
     this._render();
   }
 
   _renderSort() {
-    render(this._container, this._sortComponent);
-    this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
-  }
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
 
-  _renderListEmpty() {
-    render(this._container, this._listEmptyComponent);
+    this._sortComponent = new SortView();
+    this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
+
+    render(this._container, this._sortComponent);
   }
 
   _renderSection() {
-    if (this._items.length === 0) {
+    if (this._filmsModel.getAll().length === 0) {
       this._createList();
       return;
     }
 
     this._itemsListPresenter.forEach((presenter) => {
-      presenter.init(this._items);
-      presenter.setFilmChangeHandler(this._handleItemChange);
+      presenter.init();
       presenter.setDetailsOpenHandler(this._handleDetailsOpen);
     });
 
@@ -62,11 +66,6 @@ export default class Films {
     this._renderSection();
   }
 
-  _handleItemChange(changedFilm) {
-    this._itemsListPresenter.forEach((presenter) => presenter.update(changedFilm));
-    this._detailsPresenter.update(changedFilm);
-  }
-
   _handleDetailsOpen(item) {
     this._detailsPresenter.init(item);
   }
@@ -75,8 +74,15 @@ export default class Films {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
-  static create(container, films) {
-    const filmsPresenter = new this(container);
-    filmsPresenter.init(films);
+  _handleModelEvent(updateType) {
+    if (updateType === UpdateType.MAJOR) {
+      remove(this._sortComponent);
+      this._renderSort();
+    }
+  }
+
+  static create(container, filmsModel, filterModel) {
+    const filmsPresenter = new this(container, filmsModel, filterModel);
+    filmsPresenter.init();
   }
 }

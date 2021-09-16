@@ -1,3 +1,4 @@
+import he from 'he';
 import dayjs from 'dayjs';
 import AbstractView from '@view/abstract.js';
 
@@ -7,7 +8,7 @@ const createDetailsCommentTemplate = (data) => (`
       <img src="./images/emoji/${data.emotion}.png" width="55" height="55" alt="emoji-${data.emotion}">
     </span>
     <div>
-      <p class="film-details__comment-text">${data.text}</p>
+      <p class="film-details__comment-text">${he.encode(data.text)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${data.name}</span>
         <span class="film-details__comment-day">${data.date}</span>
