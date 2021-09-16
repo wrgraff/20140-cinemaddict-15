@@ -57,7 +57,7 @@ export default class DetailsCommentNew extends SmartView {
   _setInnerHandlers() {
     const element = this.getElement();
     element.querySelector('.film-details__emoji-list').addEventListener('change', this._changeEmojiList);
-    document.addEventListener('input', this._inputComment);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._inputComment);
     document.addEventListener('keydown', this._submitForm);
   }
 
