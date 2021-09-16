@@ -35,9 +35,9 @@ export default class DetailsCommentNew extends SmartView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
-    this._handleCommentInput = this._handleCommentInput.bind(this);
-    this._handleEmotionListChange = this._handleEmotionListChange.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._inputComment = this._inputComment.bind(this);
+    this._changeEmojiList = this._changeEmojiList.bind(this);
+    this._submitForm = this._submitForm.bind(this);
 
     this._setInnerHandlers();
   }
@@ -56,25 +56,25 @@ export default class DetailsCommentNew extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._handleEmotionListChange);
-    element.querySelector('.film-details__comment-input').addEventListener('input', this._handleCommentInput);
-    element.querySelector('.film-details__comment-input').addEventListener('keydown', this._handleFormSubmit);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._changeEmojiList);
+    document.addEventListener('input', this._inputComment);
+    document.addEventListener('keydown', this._submitForm);
   }
 
-  _handleEmotionListChange(evt) {
+  _changeEmojiList(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
     });
   }
 
-  _handleCommentInput(evt) {
+  _inputComment(evt) {
     this.updateData({
       text: evt.target.value,
     }, true);
   }
 
-  _handleFormSubmit(evt) {
+  _submitForm(evt) {
     if ( isCommandEnterEvent(evt) || isControlEnterEvent(evt) ) {
       evt.preventDefault();
       if (this._data.text && this._data.emotion) {

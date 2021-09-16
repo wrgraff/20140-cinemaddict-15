@@ -1,6 +1,6 @@
 import { render, remove } from '@utils/render.js';
 import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { filter } from '@utils/filter.js';
+import { filterTypeToFilms } from '@utils/filter.js';
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, SortType, actionTypeToFilterType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
@@ -98,7 +98,7 @@ export default class FilmsList {
     }
 
     if (filterType !== FilterType.ALL && this._type === FilmListType.DEFAULT) {
-      filteredFilms = filter[filterType](films);
+      filteredFilms = filterTypeToFilms[filterType](films);
     }
 
     switch (this._currentSortType) {

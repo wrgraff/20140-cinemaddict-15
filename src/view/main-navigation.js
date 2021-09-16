@@ -27,7 +27,7 @@ export default class MainNavigation extends AbstractView {
     this._amount = { watchlist, history, favorites };
     this._currentFilterType = currentFilterType;
 
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._changeFilterType = this._changeFilterType.bind(this);
   }
 
   getTemplate() {
@@ -35,16 +35,16 @@ export default class MainNavigation extends AbstractView {
   }
 
   setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().querySelector('.main-navigation__items').addEventListener('click', this._handleFilterTypeChange);
+    this._callback.changeFilterType = callback;
+    this.getElement().querySelector('.main-navigation__items').addEventListener('click', this._changeFilterType);
   }
 
-  _handleFilterTypeChange(evt) {
+  _changeFilterType(evt) {
     if (evt.target.tagName !== 'A') {
       return;
     }
 
     evt.preventDefault();
-    this._callback.filterTypeChange(evt.target.dataset.filterType);
+    this._callback.changeFilterType(evt.target.dataset.filterType);
   }
 }

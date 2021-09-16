@@ -16,7 +16,7 @@ export default class Sort extends SmartView {
       currentType: SortType.DEFAULT,
     };
 
-    this._handleTypeClick = this._handleTypeClick.bind(this);
+    this._clickType = this._clickType.bind(this);
   }
 
   getTemplate() {
@@ -25,14 +25,14 @@ export default class Sort extends SmartView {
 
   setTypeChangeHandler(callback) {
     this._callback.changeType = callback;
-    this.getElement().addEventListener('click', this._handleTypeClick);
+    this.getElement().addEventListener('click', this._clickType);
   }
 
   restoreHandlers() {
     this.setTypeChangeHandler(this._callback.changeType);
   }
 
-  _handleTypeClick(evt) {
+  _clickType(evt) {
     if (evt.target.tagName !== 'A') {
       return;
     }

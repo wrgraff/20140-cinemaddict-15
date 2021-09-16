@@ -9,7 +9,7 @@ import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
   constructor(container, filmsModel, filterModel) {
-    this._filmsModel = filmsModel;
+    this._model = filmsModel;
     this._filterModel = filterModel;
     this._container = container;
 
@@ -25,13 +25,13 @@ export default class Films {
   }
 
   init() {
-    this._filmsModel.addObserver(this._handleModelEvent);
+    this._model.addObserver(this._handleModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._filmsModel);
+    this._detailsPresenter = new DetailsPresenter(this._model);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel));
 
     this._render();
   }
@@ -48,7 +48,7 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._filmsModel.getAll().length === 0) {
+    if (this._model.getAll().length === 0) {
       this._createList();
       return;
     }

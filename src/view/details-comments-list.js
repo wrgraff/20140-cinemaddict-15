@@ -5,7 +5,7 @@ import { generateComment } from '@mock/comment.js';
 
 const comments = new Array(COMMENT_COUNT).fill('').map(generateComment);
 
-const createDetailsCommentsListTemplate = () => ('<ul class="film-details__comments-list"></ul>');
+const createDetailsCommentsListTemplate = () => '<ul class="film-details__comments-list"></ul>';
 
 export default class DetailsCommentsList extends AbstractView {
   constructor(filmComments) {

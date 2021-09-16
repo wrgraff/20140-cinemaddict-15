@@ -5,7 +5,7 @@ import StatisticFiltersView from '@view/statistic-filters.js';
 import StatisticListView from '@view/statistic-list.js';
 import StatisticChartView from '@view/statistic-chart.js';
 
-export const createStatisticTemplate = () => ('<section class="statistic"></section>');
+export const createStatisticTemplate = () => '<section class="statistic"></section>';
 
 export default class Statistic extends AbstractView {
   constructor({ watched, runtime, genres }) {
