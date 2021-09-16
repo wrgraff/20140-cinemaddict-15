@@ -64,11 +64,13 @@ export default class Details {
   update(film) {
     this._film = film;
 
-    this._controlsComponent.updateData({
-      isInWatchlist: film.isInWatchlist,
-      isWatched: film.isWatched,
-      isFavorite: film.isFavorite,
-    });
+    if (this._isOpen) {
+      this._controlsComponent.updateData({
+        isInWatchlist: film.isInWatchlist,
+        isWatched: film.isWatched,
+        isFavorite: film.isFavorite,
+      });
+    }
   }
 
   _open() {
