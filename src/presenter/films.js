@@ -30,8 +30,8 @@ export default class Films {
     this._detailsPresenter = new DetailsPresenter(this._filmsModel);
 
     this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting, this._filterModel));
 
     this._render();
   }

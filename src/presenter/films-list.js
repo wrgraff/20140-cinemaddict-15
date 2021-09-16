@@ -42,9 +42,7 @@ export default class FilmsList {
     this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
-    if (this._filterModel !== null) {
-      this._filterModel.addObserver(this._handleModelEvent);
-    }
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -99,7 +97,7 @@ export default class FilmsList {
       filterType = this._filterModel.getType();
     }
 
-    if (filterType !== FilterType.ALL && this._filterModel !== null) {
+    if (filterType !== FilterType.ALL && this._type === FilmListType.DEFAULT) {
       filteredFilms = filter[filterType](films);
     }
 
@@ -163,37 +161,26 @@ export default class FilmsList {
   }
 
   _handleViewAction(actionType, updateType, update) {
+    const actionTypeToFilterType = {
+      [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
+      [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
+      [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
+    };
+
     switch (actionType) {
-      case UserAction.UPDATE_FILM:
-        this._filmsModel.updateItemById(updateType, update);
+      case UserAction.UPDATE_WATCHED:
+      case UserAction.UPDATE_FAVORITE:
+      case UserAction.UPDATE_WATCHLIST:
+        updateType = actionTypeToFilterType[actionType] === this._filterModel.getType() ? UpdateType.MINOR : updateType;
+        this._filmsModel.updateById(updateType, update);
         break;
     }
   }
 
   _handleModelEvent(updateType, data) {
-    const currentFilter = this._filterModel ? this._filterModel.getType() : null;
-
     switch (updateType) {
-      case UpdateType.PATCH_WATCHLIST:
-        if (currentFilter === FilterType.WATCHLIST) {
-          this.update();
-        } else {
-          this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
-        }
-        break;
-      case UpdateType.PATCH_WATCHED:
-        if (currentFilter === FilterType.HISTORY) {
-          this.update();
-        } else {
-          this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
-        }
-        break;
-      case UpdateType.PATCH_FAVORITE:
-        if (currentFilter === FilterType.FAVORITES) {
-          this.update();
-        } else {
-          this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
-        }
+      case UpdateType.PATCH:
+        this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
         break;
       case UpdateType.MINOR:
         this.update();

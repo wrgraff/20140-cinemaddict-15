@@ -86,8 +86,8 @@ export default class Details {
   }
 
   _handleWatchlistClick() {
-    this._filmsModel.updateItemById(
-      UpdateType.PATCH_WATCHLIST,
+    this._filmsModel.updateById(
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -99,8 +99,8 @@ export default class Details {
   }
 
   _handleWatchedClick() {
-    this._filmsModel.updateItemById(
-      UpdateType.PATCH_WATCHED,
+    this._filmsModel.updateById(
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -112,8 +112,8 @@ export default class Details {
   }
 
   _handleFavoriteClick() {
-    this._filmsModel.updateItemById(
-      UpdateType.PATCH_FAVORITE,
+    this._filmsModel.updateById(
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -126,9 +126,7 @@ export default class Details {
 
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.PATCH_WATCHLIST:
-      case UpdateType.PATCH_WATCHED:
-      case UpdateType.PATCH_FAVORITE:
+      case UpdateType.PATCH:
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
         this.update(data);
