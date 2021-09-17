@@ -24,22 +24,24 @@ const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.set( filmsToData(films) );
 
-const statistics = getStatistic( filmsModel.getAll() );
-const statisticsComponent = new StatisticView( statistics );
+let statistics = getStatistic( filmsModel.getAll() );
+let statisticsComponent = null;
 render( pageHeader, new ProfileView( getRatingTitle(statistics.watched) ) );
-filmsModel.addObserver( () => statisticsComponent.updateData( StatisticView.parseStatisticToData( getStatistic(filmsModel.getAll())) ) );
+filmsModel.addObserver( () => ( statistics = getStatistic( filmsModel.getAll() ) ) );
 
 const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel);
 const filmsPresenter = FilmsPresenter.create(pageMain, filmsModel, filterModel);
 
 filterPresenter.setStatisticsMenuItemClickHandler(() => {
   filmsPresenter.destroy();
+  statisticsComponent = new StatisticView( statistics );
   render(pageMain, statisticsComponent);
 });
 
 filterPresenter.setFilterMenuItemClickHandler(() => {
   filmsPresenter.init();
   remove(statisticsComponent);
+  statisticsComponent = null;
 });
 
 const footerStatistics = document.querySelector('.footer__statistics');

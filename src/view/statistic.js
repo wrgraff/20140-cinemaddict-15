@@ -133,7 +133,6 @@ export default class Statistic extends SmartView {
     super();
     this._data = Statistic.parseStatisticToData(statistic);
     this._chart = null;
-
     this._renderChart();
   }
 
