@@ -10,8 +10,8 @@ const createFilmCardTemplate = ( data ) => (`
     <p class="film-card__rating">${data.rating}</p>
 
     <p class="film-card__info">
-      <span class="film-card__year">${data.release}</span>
-      <span class="film-card__duration">${data.runtime}</span>
+      <span class="film-card__year">${data.releaseYear}</span>
+      <span class="film-card__duration">${data.runtimeText}</span>
       <span class="film-card__genre">${data.genre}</span>
     </p>
 
@@ -104,9 +104,8 @@ export default class FilmCard extends AbstractView {
       {},
       film,
       {
-        date: dayjs(film.release).format('YYYY'),
-        rating: film.rating.toFixed(1),
-        runtime: formatRuntime(film.runtime),
+        releaseYear: dayjs(film.release).format('YYYY'),
+        runtimeText: formatRuntime(film.runtime),
         genre: film.genres[0],
         commentsAmount: film.comments.length,
         commentsPostfix: film.comments.length === 1 ? 'comment' : 'comments',

@@ -18,7 +18,7 @@ const createDetailsInfoTemplate = (data) => (`
         </div>
 
         <div class="film-details__rating">
-          <p class="film-details__total-rating">${data.rating.toFixed(1)}</p>
+          <p class="film-details__total-rating">${data.rating}</p>
         </div>
       </div>
 

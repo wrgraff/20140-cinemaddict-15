@@ -1,5 +1,6 @@
 import { render, remove } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
+import { filmsToData } from '@utils/films.js';
 import { getStatistic, getRatingTitle } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { COMMENT_COUNT } from '@const/comments.js';
@@ -21,7 +22,7 @@ const pageMain = document.querySelector('.main');
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
-filmsModel.set(films);
+filmsModel.set( filmsToData(films) );
 
 const statistics = getStatistic( filmsModel.getAll() );
 const statisticsComponent = new StatisticView( statistics );

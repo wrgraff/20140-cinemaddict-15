@@ -9,3 +9,16 @@ export const sortByComments = (items) => (
 export const sortByDate = (items) => (
   items.slice().sort((a, b) => b.release - a.release)
 );
+
+export const filmsToData = (films) => (
+  films.map((film) => (Object.assign(
+    {},
+    film,
+    {
+      rating: film.rating.toFixed(1),
+      release: new Date(film.release),
+      runtime: parseInt(film.runtime, 10),
+      watchedDate: new Date(film.watchedDate),
+    },
+  )))
+);
