@@ -34,7 +34,7 @@ const createDetailsControlsTemplate = ({ isInWatchlist, isWatched, isFavorite })
 export default class DetailsControls extends SmartView {
   constructor(film) {
     super();
-    this._data = film;
+    this._data = DetailsControls.parseFilmToData(film);
 
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);

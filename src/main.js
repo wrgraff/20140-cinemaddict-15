@@ -18,13 +18,15 @@ const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COU
 // Rendering
 const pageHeader = document.querySelector('.header');
 const pageMain = document.querySelector('.main');
-const statistics = getStatistic(films);
-const statisticsComponent = new StatisticView( statistics );
-render( pageHeader, new ProfileView( getRatingTitle(statistics.watched) ) );
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.set(films);
+
+const statistics = getStatistic( filmsModel.getAll() );
+const statisticsComponent = new StatisticView( statistics );
+render( pageHeader, new ProfileView( getRatingTitle(statistics.watched) ) );
+filmsModel.addObserver( () => statisticsComponent.updateData( StatisticView.parseStatisticToData( getStatistic(filmsModel.getAll())) ) );
 
 const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel);
 const filmsPresenter = FilmsPresenter.create(pageMain, filmsModel, filterModel);
