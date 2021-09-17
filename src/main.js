@@ -1,6 +1,6 @@
 import { render, remove } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
-import { getStatistic } from '@utils/statistic.js';
+import { getStatistic, getRatingTitle } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { COMMENT_COUNT } from '@const/comments.js';
 import ProfileView from '@view/profile.js';
@@ -18,8 +18,9 @@ const films = new Array(filmsCount).fill('').map( () => generateFilm(COMMENT_COU
 // Rendering
 const pageHeader = document.querySelector('.header');
 const pageMain = document.querySelector('.main');
-const statisticsComponent = new StatisticView( getStatistic(films) );
-render( pageHeader, new ProfileView() );
+const statistics = getStatistic(films);
+const statisticsComponent = new StatisticView( statistics );
+render( pageHeader, new ProfileView( getRatingTitle(statistics.watched) ) );
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
