@@ -1,4 +1,4 @@
-import { isToday, isWeekAgo, isMonthAgo, isYearAgo } from '@utils/common.js';
+import { isTodayDate, isWeekAgoDate, isMonthAgoDate, isYearAgoDate } from '@utils/common.js';
 import { RANK_TITLES, StatisticFilter } from '@const/statistic.js';
 
 export const getRankTitle = ( (amount) => RANK_TITLES.find(({ rating }) => rating >= amount).title || '' );
@@ -31,8 +31,8 @@ export const sortGenres = (genres) => (
 
 export const filterTypeToFilms = {
   [StatisticFilter.ALL_TIME]: (films) => films.slice(),
-  [StatisticFilter.TODAY]: (films) => films.filter((film) => isToday(film.watchedDate)),
-  [StatisticFilter.WEEK]: (films) => films.filter((film) => isWeekAgo(film.watchedDate)),
-  [StatisticFilter.MONTH]: (films) => films.filter((film) => isMonthAgo(film.watchedDate)),
-  [StatisticFilter.YEAR]: (films) => films.filter((film) => isYearAgo(film.watchedDate)),
+  [StatisticFilter.TODAY]: (films) => films.filter((film) => isTodayDate(film.watchedDate)),
+  [StatisticFilter.WEEK]: (films) => films.filter((film) => isWeekAgoDate(film.watchedDate)),
+  [StatisticFilter.MONTH]: (films) => films.filter((film) => isMonthAgoDate(film.watchedDate)),
+  [StatisticFilter.YEAR]: (films) => films.filter((film) => isYearAgoDate(film.watchedDate)),
 };

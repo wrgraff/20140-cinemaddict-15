@@ -1,3 +1,9 @@
+import dayjs from 'dayjs';
+import dayOfYear from 'dayjs/plugin/dayOfYear';
+import isToday from 'dayjs/plugin/isToday';
+dayjs.extend(dayOfYear);
+dayjs.extend(isToday);
+
 export const updateItemById = (items, updatedItem) => {
   const index = items.findIndex((item) => item.id === updatedItem.id);
 
@@ -12,30 +18,25 @@ export const updateItemById = (items, updatedItem) => {
   ];
 };
 
-export const isToday = (date) => {
-  const today = new Date();
+export const isTodayDate = (date) => dayjs(date).isToday();
 
-  return (
-    date.getDate() === today.getDate()
-    && date.getMonth() === today.getMonth()
-    && date.getFullYear() === today.getFullYear()
-  );
-};
-
-export const isWeekAgo = (date) => {
-  const weekAgo = new Date( new Date().getDate() - 7 );
+export const isWeekAgoDate = (date) => {
+  const yearDayNumber = dayjs().dayOfYear();
+  const weekAgo = dayjs().dayOfYear(yearDayNumber - 7);
 
   return weekAgo <= date;
 };
 
-export const isMonthAgo = (date) => {
-  const monthAgo = new Date( new Date().getDate() - 30 );
+export const isMonthAgoDate = (date) => {
+  const yearMonthNumber = dayjs().month();
+  const monthAgo = dayjs().month(yearMonthNumber - 1);
 
   return monthAgo <= date;
 };
 
-export const isYearAgo = (date) => {
-  const yearAgo = new Date( new Date().getDate() - 365 );
+export const isYearAgoDate = (date) => {
+  const yearNumber = dayjs().year();
+  const yearAgo = dayjs().year(yearNumber - 1);
 
   return yearAgo <= date;
 };
