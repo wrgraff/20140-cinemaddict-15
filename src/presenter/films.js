@@ -1,4 +1,4 @@
-import { render, remove } from '@utils/render.js';
+import { render, remove, RenderPlace } from '@utils/render.js';
 import { UpdateType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting, FilmListTitle } from '@const/films.js';
 
@@ -26,6 +26,7 @@ export default class Films {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDetailsOpen = this._onDetailsOpen.bind(this);
     this._onModelEvent = this._onModelEvent.bind(this);
+    this._renderSort = this._renderSort.bind(this);
   }
 
   init() {
@@ -36,6 +37,9 @@ export default class Films {
     this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel));
     this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel));
     this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel));
+
+    this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceListToEmptyHandler(() => remove(this._sortComponent));
+    this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceEmptyToListHandler(this._renderSort);
 
     this._render();
   }
@@ -53,7 +57,7 @@ export default class Films {
     this._sortComponent = new SortView();
     this._sortComponent.setTypeChangeHandler(this._onSortTypeChange);
 
-    render(this._container, this._sortComponent);
+    render(this._sectionComponent, this._sortComponent, RenderPlace.BEFORE);
   }
 
   _renderSection() {
@@ -78,8 +82,8 @@ export default class Films {
   }
 
   _render() {
-    this._renderSort();
     this._renderSection();
+    this._renderSort();
   }
 
   _onDetailsOpen(item) {

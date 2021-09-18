@@ -106,12 +106,22 @@ export default class FilmsList {
     this._callback.openDetails = callback;
   }
 
+  setReplaceListToEmptyHandler(callback) {
+    this._callback.replaceListToEmpty = callback;
+  }
+
+  setReplaceEmptyToListHandler(callback) {
+    this._callback.replaceEmptyToList = callback;
+  }
+
   _replaceListToEmpty() {
+    this._callback.replaceListToEmpty();
     this._emptyComponent = new FilmsListEmptyView(filterTypeToFilmListTitle[ this._filterModel.getType() ]);
     replace(this._emptyComponent, this._listComponent);
   }
 
   _replaceEmptyToList() {
+    this._callback.replaceEmptyToList();
     replace(this._listComponent, this._emptyComponent);
     remove(this._emptyComponent);
   }
