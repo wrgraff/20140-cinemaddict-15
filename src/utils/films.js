@@ -21,7 +21,6 @@ export const filmsToData = (films) => (
     {
       rating: film.rating.toFixed(1),
       release: new Date(film.release),
-      runtime: parseInt(film.runtime, 10),
       watchedDate: new Date(film.watchedDate),
     },
   )))
