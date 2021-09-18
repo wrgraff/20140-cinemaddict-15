@@ -35,7 +35,7 @@ export const sortGenres = (genres) => (
 );
 
 export const filterTypeToFilms = {
-  [StatisticFilter.ALL_TIME]: (films) => films,
+  [StatisticFilter.ALL_TIME]: (films) => films.slice(),
   [StatisticFilter.TODAY]: (films) => films.filter((film) => isToday(film.watchedDate)),
   [StatisticFilter.WEEK]: (films) => films.filter((film) => isWeekAgo(film.watchedDate)),
   [StatisticFilter.MONTH]: (films) => films.filter((film) => isMonthAgo(film.watchedDate)),
