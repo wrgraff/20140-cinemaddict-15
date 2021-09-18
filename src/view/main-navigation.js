@@ -28,8 +28,8 @@ export default class MainNavigation extends AbstractView {
     this._currentFilterType = isStatisticActive ? '' : currentFilterType;
     this._isStatisticActive = isStatisticActive;
 
-    this._changeFilterType = this._changeFilterType.bind(this);
-    this._clickAdditional = this._clickAdditional.bind(this);
+    this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
+    this._onAdditionalClick = this._onAdditionalClick.bind(this);
   }
 
   getTemplate() {
@@ -38,15 +38,15 @@ export default class MainNavigation extends AbstractView {
 
   setFilterTypeChangeHandler(callback) {
     this._callback.changeFilterType = callback;
-    this.getElement().querySelector('.main-navigation__items').addEventListener('click', this._changeFilterType);
+    this.getElement().querySelector('.main-navigation__items').addEventListener('click', this._onFilterTypeChange);
   }
 
   setAdditionalClickHandler(callback) {
     this._callback.clickAdditional = callback;
-    this.getElement().querySelector('.main-navigation__additional').addEventListener('click', this._clickAdditional);
+    this.getElement().querySelector('.main-navigation__additional').addEventListener('click', this._onAdditionalClick);
   }
 
-  _changeFilterType(evt) {
+  _onFilterTypeChange(evt) {
     if (evt.target.tagName !== 'A') {
       return;
     }
@@ -55,7 +55,7 @@ export default class MainNavigation extends AbstractView {
     this._callback.changeFilterType(evt.target.dataset.filterType);
   }
 
-  _clickAdditional(evt) {
+  _onAdditionalClick(evt) {
     evt.preventDefault();
     this._callback.clickAdditional();
   }

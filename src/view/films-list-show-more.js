@@ -5,7 +5,7 @@ const createFilmsListShowMoreTemplate = () => '<button class="films-list__show-m
 export default class FilmsListShowMore extends AbstractView {
   constructor() {
     super();
-    this._clickHandler = this._clickHandler.bind(this);
+    this._onButtonClick = this._onButtonClick.bind(this);
   }
 
   getTemplate() {
@@ -14,10 +14,10 @@ export default class FilmsListShowMore extends AbstractView {
 
   setClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener('click', this._clickHandler);
+    this.getElement().addEventListener('click', this._onButtonClick);
   }
 
-  _clickHandler(evt) {
+  _onButtonClick(evt) {
     evt.preventDefault();
     this._callback.click();
   }

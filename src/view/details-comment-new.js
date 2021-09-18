@@ -35,9 +35,9 @@ export default class DetailsCommentNew extends SmartView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
-    this._inputComment = this._inputComment.bind(this);
-    this._changeEmojiList = this._changeEmojiList.bind(this);
-    this._submitForm = this._submitForm.bind(this);
+    this._onCommentInput = this._onCommentInput.bind(this);
+    this._onEmojiListChange = this._onEmojiListChange.bind(this);
+    this._onFormSubmit = this._onFormSubmit.bind(this);
 
     this._setInnerHandlers();
   }
@@ -47,7 +47,7 @@ export default class DetailsCommentNew extends SmartView {
   }
 
   setFormSubmitHandler(callback) {
-    this._callback.submitForm = callback;
+    this._callback.onFormSubmit = callback;
   }
 
   restoreHandlers() {
@@ -56,29 +56,29 @@ export default class DetailsCommentNew extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._changeEmojiList);
-    element.querySelector('.film-details__comment-input').addEventListener('input', this._inputComment);
-    document.addEventListener('keydown', this._submitForm);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._onEmojiListChange);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._onCommentInput);
+    document.addEventListener('keydown', this._onFormSubmit);
   }
 
-  _changeEmojiList(evt) {
+  _onEmojiListChange(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
     });
   }
 
-  _inputComment(evt) {
+  _onCommentInput(evt) {
     this.updateData({
       text: evt.target.value,
     }, true);
   }
 
-  _submitForm(evt) {
+  _onFormSubmit(evt) {
     if ( isCommandEnterEvent(evt) || isControlEnterEvent(evt) ) {
       evt.preventDefault();
       if (this._data.text && this._data.emotion) {
-        this._callback.submitForm(this._data);
+        this._callback.onFormSubmit(this._data);
       }
     }
   }
