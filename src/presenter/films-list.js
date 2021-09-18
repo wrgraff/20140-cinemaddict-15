@@ -1,6 +1,6 @@
 import { render, remove } from '@utils/render.js';
-import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
-import { filter } from '@utils/filter.js';
+import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType } from '@utils/films.js';
+import { filterTypeToFilms } from '@utils/filter.js';
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
@@ -37,12 +37,12 @@ export default class FilmsList {
     this._cardPresenter = new Map();
 
     this._callback = {};
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleViewAction = this._handleViewAction.bind(this);
-    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
+    this._onViewAction = this._onViewAction.bind(this);
+    this._onDetailsOpen = this._onDetailsOpen.bind(this);
 
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._onModelEvent);
+    this._filterModel.addObserver(this._onModelEvent);
   }
 
   init() {
@@ -98,7 +98,7 @@ export default class FilmsList {
     }
 
     if (filterType !== FilterType.ALL && this._type === FilmListType.DEFAULT) {
-      filteredFilms = filter[filterType](films);
+      filteredFilms = filterTypeToFilms[filterType](films);
     }
 
     switch (this._currentSortType) {
@@ -130,8 +130,8 @@ export default class FilmsList {
     this._getItems()
       .slice(from, to)
       .forEach((item) => {
-        const cardPresenter = FilmCardPresenter.create(this._listContainerComponent, item, this._handleViewAction);
-        cardPresenter.setCardClickHandler(() => this._handleDetailsOpen(item));
+        const cardPresenter = FilmCardPresenter.create(this._listContainerComponent, item, this._onViewAction);
+        cardPresenter.setCardClickHandler(() => this._onDetailsOpen(item));
         this._cardPresenter.set(item.id, cardPresenter);
       });
     this._shownAmount = to;
@@ -160,13 +160,7 @@ export default class FilmsList {
     });
   }
 
-  _handleViewAction(actionType, updateType, update) {
-    const actionTypeToFilterType = {
-      [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
-      [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
-      [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
-    };
-
+  _onViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_WATCHED:
       case UserAction.UPDATE_FAVORITE:
@@ -177,7 +171,7 @@ export default class FilmsList {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _onModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
         this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
@@ -191,7 +185,7 @@ export default class FilmsList {
     }
   }
 
-  _handleDetailsOpen(item) {
+  _onDetailsOpen(item) {
     this._callback.openDetails(item);
   }
 }

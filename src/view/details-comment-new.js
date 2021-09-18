@@ -35,9 +35,9 @@ export default class DetailsCommentNew extends SmartView {
     super();
     this._data = DetailsCommentNew.parseCommentToData(comment);
 
-    this._handleCommentInput = this._handleCommentInput.bind(this);
-    this._handleEmotionListChange = this._handleEmotionListChange.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._onCommentInput = this._onCommentInput.bind(this);
+    this._onEmojiListChange = this._onEmojiListChange.bind(this);
+    this._onFormSubmitKeyDown = this._onFormSubmitKeyDown.bind(this);
 
     this._setInnerHandlers();
   }
@@ -47,7 +47,7 @@ export default class DetailsCommentNew extends SmartView {
   }
 
   setFormSubmitHandler(callback) {
-    this._callback.submitForm = callback;
+    this._callback.onFormSubmit = callback;
   }
 
   restoreHandlers() {
@@ -56,29 +56,29 @@ export default class DetailsCommentNew extends SmartView {
 
   _setInnerHandlers() {
     const element = this.getElement();
-    element.querySelector('.film-details__emoji-list').addEventListener('change', this._handleEmotionListChange);
-    element.querySelector('.film-details__comment-input').addEventListener('input', this._handleCommentInput);
-    element.querySelector('.film-details__comment-input').addEventListener('keydown', this._handleFormSubmit);
+    element.querySelector('.film-details__emoji-list').addEventListener('change', this._onEmojiListChange);
+    element.querySelector('.film-details__comment-input').addEventListener('input', this._onCommentInput);
+    document.addEventListener('keydown', this._onFormSubmitKeyDown);
   }
 
-  _handleEmotionListChange(evt) {
+  _onEmojiListChange(evt) {
     this.updateData({
       emotion: evt.target.value,
       isActiveEmotion: true,
     });
   }
 
-  _handleCommentInput(evt) {
+  _onCommentInput(evt) {
     this.updateData({
       text: evt.target.value,
     }, true);
   }
 
-  _handleFormSubmit(evt) {
+  _onFormSubmitKeyDown(evt) {
     if ( isCommandEnterEvent(evt) || isControlEnterEvent(evt) ) {
       evt.preventDefault();
       if (this._data.text && this._data.emotion) {
-        this._callback.submitForm(this._data);
+        this._callback.onFormSubmit(this._data);
       }
     }
   }

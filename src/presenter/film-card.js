@@ -11,10 +11,10 @@ export default class FilmCard {
     this._cardComponent = null;
 
     this._callback = {};
-    this._handleCardClick = this._handleCardClick.bind(this);
-    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._onCardClick = this._onCardClick.bind(this);
+    this._onWatchlistClick = this._onWatchlistClick.bind(this);
+    this._onWatchedClick = this._onWatchedClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -40,17 +40,17 @@ export default class FilmCard {
 
   _createCard() {
     this._cardComponent = new FilmCardView(this._film);
-    this._cardComponent.setCardClickHandler(this._handleCardClick);
-    this._cardComponent.setWatchlistClickHandler(this._handleWatchlistClick);
-    this._cardComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._cardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._cardComponent.setCardClickHandler(this._onCardClick);
+    this._cardComponent.setWatchlistClickHandler(this._onWatchlistClick);
+    this._cardComponent.setWatchedClickHandler(this._onWatchedClick);
+    this._cardComponent.setFavoriteClickHandler(this._onFavoriteClick);
   }
 
-  _handleCardClick(activeFilm) {
+  _onCardClick(activeFilm) {
     this._callback.clickCard(activeFilm);
   }
 
-  _handleWatchlistClick() {
+  _onWatchlistClick() {
     this._changeData(
       UserAction.UPDATE_WATCHLIST,
       UpdateType.PATCH,
@@ -64,7 +64,7 @@ export default class FilmCard {
     );
   }
 
-  _handleWatchedClick() {
+  _onWatchedClick() {
     this._changeData(
       UserAction.UPDATE_WATCHED,
       UpdateType.PATCH,
@@ -78,7 +78,7 @@ export default class FilmCard {
     );
   }
 
-  _handleFavoriteClick() {
+  _onFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_FAVORITE,
       UpdateType.PATCH,

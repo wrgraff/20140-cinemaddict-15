@@ -1,6 +1,5 @@
 import { UpdateType } from '@const/common.js';
-import { BLANK_COMMENT } from '@const/comments.js';
-import { render, remove, replace } from '@utils/render.js';
+import { render, remove } from '@utils/render.js';
 import { isEscapeEvent } from '@utils/dom-event.js';
 import DetailsInfoView from '@view/details-info.js';
 import DetailsControlsView from '@view/details-controls.js';
@@ -31,53 +30,50 @@ export default class Details {
     this._newCommentComponent = new DetailsCommentNewView();
 
     this._remove = this._remove.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleAddComment = this._handleAddComment.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
+    this._onWatchlistClick = this._onWatchlistClick.bind(this);
+    this._onWatchedClick = this._onWatchedClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
+    this._onCommentAdd = this._onCommentAdd.bind(this);
+    this._onEscapeKeyDown = this._onEscapeKeyDown.bind(this);
 
-    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._onModelEvent);
   }
 
   init(film) {
-    if (this._popupComponent !== null) {
-      remove(this._popupComponent);
+    if (this._isOpen) {
+      this._remove();
     }
 
     this._film = film;
+
     this._infoComponent = new DetailsInfoView(this._film);
     this._commentsComponent = new DetailsCommentsView(this._film.comments);
     this._commentsListComponent = new DetailsCommentsListView(this._film.comments);
-    this._createControls();
+    this._controlsComponent = new DetailsControlsView(this._film);
 
+    this._controlsComponent.setWatchlistClickHandler(this._onWatchlistClick);
+    this._controlsComponent.setWatchedClickHandler(this._onWatchedClick);
+    this._controlsComponent.setFavoriteClickHandler(this._onFavoriteClick);
     this._closeButtonComponent.setClickHandler(this._remove);
-    this._newCommentComponent.setFormSubmitHandler(this._handleAddComment);
+    this._newCommentComponent.setFormSubmitHandler(this._onCommentAdd);
 
     this._open();
   }
 
   update(film) {
-    if (this._controlsComponent !== null && film.id === this._film.id) {
-      this._film = film;
-      const oldControlsComponent = this._controlsComponent;
-      this._createControls();
-      replace(this._controlsComponent, oldControlsComponent);
+    this._film = film;
 
-      const oldCommentsComponent = this._commentsComponent;
-      this._commentsComponent = new DetailsCommentsView(this._film.comments);
-      replace(this._commentsComponent, oldCommentsComponent);
+    if (this._isOpen) {
+      this._controlsComponent.updateData({
+        isInWatchlist: film.isInWatchlist,
+        isWatched: film.isWatched,
+        isFavorite: film.isFavorite,
+      });
     }
   }
 
   _open() {
-    if (this._isOpen) {
-      this._remove();
-    }
-
-    this._newCommentComponent.updateData(BLANK_COMMENT);
-
     render(this._topComponent, this._closeButtonComponent);
     render(this._topComponent, this._infoComponent);
     render(this._topComponent, this._controlsComponent);
@@ -91,35 +87,28 @@ export default class Details {
 
     render(document.body, this._popupComponent);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._escKeyDownHandler);
+    document.addEventListener('keydown', this._onEscapeKeyDown);
 
     this._isOpen = true;
   }
 
   _remove() {
     this._film = null;
-    remove(this._infoComponent);
-    remove(this._controlsComponent);
-    remove(this._closeButtonComponent);
+    remove(this._popupComponent);
+    remove(this._formComponent);
     remove(this._topComponent);
     remove(this._bottomComponent);
-    remove(this._commentsListComponent);
+    remove(this._infoComponent);
+    remove(this._controlsComponent);
     remove(this._commentsComponent);
-    remove(this._formComponent);
-    remove(this._formComponent);
-    remove(this._popupComponent);
+    remove(this._commentsListComponent);
+    remove(this._closeButtonComponent);
+    remove(this._newCommentComponent);
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._escKeyDownHandler);
+    document.removeEventListener('keydown', this._onEscapeKeyDown);
   }
 
-  _createControls() {
-    this._controlsComponent = new DetailsControlsView(this._film);
-    this._controlsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
-    this._controlsComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._controlsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-  }
-
-  _handleWatchlistClick() {
+  _onWatchlistClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -132,7 +121,7 @@ export default class Details {
     );
   }
 
-  _handleWatchedClick() {
+  _onWatchedClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -145,7 +134,7 @@ export default class Details {
     );
   }
 
-  _handleFavoriteClick() {
+  _onFavoriteClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -158,7 +147,7 @@ export default class Details {
     );
   }
 
-  _handleAddComment(update) {
+  _onCommentAdd(update) {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -171,7 +160,7 @@ export default class Details {
     );
   }
 
-  _handleModelEvent(updateType, data) {
+  _onModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
       case UpdateType.MINOR:
@@ -181,11 +170,11 @@ export default class Details {
     }
   }
 
-  _escKeyDownHandler(evt) {
+  _onEscapeKeyDown(evt) {
     if ( isEscapeEvent(evt) ) {
       evt.preventDefault();
       this._remove();
-      document.removeEventListener('keydown', this._escKeyDownHandler);
+      document.removeEventListener('keydown', this._onEscapeKeyDown);
     }
   }
 }

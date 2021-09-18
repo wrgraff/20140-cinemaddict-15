@@ -1,3 +1,5 @@
+import { UserAction, FilterType } from '@const/common.js';
+
 export const sortByRating = (items) => (
   items.slice().sort((a, b) => b.rating - a.rating)
 );
@@ -9,3 +11,23 @@ export const sortByComments = (items) => (
 export const sortByDate = (items) => (
   items.slice().sort((a, b) => b.release - a.release)
 );
+
+export const getWatchedAmount = (films) => films.reduce( (amount, { isWatched }) => (isWatched ? amount++ : amount), 0);
+
+export const parseFilmsToData = (films) => (
+  films.map((film) => (Object.assign(
+    {},
+    film,
+    {
+      rating: film.rating.toFixed(1),
+      release: new Date(film.release),
+      watchedDate: new Date(film.watchedDate),
+    },
+  )))
+);
+
+export const actionTypeToFilterType = {
+  [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
+  [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
+  [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
+};

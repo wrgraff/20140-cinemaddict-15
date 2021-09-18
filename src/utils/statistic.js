@@ -1,7 +1,7 @@
-import { RANK_TITLES } from '@const/statistic.js';
+import { isTodayDate, isWeekAgoDate, isMonthAgoDate, isYearAgoDate } from '@utils/common.js';
+import { RANK_TITLES, StatisticFilter } from '@const/statistic.js';
 
-export const getRatingTitle = (value) => RANK_TITLES
-  .find(({ rating }) => rating >= value).title || '';
+export const getRankTitle = ( (amount) => RANK_TITLES.find(({ rating }) => rating >= amount).title || '' );
 
 export const getStatistic = (films) => (
   films.reduce((statistic, film) => {
@@ -28,3 +28,11 @@ export const getStatistic = (films) => (
 export const sortGenres = (genres) => (
   Object.entries(genres).sort( (a, b) => a[1] < b[1] )
 );
+
+export const filterTypeToFilms = {
+  [StatisticFilter.ALL_TIME]: (films) => films.slice(),
+  [StatisticFilter.TODAY]: (films) => films.filter((film) => isTodayDate(film.watchedDate)),
+  [StatisticFilter.WEEK]: (films) => films.filter((film) => isWeekAgoDate(film.watchedDate)),
+  [StatisticFilter.MONTH]: (films) => films.filter((film) => isMonthAgoDate(film.watchedDate)),
+  [StatisticFilter.YEAR]: (films) => films.filter((film) => isYearAgoDate(film.watchedDate)),
+};

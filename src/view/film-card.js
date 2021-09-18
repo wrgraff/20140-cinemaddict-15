@@ -10,8 +10,8 @@ const createFilmCardTemplate = ( data ) => (`
     <p class="film-card__rating">${data.rating}</p>
 
     <p class="film-card__info">
-      <span class="film-card__year">${data.release}</span>
-      <span class="film-card__duration">${data.runtime}</span>
+      <span class="film-card__year">${data.releaseYear}</span>
+      <span class="film-card__duration">${data.runtimeText}</span>
       <span class="film-card__genre">${data.genre}</span>
     </p>
 
@@ -47,10 +47,10 @@ export default class FilmCard extends AbstractView {
   constructor(film) {
     super();
     this._data = FilmCard.parseFilmToData(film);
-    this._cardClickHandler = this._cardClickHandler.bind(this);
-    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
-    this._watchedClickHandler = this._watchedClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._onCardClick = this._onCardClick.bind(this);
+    this._onAddToWatchlistClick = this._onAddToWatchlistClick.bind(this);
+    this._onMarkAsWatchedClick = this._onMarkAsWatchedClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
   }
 
   getTemplate() {
@@ -60,41 +60,41 @@ export default class FilmCard extends AbstractView {
   setCardClickHandler(callback) {
     this._callback.clickCard = callback;
     this.getElement().querySelectorAll('.film-card__title, .film-card__poster, .film-card__comments').forEach((element) => {
-      element.addEventListener('click', this._cardClickHandler);
+      element.addEventListener('click', this._onCardClick);
     });
   }
 
   setWatchlistClickHandler(callback) {
     this._callback.clickWatchlist = callback;
-    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._watchlistClickHandler);
+    this.getElement().querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this._onAddToWatchlistClick);
   }
 
   setWatchedClickHandler(callback) {
     this._callback.clickWatched = callback;
-    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._watchedClickHandler);
+    this.getElement().querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this._onMarkAsWatchedClick);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.clickFavorite = callback;
-    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._favoriteClickHandler);
+    this.getElement().querySelector('.film-card__controls-item--favorite').addEventListener('click', this._onFavoriteClick);
   }
 
-  _cardClickHandler(evt) {
+  _onCardClick(evt) {
     evt.preventDefault();
     this._callback.clickCard();
   }
 
-  _watchlistClickHandler(evt) {
+  _onAddToWatchlistClick(evt) {
     evt.preventDefault();
     this._callback.clickWatchlist();
   }
 
-  _watchedClickHandler(evt) {
+  _onMarkAsWatchedClick(evt) {
     evt.preventDefault();
     this._callback.clickWatched();
   }
 
-  _favoriteClickHandler(evt) {
+  _onFavoriteClick(evt) {
     evt.preventDefault();
     this._callback.clickFavorite();
   }
@@ -104,9 +104,8 @@ export default class FilmCard extends AbstractView {
       {},
       film,
       {
-        date: dayjs(film.release).format('YYYY'),
-        rating: film.rating.toFixed(1),
-        runtime: formatRuntime(film.runtime),
+        releaseYear: dayjs(film.release).format('YYYY'),
+        runtimeText: formatRuntime(film.runtime),
         genre: film.genres[0],
         commentsAmount: film.comments.length,
         commentsPostfix: film.comments.length === 1 ? 'comment' : 'comments',

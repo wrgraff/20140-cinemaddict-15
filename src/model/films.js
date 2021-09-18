@@ -14,6 +14,10 @@ export default class Films extends AbstractObserver {
     return this._items;
   }
 
+  isEmpty() {
+    return this._items.length === 0;
+  }
+
   updateById(updateType, updatedItem) {
     const index = this._items.findIndex((item) => item.id === updatedItem.id);
 

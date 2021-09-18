@@ -1,10 +1,10 @@
-import AbstractView from '@view/abstract.js';
+import SmartView from '@view/smart.js';
 
-const createDetailsControlsTemplate = (film) => (`
+const createDetailsControlsTemplate = ({ isInWatchlist, isWatched, isFavorite }) => (`
   <section class="film-details__controls">
     <button
       type="button"
-      class="film-details__control-button film-details__control-button--watchlist ${film.isInWatchlist ? 'film-details__control-button--active' : ''}"
+      class="film-details__control-button film-details__control-button--watchlist ${isInWatchlist ? 'film-details__control-button--active' : ''}"
       id="watchlist"
       name="watchlist"
     >
@@ -13,7 +13,7 @@ const createDetailsControlsTemplate = (film) => (`
 
     <button
       type="button"
-      class="film-details__control-button film-details__control-button--watched ${film.isWatched ? 'film-details__control-button--active' : ''}"
+      class="film-details__control-button film-details__control-button--watched ${isWatched ? 'film-details__control-button--active' : ''}"
       id="watched"
       name="watched"
     >
@@ -22,7 +22,7 @@ const createDetailsControlsTemplate = (film) => (`
 
     <button
       type="button"
-      class="film-details__control-button film-details__control-button--favorite ${film.isFavorite ? 'film-details__control-button--active' : ''}"
+      class="film-details__control-button film-details__control-button--favorite ${isFavorite ? 'film-details__control-button--active' : ''}"
       id="favorite"
       name="favorite"
     >
@@ -31,47 +31,61 @@ const createDetailsControlsTemplate = (film) => (`
   </section>
 `);
 
-export default class DetailsControls extends AbstractView {
+export default class DetailsControls extends SmartView {
   constructor(film) {
     super();
-    this._film = film;
+    this._data = DetailsControls.parseFilmToData(film);
 
-    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
-    this._watchedClickHandler = this._watchedClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._onWatchlistClick = this._onWatchlistClick.bind(this);
+    this._onWatchedClick = this._onWatchedClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
   }
 
   getTemplate() {
-    return createDetailsControlsTemplate(this._film);
+    return createDetailsControlsTemplate(this._data);
   }
 
   setWatchlistClickHandler(callback) {
     this._callback.clickWatchlist = callback;
-    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._watchlistClickHandler);
+    this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._onWatchlistClick);
   }
 
   setWatchedClickHandler(callback) {
     this._callback.clickWatched = callback;
-    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._watchedClickHandler);
+    this.getElement().querySelector('.film-details__control-button--watched').addEventListener('click', this._onWatchedClick);
   }
 
   setFavoriteClickHandler(callback) {
     this._callback.clickFavorite = callback;
-    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._favoriteClickHandler);
+    this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._onFavoriteClick);
   }
 
-  _watchlistClickHandler(evt) {
+  restoreHandlers() {
+    this.setWatchlistClickHandler(this._callback.clickWatchlist);
+    this.setWatchedClickHandler(this._callback.clickWatched);
+    this.setFavoriteClickHandler(this._callback.clickFavorite);
+  }
+
+  _onWatchlistClick(evt) {
     evt.preventDefault();
     this._callback.clickWatchlist();
   }
 
-  _watchedClickHandler(evt) {
+  _onWatchedClick(evt) {
     evt.preventDefault();
     this._callback.clickWatched();
   }
 
-  _favoriteClickHandler(evt) {
+  _onFavoriteClick(evt) {
     evt.preventDefault();
     this._callback.clickFavorite();
+  }
+
+  static parseFilmToData({ isInWatchlist, isWatched, isFavorite }) {
+    return {
+      isInWatchlist,
+      isWatched,
+      isFavorite,
+    };
   }
 }

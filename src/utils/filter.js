@@ -15,7 +15,7 @@ export const getFilters = (films) => (
   })
 );
 
-export const filter = {
+export const filterTypeToFilms = {
   [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isInWatchlist),
   [FilterType.HISTORY]: (films) => films.filter((film) => film.isWatched),
   [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),

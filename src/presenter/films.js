@@ -9,7 +9,7 @@ import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
   constructor(container, filmsModel, filterModel) {
-    this._filmsModel = filmsModel;
+    this._model = filmsModel;
     this._filterModel = filterModel;
     this._container = container;
 
@@ -19,21 +19,26 @@ export default class Films {
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
 
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDetailsOpen = this._onDetailsOpen.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
   }
 
   init() {
-    this._filmsModel.addObserver(this._handleModelEvent);
+    this._model.addObserver(this._onModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._filmsModel);
+    this._detailsPresenter = new DetailsPresenter(this._model);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._filmsModel, DefaultListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._filmsModel, RatingListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._filmsModel, CommentsListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel));
 
     this._render();
+  }
+
+  destroy() {
+    remove(this._sortComponent);
+    remove(this._sectionComponent);
   }
 
   _renderSort() {
@@ -42,20 +47,20 @@ export default class Films {
     }
 
     this._sortComponent = new SortView();
-    this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
+    this._sortComponent.setTypeChangeHandler(this._onSortTypeChange);
 
     render(this._container, this._sortComponent);
   }
 
   _renderSection() {
-    if (this._filmsModel.getAll().length === 0) {
+    if ( this._model.isEmpty() ) {
       this._createList();
       return;
     }
 
     this._itemsListPresenter.forEach((presenter) => {
       presenter.init();
-      presenter.setDetailsOpenHandler(this._handleDetailsOpen);
+      presenter.setDetailsOpenHandler(this._onDetailsOpen);
     });
 
     render(this._container, this._sectionComponent);
@@ -66,15 +71,15 @@ export default class Films {
     this._renderSection();
   }
 
-  _handleDetailsOpen(item) {
+  _onDetailsOpen(item) {
     this._detailsPresenter.init(item);
   }
 
-  _handleSortTypeChange(sortType) {
+  _onSortTypeChange(sortType) {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
-  _handleModelEvent(updateType) {
+  _onModelEvent(updateType) {
     if (updateType === UpdateType.MAJOR) {
       remove(this._sortComponent);
       this._renderSort();
@@ -84,5 +89,6 @@ export default class Films {
   static create(container, filmsModel, filterModel) {
     const filmsPresenter = new this(container, filmsModel, filterModel);
     filmsPresenter.init();
+    return filmsPresenter;
   }
 }
