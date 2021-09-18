@@ -4,6 +4,8 @@ import isToday from 'dayjs/plugin/isToday';
 dayjs.extend(dayOfYear);
 dayjs.extend(isToday);
 
+const DAYS_IN_WEEK = 7;
+
 export const updateItemById = (items, updatedItem) => {
   const index = items.findIndex((item) => item.id === updatedItem.id);
 
@@ -22,7 +24,7 @@ export const isTodayDate = (date) => dayjs(date).isToday();
 
 export const isWeekAgoDate = (date) => {
   const yearDayNumber = dayjs().dayOfYear();
-  const weekAgo = dayjs().dayOfYear(yearDayNumber - 7);
+  const weekAgo = dayjs().dayOfYear(yearDayNumber - DAYS_IN_WEEK);
 
   return weekAgo <= date;
 };

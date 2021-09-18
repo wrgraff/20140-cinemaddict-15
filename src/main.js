@@ -1,6 +1,6 @@
 import { render, remove, replace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
-import { getWatchedAmount, filmsToData } from '@utils/films.js';
+import { getWatchedAmount, parseFilmsToData } from '@utils/films.js';
 import { getRankTitle } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { COMMENT_COUNT } from '@const/comments.js';
@@ -22,7 +22,7 @@ const pageMain = document.querySelector('.main');
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
-filmsModel.set( filmsToData(films) );
+filmsModel.set( parseFilmsToData(films) );
 
 let statisticsComponent = null;
 let watchedFilmsAmount = getWatchedAmount( filmsModel.getAll() );
@@ -46,7 +46,7 @@ filterPresenter.setStatisticsMenuItemClickHandler(() => {
   render(pageMain, statisticsComponent);
 });
 
-filterPresenter.setFilterMenuItemClickHandler(() => {
+filterPresenter.setMenuItemClickHandler(() => {
   filmsPresenter.init();
   remove(statisticsComponent);
   statisticsComponent = null;

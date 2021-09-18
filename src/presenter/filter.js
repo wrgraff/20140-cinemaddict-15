@@ -45,7 +45,7 @@ export default class Filter {
     this._callback.clickStatisticsMenuItem = callback;
   }
 
-  setFilterMenuItemClickHandler(callback) {
+  setMenuItemClickHandler(callback) {
     this._callback.clickFilterMenuItem = callback;
   }
 

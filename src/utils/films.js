@@ -14,7 +14,7 @@ export const sortByDate = (items) => (
 
 export const getWatchedAmount = (films) => films.reduce( (amount, { isWatched }) => (isWatched ? amount++ : amount), 0);
 
-export const filmsToData = (films) => (
+export const parseFilmsToData = (films) => (
   films.map((film) => (Object.assign(
     {},
     film,
