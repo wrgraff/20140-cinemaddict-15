@@ -1,8 +1,8 @@
 import { render, remove } from '@utils/render.js';
-import { sortByRating, sortByComments, sortByDate } from '@utils/films.js';
+import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType } from '@utils/films.js';
 import { filterTypeToFilms } from '@utils/filter.js';
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, SortType, actionTypeToFilterType } from '@const/films.js';
+import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
 import FilmsListContainerView from '@view/films-list-container.js';

@@ -1,5 +1,3 @@
-import { UserAction, FilterType } from '@const/common.js';
-
 export const FilmListType = {
   DEFAULT: 'default',
   RATING: 'rating',
@@ -52,10 +50,4 @@ export const CommentsListSetting = {
   SORT_TYPE: SortType.COMMENTS,
   STEP_AMOUNT: FilmListStepAmount.EXTRA,
   MAX_AMOUNT: FilmListStepAmount.EXTRA,
-};
-
-export const actionTypeToFilterType = {
-  [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
-  [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
-  [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
 };

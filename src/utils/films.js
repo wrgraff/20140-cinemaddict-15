@@ -1,3 +1,5 @@
+import { UserAction, FilterType } from '@const/common.js';
+
 export const sortByRating = (items) => (
   items.slice().sort((a, b) => b.rating - a.rating)
 );
@@ -22,3 +24,9 @@ export const filmsToData = (films) => (
     },
   )))
 );
+
+export const actionTypeToFilterType = {
+  [UserAction.UPDATE_WATCHED]: FilterType.HISTORY,
+  [UserAction.UPDATE_FAVORITE]: FilterType.FAVORITES,
+  [UserAction.UPDATE_WATCHLIST]: FilterType.WATCHLIST,
+};
