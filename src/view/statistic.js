@@ -5,6 +5,8 @@ import { StatisticFilter } from '@const/statistic.js';
 import { sortGenres, getStatistic, filterTypeToFilms } from '@utils/statistic.js';
 import { formatRuntime } from '@utils/format.js';
 
+const BAR_HEIGHT = 50;
+
 const createTopGenreTemplate = (topGenreName) => (`
   <li class="statistic__text-item">
     <h4 class="statistic__item-title">Top genre</h4>
@@ -64,9 +66,8 @@ const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName, ac
 `);
 
 const renderChart = (ctx, genres) => {
-  const BAR_HEIGHT = 50;
   const height = BAR_HEIGHT * genres.length;
-  const labels = genres.map((genre) => genre[0]);
+  const labels = genres.map(([label]) => label);
   const data = genres.map((genre) => genre[1]);
 
   ctx.height = height;
@@ -106,7 +107,6 @@ const renderChart = (ctx, genres) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 24,
         }],
         xAxes: [{
           ticks: {
@@ -118,6 +118,9 @@ const renderChart = (ctx, genres) => {
             drawBorder: false,
           },
         }],
+      },
+      dataset: {
+        barThickness: 24,
       },
       legend: {
         display: false,
@@ -169,7 +172,6 @@ export default class Statistic extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this._changeFilterType = this._changeFilterType.bind(this);
   }
 
   _setInnerHandlers() {
@@ -191,7 +193,7 @@ export default class Statistic extends SmartView {
       {
         genres: sortedGenres,
         topGenreName: sortedGenres.length !== 0 ? sortedGenres[0][0] : '',
-        rankTitle: rankTitle,
+        rankTitle,
         activeFilterType: activeFilterType,
       },
     );
