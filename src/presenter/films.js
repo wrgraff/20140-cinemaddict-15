@@ -53,7 +53,7 @@ export default class Films {
   }
 
   _renderSection() {
-    if (this._model.getAll().length === 0) {
+    if ( this._model.isEmpty() ) {
       this._createList();
       return;
     }
