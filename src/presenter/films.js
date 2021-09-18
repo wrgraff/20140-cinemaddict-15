@@ -9,11 +9,12 @@ import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
-  constructor(container, filmsModel, filterModel) {
+  constructor(container, filmsModel, filterModel, api) {
     this._model = filmsModel;
     this._filterModel = filterModel;
     this._container = container;
     this._isLoading = true;
+    this._api = api;
 
     this._sectionComponent = new FilmsView();
     this._sortComponent = null;
@@ -34,9 +35,9 @@ export default class Films {
 
     this._detailsPresenter = new DetailsPresenter(this._model);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel, this._api));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel, this._api));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel, this._api));
 
     this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceListToEmptyHandler(() => remove(this._sortComponent));
     this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceEmptyToListHandler(this._renderSort);
@@ -109,8 +110,8 @@ export default class Films {
     }
   }
 
-  static create(container, filmsModel, filterModel) {
-    const filmsPresenter = new this(container, filmsModel, filterModel);
+  static create(container, filmsModel, filterModel, api) {
+    const filmsPresenter = new this(container, filmsModel, filterModel, api);
     filmsPresenter.init();
     return filmsPresenter;
   }

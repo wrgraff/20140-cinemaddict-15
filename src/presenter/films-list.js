@@ -11,10 +11,11 @@ import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null) {
+  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null, api) {
     this._filmsModel = filmsModel;
     this._filterModel = filerModel;
     this._container = container;
+    this._api = api;
 
     this._isRenderedEmpty = false;
     this._type = settings.TYPE;
@@ -204,7 +205,9 @@ export default class FilmsList {
       case UserAction.UPDATE_FAVORITE:
       case UserAction.UPDATE_WATCHLIST:
         updateType = actionTypeToFilterType[actionType] === this._filterModel.getType() ? UpdateType.MINOR : updateType;
-        this._filmsModel.updateById(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.updateById(updateType, response);
+        });
         break;
     }
   }
