@@ -1,9 +1,10 @@
 import { render, remove } from '@utils/render.js';
 import { UpdateType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
+import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting, FilmListTitle } from '@const/films.js';
 
 import SortView from '@view/sort.js';
 import FilmsView from '@view/films.js';
+import FilmsListEmptyView from '@view/films-list-empty.js';
 import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
@@ -12,9 +13,12 @@ export default class Films {
     this._model = filmsModel;
     this._filterModel = filterModel;
     this._container = container;
+    this._isLoading = true;
 
     this._sectionComponent = new FilmsView();
     this._sortComponent = null;
+    this._emptyComponent = new FilmsListEmptyView(FilmListTitle.EMPTY);
+    this._loadingComponent = new FilmsListEmptyView(FilmListTitle.LOADING);
 
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
@@ -53,8 +57,15 @@ export default class Films {
   }
 
   _renderSection() {
+    if (this._isLoading) {
+      render(this._sectionComponent, this._loadingComponent);
+      render(this._container, this._sectionComponent);
+      return;
+    }
+
     if ( this._model.isEmpty() ) {
-      this._createList();
+      render(this._sectionComponent, this._emptyComponent);
+      render(this._container, this._sectionComponent);
       return;
     }
 
@@ -80,9 +91,17 @@ export default class Films {
   }
 
   _onModelEvent(updateType) {
-    if (updateType === UpdateType.MAJOR) {
-      remove(this._sortComponent);
-      this._renderSort();
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        remove(this._sortComponent);
+        this._renderSort();
+        break;
+
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderSection();
+        break;
     }
   }
 

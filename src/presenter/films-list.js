@@ -1,10 +1,11 @@
-import { render, remove } from '@utils/render.js';
+import { UserAction, UpdateType, FilterType } from '@const/common.js';
+import { FilmListType, DefaultListSetting, SortType, filterTypeToFilmListTitle } from '@const/films.js';
+import { render, remove, replace } from '@utils/render.js';
 import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType } from '@utils/films.js';
 import { filterTypeToFilms } from '@utils/filter.js';
-import { UserAction, UpdateType, FilterType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
+import FilmsListEmptyView from '@view/films-list-empty.js';
 import FilmsListContainerView from '@view/films-list-container.js';
 import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
@@ -15,6 +16,7 @@ export default class FilmsList {
     this._filterModel = filerModel;
     this._container = container;
 
+    this._isRenderedEmpty = false;
     this._type = settings.TYPE;
     this._stepAmount = settings.STEP_AMOUNT;
     this._maxAmount = settings.MAX_AMOUNT || this._filmsModel.getAll().length;
@@ -31,6 +33,7 @@ export default class FilmsList {
         this._listComponent = new FilmsListView(settings.TITLE);
     }
 
+    this._emptyComponent = null;
     this._listContainerComponent = new FilmsListContainerView();
     this._showMoreComponent = null;
 
@@ -50,6 +53,21 @@ export default class FilmsList {
   }
 
   update({resetShownAmount = false, resetSortType = false} = {}) {
+    if (this._getItems().length === 0) {
+      if (!this._isRenderedEmpty) {
+        this._replaceListToEmpty();
+      }
+
+      this._isRenderedEmpty = true;
+
+      return;
+    }
+
+    if (this._isRenderedEmpty) {
+      this._isRenderedEmpty = false;
+      this._replaceEmptyToList();
+    }
+
     this._clearCards();
 
     if (resetShownAmount) {
@@ -86,6 +104,16 @@ export default class FilmsList {
 
   setDetailsOpenHandler(callback) {
     this._callback.openDetails = callback;
+  }
+
+  _replaceListToEmpty() {
+    this._emptyComponent = new FilmsListEmptyView(filterTypeToFilmListTitle[ this._filterModel.getType() ]);
+    replace(this._emptyComponent, this._listComponent);
+  }
+
+  _replaceEmptyToList() {
+    replace(this._listComponent, this._emptyComponent);
+    remove(this._emptyComponent);
   }
 
   _getItems() {
