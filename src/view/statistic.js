@@ -1,7 +1,8 @@
 import SmartView from '@view/smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { sortGenres, getRatingTitle } from '@utils/statistic.js';
+import { StatisticFilter } from '@const/statistic.js';
+import { sortGenres, getStatistic, filterTypeToFilms } from '@utils/statistic.js';
 import { formatRuntime } from '@utils/format.js';
 
 const createTopGenreTemplate = (topGenreName) => (`
@@ -11,7 +12,9 @@ const createTopGenreTemplate = (topGenreName) => (`
   </li>
 `);
 
-const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName }) => (`
+const createStatisticChartTemplate = () => '<div class="statistic__chart-wrap"><canvas class="statistic__chart" width="1000"></canvas></div>';
+
+const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName, activeFilterType }) => (`
   <section class="statistic">
     <p class="statistic__rank">
       Your rank
@@ -22,19 +25,19 @@ const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName }) 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="${StatisticFilter.ALL_TIME}" ${ activeFilterType === StatisticFilter.ALL_TIME ? 'checked' : ''}>
       <label for="statistic-all-time" class="statistic__filters-label">All time</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="${StatisticFilter.TODAY}" ${ activeFilterType === StatisticFilter.TODAY ? 'checked' : ''}>
       <label for="statistic-today" class="statistic__filters-label">Today</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="${StatisticFilter.WEEK}" ${ activeFilterType === StatisticFilter.WEEK ? 'checked' : ''}>
       <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="${StatisticFilter.MONTH}" ${ activeFilterType === StatisticFilter.MONTH ? 'checked' : ''}>
       <label for="statistic-month" class="statistic__filters-label">Month</label>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="${StatisticFilter.YEAR}" ${ activeFilterType === StatisticFilter.YEAR ? 'checked' : ''}>
       <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
 
@@ -53,12 +56,10 @@ const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName }) 
           `) )}
         </p>
       </li>
-      ${topGenreName ? createTopGenreTemplate(topGenreName) : ''}
+      ${topGenreName !== '' ? createTopGenreTemplate(topGenreName) : ''}
     </ul>
 
-    <div class="statistic__chart-wrap">
-      <canvas class="statistic__chart" width="1000"></canvas>
-    </div>
+    ${watched !== 0 ? createStatisticChartTemplate() : ''}
   </section>
 `);
 
@@ -129,10 +130,17 @@ const renderChart = (ctx, genres) => {
 };
 
 export default class Statistic extends SmartView {
-  constructor(statistic) {
+  constructor(films, rankTitle) {
     super();
-    this._data = Statistic.parseStatisticToData(statistic);
+    this._films = films;
+    this._rankTitle = rankTitle;
     this._chart = null;
+
+    this._data = Statistic.parseFilmsToData(films, rankTitle, StatisticFilter.ALL_TIME);
+
+    this._changeFilterType = this._changeFilterType.bind(this);
+
+    this._setInnerHandlers();
     this._renderChart();
   }
 
@@ -153,24 +161,28 @@ export default class Statistic extends SmartView {
       this._chart = null;
     }
 
-    const ctx = this.getElement().querySelector('.statistic__chart');
-    this._chart = renderChart(ctx, this._data.genres);
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.changeFilterType = callback;
-    this.getElement().querySelector('.statistic__filters').addEventListener('change', this._changeFilterType);
+    if (this._data.watched !== 0) {
+      const ctx = this.getElement().querySelector('.statistic__chart');
+      this._chart = renderChart(ctx, this._data.genres);
+    }
   }
 
   restoreHandlers() {
-    this.setFilterTypeChangeHandler(this._callback.changeFilterType);
+    this._setInnerHandlers();
+    this._changeFilterType = this._changeFilterType.bind(this);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('.statistic__filters').addEventListener('change', this._changeFilterType);
   }
 
   _changeFilterType(evt) {
-    this._callback.changeFilterType(evt.target.value);
+    this.updateData( Statistic.parseFilmsToData(this._films, this._rankTitle, evt.target.value) );
+    this._renderChart();
   }
 
-  static parseStatisticToData(statistic) {
+  static parseFilmsToData(films, rankTitle, activeFilterType) {
+    const statistic = getStatistic( filterTypeToFilms[activeFilterType](films) );
     const sortedGenres = sortGenres(statistic.genres);
 
     return Object.assign(
@@ -178,8 +190,9 @@ export default class Statistic extends SmartView {
       statistic,
       {
         genres: sortedGenres,
-        topGenreName: sortedGenres[0][0],
-        rankTitle: getRatingTitle(statistic.watched),
+        topGenreName: sortedGenres.length !== 0 ? sortedGenres[0][0] : '',
+        rankTitle: rankTitle,
+        activeFilterType: activeFilterType,
       },
     );
   }

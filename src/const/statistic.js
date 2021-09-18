@@ -12,3 +12,11 @@ export const RANK_TITLES = [
     rating: 21,
   },
 ];
+
+export const StatisticFilter = {
+  ALL_TIME: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};

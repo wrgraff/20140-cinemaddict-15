@@ -1,7 +1,7 @@
-import { render, remove } from '@utils/render.js';
+import { render, remove, replace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
 import { filmsToData } from '@utils/films.js';
-import { getStatistic, getRatingTitle } from '@utils/statistic.js';
+import { getRankTitle } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { COMMENT_COUNT } from '@const/comments.js';
 import ProfileView from '@view/profile.js';
@@ -24,17 +24,23 @@ const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.set( filmsToData(films) );
 
-let statistics = getStatistic( filmsModel.getAll() );
 let statisticsComponent = null;
-render( pageHeader, new ProfileView( getRatingTitle(statistics.watched) ) );
-filmsModel.addObserver( () => ( statistics = getStatistic( filmsModel.getAll() ) ) );
+let rankTitle = getRankTitle( filmsModel.getAll() );
+let profileComponent = new ProfileView(rankTitle);
+render(pageHeader, profileComponent);
+filmsModel.addObserver(() => {
+  rankTitle = getRankTitle( filmsModel.getAll() );
+  const oldProfileComponent = profileComponent;
+  profileComponent = new ProfileView(rankTitle);
+  replace(profileComponent, oldProfileComponent);
+});
 
 const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel);
 const filmsPresenter = FilmsPresenter.create(pageMain, filmsModel, filterModel);
 
 filterPresenter.setStatisticsMenuItemClickHandler(() => {
   filmsPresenter.destroy();
-  statisticsComponent = new StatisticView( statistics );
+  statisticsComponent = new StatisticView( filmsModel.getAll(), rankTitle );
   render(pageMain, statisticsComponent);
 });
 
