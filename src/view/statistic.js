@@ -141,7 +141,7 @@ export default class Statistic extends SmartView {
 
     this._data = Statistic.parseFilmsToData(films, rankTitle, StatisticFilter.ALL_TIME);
 
-    this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
+    this._onFiltersChange = this._onFiltersChange.bind(this);
 
     this._setInnerHandlers();
     this._renderChart();
@@ -175,10 +175,10 @@ export default class Statistic extends SmartView {
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector('.statistic__filters').addEventListener('change', this._onFilterTypeChange);
+    this.getElement().querySelector('.statistic__filters').addEventListener('change', this._onFiltersChange);
   }
 
-  _onFilterTypeChange(evt) {
+  _onFiltersChange(evt) {
     this.updateData( Statistic.parseFilmsToData(this._films, this._rankTitle, evt.target.value) );
     this._renderChart();
   }

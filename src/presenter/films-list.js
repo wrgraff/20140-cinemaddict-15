@@ -37,12 +37,12 @@ export default class FilmsList {
     this._cardPresenter = new Map();
 
     this._callback = {};
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleViewAction = this._handleViewAction.bind(this);
-    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
+    this._onViewAction = this._onViewAction.bind(this);
+    this._onDetailsOpen = this._onDetailsOpen.bind(this);
 
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._onModelEvent);
+    this._filterModel.addObserver(this._onModelEvent);
   }
 
   init() {
@@ -130,8 +130,8 @@ export default class FilmsList {
     this._getItems()
       .slice(from, to)
       .forEach((item) => {
-        const cardPresenter = FilmCardPresenter.create(this._listContainerComponent, item, this._handleViewAction);
-        cardPresenter.setCardClickHandler(() => this._handleDetailsOpen(item));
+        const cardPresenter = FilmCardPresenter.create(this._listContainerComponent, item, this._onViewAction);
+        cardPresenter.setCardClickHandler(() => this._onDetailsOpen(item));
         this._cardPresenter.set(item.id, cardPresenter);
       });
     this._shownAmount = to;
@@ -160,7 +160,7 @@ export default class FilmsList {
     });
   }
 
-  _handleViewAction(actionType, updateType, update) {
+  _onViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_WATCHED:
       case UserAction.UPDATE_FAVORITE:
@@ -171,7 +171,7 @@ export default class FilmsList {
     }
   }
 
-  _handleModelEvent(updateType, data) {
+  _onModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
         this._cardPresenter.get(data.id) && this._cardPresenter.get(data.id).update(data);
@@ -185,7 +185,7 @@ export default class FilmsList {
     }
   }
 
-  _handleDetailsOpen(item) {
+  _onDetailsOpen(item) {
     this._callback.openDetails(item);
   }
 }

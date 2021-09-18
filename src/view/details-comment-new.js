@@ -37,7 +37,7 @@ export default class DetailsCommentNew extends SmartView {
 
     this._onCommentInput = this._onCommentInput.bind(this);
     this._onEmojiListChange = this._onEmojiListChange.bind(this);
-    this._onFormSubmit = this._onFormSubmit.bind(this);
+    this._onFormSubmitKeyDown = this._onFormSubmitKeyDown.bind(this);
 
     this._setInnerHandlers();
   }
@@ -58,7 +58,7 @@ export default class DetailsCommentNew extends SmartView {
     const element = this.getElement();
     element.querySelector('.film-details__emoji-list').addEventListener('change', this._onEmojiListChange);
     element.querySelector('.film-details__comment-input').addEventListener('input', this._onCommentInput);
-    document.addEventListener('keydown', this._onFormSubmit);
+    document.addEventListener('keydown', this._onFormSubmitKeyDown);
   }
 
   _onEmojiListChange(evt) {
@@ -74,7 +74,7 @@ export default class DetailsCommentNew extends SmartView {
     }, true);
   }
 
-  _onFormSubmit(evt) {
+  _onFormSubmitKeyDown(evt) {
     if ( isCommandEnterEvent(evt) || isControlEnterEvent(evt) ) {
       evt.preventDefault();
       if (this._data.text && this._data.emotion) {

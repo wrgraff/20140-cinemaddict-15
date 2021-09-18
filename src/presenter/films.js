@@ -19,13 +19,13 @@ export default class Films {
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
 
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleDetailsOpen = this._handleDetailsOpen.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onDetailsOpen = this._onDetailsOpen.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
   }
 
   init() {
-    this._model.addObserver(this._handleModelEvent);
+    this._model.addObserver(this._onModelEvent);
 
     this._detailsPresenter = new DetailsPresenter(this._model);
 
@@ -47,7 +47,7 @@ export default class Films {
     }
 
     this._sortComponent = new SortView();
-    this._sortComponent.setTypeChangeHandler(this._handleSortTypeChange);
+    this._sortComponent.setTypeChangeHandler(this._onSortTypeChange);
 
     render(this._container, this._sortComponent);
   }
@@ -60,7 +60,7 @@ export default class Films {
 
     this._itemsListPresenter.forEach((presenter) => {
       presenter.init();
-      presenter.setDetailsOpenHandler(this._handleDetailsOpen);
+      presenter.setDetailsOpenHandler(this._onDetailsOpen);
     });
 
     render(this._container, this._sectionComponent);
@@ -71,15 +71,15 @@ export default class Films {
     this._renderSection();
   }
 
-  _handleDetailsOpen(item) {
+  _onDetailsOpen(item) {
     this._detailsPresenter.init(item);
   }
 
-  _handleSortTypeChange(sortType) {
+  _onSortTypeChange(sortType) {
     this._itemsListPresenter.get(FilmListType.DEFAULT).sort(sortType);
   }
 
-  _handleModelEvent(updateType) {
+  _onModelEvent(updateType) {
     if (updateType === UpdateType.MAJOR) {
       remove(this._sortComponent);
       this._renderSort();

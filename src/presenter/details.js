@@ -30,14 +30,14 @@ export default class Details {
     this._newCommentComponent = new DetailsCommentNewView();
 
     this._remove = this._remove.bind(this);
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
-    this._handleWatchedClick = this._handleWatchedClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleAddComment = this._handleAddComment.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
+    this._onWatchlistClick = this._onWatchlistClick.bind(this);
+    this._onWatchedClick = this._onWatchedClick.bind(this);
+    this._onFavoriteClick = this._onFavoriteClick.bind(this);
+    this._onCommentAdd = this._onCommentAdd.bind(this);
+    this._onEscapeKeyDown = this._onEscapeKeyDown.bind(this);
 
-    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._onModelEvent);
   }
 
   init(film) {
@@ -52,11 +52,11 @@ export default class Details {
     this._commentsListComponent = new DetailsCommentsListView(this._film.comments);
     this._controlsComponent = new DetailsControlsView(this._film);
 
-    this._controlsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
-    this._controlsComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._controlsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._controlsComponent.setWatchlistClickHandler(this._onWatchlistClick);
+    this._controlsComponent.setWatchedClickHandler(this._onWatchedClick);
+    this._controlsComponent.setFavoriteClickHandler(this._onFavoriteClick);
     this._closeButtonComponent.setClickHandler(this._remove);
-    this._newCommentComponent.setFormSubmitHandler(this._handleAddComment);
+    this._newCommentComponent.setFormSubmitHandler(this._onCommentAdd);
 
     this._open();
   }
@@ -87,7 +87,7 @@ export default class Details {
 
     render(document.body, this._popupComponent);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._escKeyDownHandler);
+    document.addEventListener('keydown', this._onEscapeKeyDown);
 
     this._isOpen = true;
   }
@@ -105,10 +105,10 @@ export default class Details {
     remove(this._closeButtonComponent);
     remove(this._newCommentComponent);
     document.body.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this._escKeyDownHandler);
+    document.removeEventListener('keydown', this._onEscapeKeyDown);
   }
 
-  _handleWatchlistClick() {
+  _onWatchlistClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -121,7 +121,7 @@ export default class Details {
     );
   }
 
-  _handleWatchedClick() {
+  _onWatchedClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -134,7 +134,7 @@ export default class Details {
     );
   }
 
-  _handleFavoriteClick() {
+  _onFavoriteClick() {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -147,7 +147,7 @@ export default class Details {
     );
   }
 
-  _handleAddComment(update) {
+  _onCommentAdd(update) {
     this._filmsModel.updateById(
       UpdateType.MINOR,
       Object.assign(
@@ -160,7 +160,7 @@ export default class Details {
     );
   }
 
-  _handleModelEvent(updateType, data) {
+  _onModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
       case UpdateType.MINOR:
@@ -170,11 +170,11 @@ export default class Details {
     }
   }
 
-  _escKeyDownHandler(evt) {
+  _onEscapeKeyDown(evt) {
     if ( isEscapeEvent(evt) ) {
       evt.preventDefault();
       this._remove();
-      document.removeEventListener('keydown', this._escKeyDownHandler);
+      document.removeEventListener('keydown', this._onEscapeKeyDown);
     }
   }
 }

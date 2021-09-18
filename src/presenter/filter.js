@@ -13,12 +13,12 @@ export default class Filter {
 
     this._navigationComponent = null;
 
-    this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleTypeChange = this._handleTypeChange.bind(this);
-    this._handleMenuStatisticClick = this._handleMenuStatisticClick.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
+    this._onTypeChange = this._onTypeChange.bind(this);
+    this._onMenuStatisticClick = this._onMenuStatisticClick.bind(this);
 
-    this._model.addObserver(this._handleModelEvent);
-    this._filmsModel.addObserver(this._handleModelEvent);
+    this._model.addObserver(this._onModelEvent);
+    this._filmsModel.addObserver(this._onModelEvent);
   }
 
   init() {
@@ -37,8 +37,8 @@ export default class Filter {
   _createNavigationComponent() {
     const filters = getFilters( this._filmsModel.getAll() );
     this._navigationComponent = new MainNavigationView( filters, this._model.getType(), this._isStatisticActive );
-    this._navigationComponent.setFilterTypeChangeHandler(this._handleTypeChange);
-    this._navigationComponent.setAdditionalClickHandler(this._handleMenuStatisticClick);
+    this._navigationComponent.setFilterTypeChangeHandler(this._onTypeChange);
+    this._navigationComponent.setAdditionalClickHandler(this._onMenuStatisticClick);
   }
 
   setStatisticsMenuItemClickHandler(callback) {
@@ -49,11 +49,11 @@ export default class Filter {
     this._callback.clickFilterMenuItem = callback;
   }
 
-  _handleModelEvent() {
+  _onModelEvent() {
     this.update();
   }
 
-  _handleTypeChange(type) {
+  _onTypeChange(type) {
     if (this._isStatisticActive) {
       this._callback.clickFilterMenuItem();
       this._isStatisticActive = false;
@@ -66,7 +66,7 @@ export default class Filter {
     this._model.setType(UpdateType.MAJOR, type);
   }
 
-  _handleMenuStatisticClick() {
+  _onMenuStatisticClick() {
     this._isStatisticActive = true;
     this._callback.clickStatisticsMenuItem();
     this.update();
