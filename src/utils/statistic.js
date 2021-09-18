@@ -1,12 +1,7 @@
 import { isToday, isWeekAgo, isMonthAgo, isYearAgo } from '@utils/common.js';
 import { RANK_TITLES, StatisticFilter } from '@const/statistic.js';
 
-const getWatchedAmount = (films) => films.filter( (film) => film.isWatched ).length;
-
-export const getRankTitle = ( (films) => {
-  const amount = getWatchedAmount(films);
-  return RANK_TITLES.find(({ rating }) => rating >= amount).title || '';
-});
+export const getRankTitle = ( (amount) => RANK_TITLES.find(({ rating }) => rating >= amount).title || '' );
 
 export const getStatistic = (films) => (
   films.reduce((statistic, film) => {

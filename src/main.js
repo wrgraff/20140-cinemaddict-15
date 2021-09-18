@@ -1,6 +1,6 @@
 import { render, remove, replace } from '@utils/render.js';
 import { getRandomInteger } from '@utils/random.js';
-import { filmsToData } from '@utils/films.js';
+import { getWatchedAmount, filmsToData } from '@utils/films.js';
 import { getRankTitle } from '@utils/statistic.js';
 import { generateFilm } from '@mock/film.js';
 import { COMMENT_COUNT } from '@const/comments.js';
@@ -25,11 +25,13 @@ const filmsModel = new FilmsModel();
 filmsModel.set( filmsToData(films) );
 
 let statisticsComponent = null;
-let rankTitle = getRankTitle( filmsModel.getAll() );
+let watchedFilmsAmount = getWatchedAmount( filmsModel.getAll() );
+let rankTitle = getRankTitle(watchedFilmsAmount);
 let profileComponent = new ProfileView(rankTitle);
 render(pageHeader, profileComponent);
 filmsModel.addObserver(() => {
-  rankTitle = getRankTitle( filmsModel.getAll() );
+  watchedFilmsAmount = getWatchedAmount( filmsModel.getAll() );
+  rankTitle = getRankTitle(watchedFilmsAmount);
   const oldProfileComponent = profileComponent;
   profileComponent = new ProfileView(rankTitle);
   replace(profileComponent, oldProfileComponent);

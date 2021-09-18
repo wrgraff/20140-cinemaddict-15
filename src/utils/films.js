@@ -12,6 +12,8 @@ export const sortByDate = (items) => (
   items.slice().sort((a, b) => b.release - a.release)
 );
 
+export const getWatchedAmount = (films) => films.reduce( (amount, { isWatched }) => (isWatched ? amount++ : amount), 0);
+
 export const filmsToData = (films) => (
   films.map((film) => (Object.assign(
     {},
