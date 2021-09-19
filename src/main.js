@@ -29,16 +29,24 @@ api.getFilms()
   });
 
 let statisticsComponent = null;
+let footerStatisticsComponent = new FooterStatisticsView();
 let watchedFilmsAmount = getWatchedAmount( filmsModel.getAll() );
 let rankTitle = getRankTitle(watchedFilmsAmount);
 let profileComponent = new ProfileView(rankTitle);
+let isLoading = true;
 render(pageHeader, profileComponent);
 filmsModel.addObserver(() => {
+  isLoading = false;
   watchedFilmsAmount = getWatchedAmount( filmsModel.getAll() );
   rankTitle = getRankTitle(watchedFilmsAmount);
+
   const oldProfileComponent = profileComponent;
-  profileComponent = new ProfileView(rankTitle);
+  profileComponent = new ProfileView(rankTitle, isLoading);
   replace(profileComponent, oldProfileComponent);
+
+  const oldFooterStatisticsComponent = footerStatisticsComponent;
+  footerStatisticsComponent = new FooterStatisticsView(watchedFilmsAmount, isLoading);
+  replace(footerStatisticsComponent, oldFooterStatisticsComponent);
 });
 
 const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel);
@@ -57,5 +65,5 @@ filterPresenter.setMenuItemClickHandler(() => {
 });
 
 const footerStatistics = document.querySelector('.footer__statistics');
-render( footerStatistics, new FooterStatisticsView( filmsModel.getAll().length ) );
+render( footerStatistics, footerStatisticsComponent );
 
