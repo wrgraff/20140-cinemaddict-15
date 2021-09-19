@@ -37,27 +37,30 @@ export default class Films extends AbstractObserver {
   }
 
   static adaptToClient(film) {
+    const info = film.film_info;
+    const userDetails = film.user_details;
+
     const adaptedFilm = Object.assign(
       {},
       film,
       {
-        name: film.film_info.title,
-        originalName: film.film_info.alternative_title,
-        poster: film.film_info.poster,
-        rating: film.film_info.total_rating,
-        director: film.film_info.director,
-        writers: film.film_info.writers,
-        actors: film.film_info.actors,
-        release: new Date(film.film_info.release.date),
-        runtime: film.film_info.runtime,
-        country: film.film_info.release.release_country,
-        genres: film.film_info.genre,
-        description: film.film_info.description,
-        ageRating: film.film_info.age_rating,
-        watchedDate: new Date(film.user_details.watching_date),
-        isInWatchlist: film.user_details.watchlist,
-        isWatched: film.user_details.already_watched,
-        isFavorite: film.user_details.favorite,
+        name: info.title,
+        originalName: info.alternative_title,
+        poster: info.poster,
+        rating: info.total_rating,
+        director: info.director,
+        writers: info.writers,
+        actors: info.actors,
+        release: new Date(info.release.date),
+        runtime: info.runtime,
+        country: info.release.release_country,
+        genres: info.genre,
+        description: info.description,
+        ageRating: info.age_rating,
+        watchedDate: new Date(userDetails.watching_date),
+        isInWatchlist: userDetails.watchlist,
+        isWatched: userDetails.already_watched,
+        isFavorite: userDetails.favorite,
       },
     );
 
