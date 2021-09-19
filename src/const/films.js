@@ -1,5 +1,3 @@
-import { FilterType } from '@const/common.js';
-
 export const FilmListType = {
   DEFAULT: 'default',
   RATING: 'rating',
@@ -15,12 +13,6 @@ export const FilmListTitle = {
   EMPTY_HISTORY: 'There are no watched movies now',
   EMPTY_FAVORITES: 'There are no favorite movies now',
   LOADING: 'Loading...',
-};
-
-export const filterTypeToFilmListTitle = {
-  [FilterType.HISTORY]: FilmListTitle.EMPTY_HISTORY,
-  [FilterType.FAVORITES]: FilmListTitle.EMPTY_FAVORITES,
-  [FilterType.WATCHLIST]: FilmListTitle.EMPTY_WATCHLIST,
 };
 
 const FilmListStepAmount = {

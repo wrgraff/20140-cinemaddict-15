@@ -1,7 +1,7 @@
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, SortType, filterTypeToFilmListTitle } from '@const/films.js';
+import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
 import { render, remove, replace } from '@utils/render.js';
-import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType } from '@utils/films.js';
+import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType, filterTypeToFilmListTitle } from '@utils/films.js';
 import { filterTypeToFilms } from '@utils/filter.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
