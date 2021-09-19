@@ -4,14 +4,15 @@ export const FilmListType = {
   COMMENTS: 'comments',
 };
 
-const FilmListTitle = {
+export const FilmListTitle = {
   DEFAULT: 'All movies. Upcoming',
   RATING: 'Top rated',
   COMMENTS: 'Most commented',
   EMPTY: 'There are no movies in our database',
-  EMPTY_WATCH_LIST: 'There are no movies to watch now',
+  EMPTY_WATCHLIST: 'There are no movies to watch now',
   EMPTY_HISTORY: 'There are no watched movies now',
   EMPTY_FAVORITES: 'There are no favorite movies now',
+  LOADING: 'Loading...',
 };
 
 const FilmListStepAmount = {

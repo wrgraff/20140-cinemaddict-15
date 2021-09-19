@@ -3,6 +3,8 @@ import AbstractView from '@view/abstract.js';
 export const RenderPlace = {
   AFTER_BEGIN: 'afterbegin',
   BEFORE_END: 'beforeend',
+  BEFORE: 'before',
+  AFTER: 'after',
 };
 
 export const render = (container, element, place = RenderPlace.BEFORE_END) => {
@@ -20,6 +22,12 @@ export const render = (container, element, place = RenderPlace.BEFORE_END) => {
       break;
     case RenderPlace.AFTER_BEGIN:
       container.prepend(element);
+      break;
+    case RenderPlace.BEFORE:
+      container.before(element);
+      break;
+    case RenderPlace.AFTER:
+      container.after(element);
       break;
     default:
       throw new Error(`Unknown render position: ${place}. Possible values: ${Object.values(RenderPlace).join(', ')}`);

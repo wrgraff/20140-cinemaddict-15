@@ -73,6 +73,7 @@ export default class FilmCard {
         this._film,
         {
           isWatched: !this._film.isWatched,
+          watchedDate: !this._film.isWatched ? new Date() : null,
         },
       ),
     );

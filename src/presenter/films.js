@@ -1,20 +1,25 @@
-import { render, remove } from '@utils/render.js';
+import { render, remove, RenderPlace } from '@utils/render.js';
 import { UpdateType } from '@const/common.js';
-import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting } from '@const/films.js';
+import { FilmListType, DefaultListSetting, RatingListSetting, CommentsListSetting, FilmListTitle } from '@const/films.js';
 
 import SortView from '@view/sort.js';
 import FilmsView from '@view/films.js';
+import FilmsListEmptyView from '@view/films-list-empty.js';
 import DetailsPresenter from '@presenter/details.js';
 import FilmsListPresenter from '@presenter/films-list.js';
 
 export default class Films {
-  constructor(container, filmsModel, filterModel) {
+  constructor(container, filmsModel, filterModel, api) {
     this._model = filmsModel;
     this._filterModel = filterModel;
     this._container = container;
+    this._isLoading = true;
+    this._api = api;
 
     this._sectionComponent = new FilmsView();
     this._sortComponent = null;
+    this._emptyComponent = new FilmsListEmptyView(FilmListTitle.EMPTY);
+    this._loadingComponent = new FilmsListEmptyView(FilmListTitle.LOADING);
 
     this._detailsPresenter = null;
     this._itemsListPresenter = new Map();
@@ -22,16 +27,20 @@ export default class Films {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onDetailsOpen = this._onDetailsOpen.bind(this);
     this._onModelEvent = this._onModelEvent.bind(this);
+    this._renderSort = this._renderSort.bind(this);
   }
 
   init() {
     this._model.addObserver(this._onModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._model);
+    this._detailsPresenter = new DetailsPresenter(this._model, this._api);
 
-    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel));
-    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel));
+    this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel, this._api));
+    this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel, this._api));
+    this._itemsListPresenter.set(FilmListType.COMMENTS, new FilmsListPresenter(this._sectionComponent, this._model, CommentsListSetting, this._filterModel, this._api));
+
+    this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceListToEmptyHandler(() => remove(this._sortComponent));
+    this._itemsListPresenter.get(FilmListType.DEFAULT).setReplaceEmptyToListHandler(this._renderSort);
 
     this._render();
   }
@@ -49,12 +58,19 @@ export default class Films {
     this._sortComponent = new SortView();
     this._sortComponent.setTypeChangeHandler(this._onSortTypeChange);
 
-    render(this._container, this._sortComponent);
+    render(this._sectionComponent, this._sortComponent, RenderPlace.BEFORE);
   }
 
   _renderSection() {
+    if (this._isLoading) {
+      render(this._sectionComponent, this._loadingComponent);
+      render(this._container, this._sectionComponent);
+      return;
+    }
+
     if ( this._model.isEmpty() ) {
-      this._createList();
+      render(this._sectionComponent, this._emptyComponent);
+      render(this._container, this._sectionComponent);
       return;
     }
 
@@ -67,8 +83,8 @@ export default class Films {
   }
 
   _render() {
-    this._renderSort();
     this._renderSection();
+    this._renderSort();
   }
 
   _onDetailsOpen(item) {
@@ -80,14 +96,22 @@ export default class Films {
   }
 
   _onModelEvent(updateType) {
-    if (updateType === UpdateType.MAJOR) {
-      remove(this._sortComponent);
-      this._renderSort();
+    switch (updateType) {
+      case UpdateType.MAJOR:
+        remove(this._sortComponent);
+        this._renderSort();
+        break;
+
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderSection();
+        break;
     }
   }
 
-  static create(container, filmsModel, filterModel) {
-    const filmsPresenter = new this(container, filmsModel, filterModel);
+  static create(container, filmsModel, filterModel, api) {
+    const filmsPresenter = new this(container, filmsModel, filterModel, api);
     filmsPresenter.init();
     return filmsPresenter;
   }

@@ -1,20 +1,23 @@
-import { render, remove } from '@utils/render.js';
-import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType } from '@utils/films.js';
-import { filterTypeToFilms } from '@utils/filter.js';
 import { UserAction, UpdateType, FilterType } from '@const/common.js';
 import { FilmListType, DefaultListSetting, SortType } from '@const/films.js';
+import { render, remove, replace } from '@utils/render.js';
+import { sortByRating, sortByComments, sortByDate, actionTypeToFilterType, filterTypeToFilmListTitle } from '@utils/films.js';
+import { filterTypeToFilms } from '@utils/filter.js';
 import FilmsListView from '@view/films-list.js';
 import FilmsListExtraView from '@view/films-list-extra.js';
+import FilmsListEmptyView from '@view/films-list-empty.js';
 import FilmsListContainerView from '@view/films-list-container.js';
 import FilmsListShowMoreView from '@view/films-list-show-more.js';
 import FilmCardPresenter from '@presenter/film-card.js';
 
 export default class FilmsList {
-  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null) {
+  constructor(container, filmsModel, settings = DefaultListSetting, filerModel = null, api) {
     this._filmsModel = filmsModel;
     this._filterModel = filerModel;
     this._container = container;
+    this._api = api;
 
+    this._isRenderedEmpty = false;
     this._type = settings.TYPE;
     this._stepAmount = settings.STEP_AMOUNT;
     this._maxAmount = settings.MAX_AMOUNT || this._filmsModel.getAll().length;
@@ -31,6 +34,7 @@ export default class FilmsList {
         this._listComponent = new FilmsListView(settings.TITLE);
     }
 
+    this._emptyComponent = null;
     this._listContainerComponent = new FilmsListContainerView();
     this._showMoreComponent = null;
 
@@ -50,6 +54,21 @@ export default class FilmsList {
   }
 
   update({resetShownAmount = false, resetSortType = false} = {}) {
+    if (this._getItems().length === 0) {
+      if (!this._isRenderedEmpty) {
+        this._replaceListToEmpty();
+      }
+
+      this._isRenderedEmpty = true;
+
+      return;
+    }
+
+    if (this._isRenderedEmpty) {
+      this._isRenderedEmpty = false;
+      this._replaceEmptyToList();
+    }
+
     this._clearCards();
 
     if (resetShownAmount) {
@@ -88,6 +107,26 @@ export default class FilmsList {
     this._callback.openDetails = callback;
   }
 
+  setReplaceListToEmptyHandler(callback) {
+    this._callback.replaceListToEmpty = callback;
+  }
+
+  setReplaceEmptyToListHandler(callback) {
+    this._callback.replaceEmptyToList = callback;
+  }
+
+  _replaceListToEmpty() {
+    this._callback.replaceListToEmpty();
+    this._emptyComponent = new FilmsListEmptyView(filterTypeToFilmListTitle[ this._filterModel.getType() ]);
+    replace(this._emptyComponent, this._listComponent);
+  }
+
+  _replaceEmptyToList() {
+    this._callback.replaceEmptyToList();
+    replace(this._listComponent, this._emptyComponent);
+    remove(this._emptyComponent);
+  }
+
   _getItems() {
     const films = this._filmsModel.getAll();
     let filterType = null;
@@ -120,6 +159,8 @@ export default class FilmsList {
     if (this._type !== FilmListType.DEFAULT) {
       return;
     }
+
+    this._maxAmount = this._getItems().length;
 
     if (this._shownAmount < this._maxAmount) {
       this._renderShowMore();
@@ -166,7 +207,9 @@ export default class FilmsList {
       case UserAction.UPDATE_FAVORITE:
       case UserAction.UPDATE_WATCHLIST:
         updateType = actionTypeToFilterType[actionType] === this._filterModel.getType() ? UpdateType.MINOR : updateType;
-        this._filmsModel.updateById(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._filmsModel.updateById(updateType, response);
+        });
         break;
     }
   }
