@@ -45,7 +45,7 @@ filmsModel.addObserver(() => {
   replace(profileComponent, oldProfileComponent);
 
   const oldFooterStatisticsComponent = footerStatisticsComponent;
-  footerStatisticsComponent = new FooterStatisticsView(watchedFilmsAmount, isLoading);
+  footerStatisticsComponent = new FooterStatisticsView(filmsModel.getAll().length, isLoading);
   replace(footerStatisticsComponent, oldFooterStatisticsComponent);
 });
 

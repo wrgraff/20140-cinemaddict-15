@@ -138,6 +138,7 @@ export default class Details {
         this._film,
         {
           isWatched: !this._film.isWatched,
+          watchedDate: !this._film.isWatched ? new Date() : null,
         },
       ),
     )
