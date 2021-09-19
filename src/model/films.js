@@ -85,12 +85,56 @@ export default class Films extends AbstractObserver {
   }
 
   static adaptToServer(film) {
-    return {
-      'user_details': {
-        'watchlist': film.isInWatchlist,
-        'already_watched': film.isWatched,
-        'favorite': film.isFavorite,
+    const adaptedFilm = Object.assign(
+      {},
+      film,
+      {
+        'film_info': {
+          'title': film.name,
+          'alternative_title': film.originalName,
+          'poster': film.poster,
+          'total_rating': film.rating,
+          'director': film.director,
+          'writers': film.writers,
+          'actors': film.actors,
+          'release': {
+            'date': film.release.toISOString(),
+            'release_country': film.country,
+          },
+          'runtime': film.runtime,
+          'genre': film.genres,
+          'description': film.description,
+          'age_rating': film.rating,
+        },
+        'user_details': {
+          'watched_date': film.watchedDate.toISOString(),
+          'watchlist': film.isInWatchlist,
+          'already_watched': film.isWatched,
+          'favorite': film.isFavorite,
+        },
       },
-    };
+    );
+
+    delete adaptedFilm['name'];
+    delete adaptedFilm['originalName'];
+    delete adaptedFilm['poster'];
+    delete adaptedFilm['rating'];
+    delete adaptedFilm['ageRating'];
+    delete adaptedFilm['director'];
+    delete adaptedFilm['writers'];
+    delete adaptedFilm['actors'];
+    delete adaptedFilm['release'];
+    delete adaptedFilm['country'];
+    delete adaptedFilm['runtime'];
+    delete adaptedFilm['genres'];
+    delete adaptedFilm['description'];
+    delete adaptedFilm['runtime'];
+    delete adaptedFilm['rating'];
+    delete adaptedFilm['watchedDate'];
+    delete adaptedFilm['isInWatchlist'];
+    delete adaptedFilm['isWatched'];
+    delete adaptedFilm['isFavorite'];
+
+    return adaptedFilm;
   }
 }
