@@ -120,7 +120,7 @@ export default class Details {
         {},
         this._film,
         {
-          sInWatchlist: !this._film.isInWatchlist,
+          isInWatchlist: !this._film.isInWatchlist,
         },
       ),
     )
