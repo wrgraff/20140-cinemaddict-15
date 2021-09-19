@@ -1,5 +1,5 @@
 import { UpdateType } from '@const/common.js';
-import { render, remove } from '@utils/render.js';
+import { render, remove, replace } from '@utils/render.js';
 import { isEscapeEvent } from '@utils/dom-event.js';
 import DetailsInfoView from '@view/details-info.js';
 import DetailsControlsView from '@view/details-controls.js';
@@ -60,11 +60,15 @@ export default class Details {
 
     this._api.getCommentsById(film)
       .then((comments) => {
-        this._commentsComponent.updateData( DetailsCommentsView.parseCommentsToData({ comments, isLoading: false }) );
+        const oldCommentsComponent = this._commentsComponent;
+        this._commentsComponent = new DetailsCommentsView(comments, false);
+        replace(this._commentsComponent, oldCommentsComponent);
         render(this._commentsComponent, this._newCommentComponent);
       })
       .catch(() => {
-        this._commentsComponent.updateData({ comments: [], amount: 0, isLoading: false });
+        const oldCommentsComponent = this._commentsComponent;
+        this._commentsComponent = new DetailsCommentsView([], false);
+        replace(this._commentsComponent, oldCommentsComponent);
         render(this._commentsComponent, this._newCommentComponent);
       });
   }

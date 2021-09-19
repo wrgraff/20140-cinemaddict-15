@@ -67,14 +67,21 @@ export default class Films extends AbstractObserver {
     return adaptedFilm;
   }
 
-  static adaptCommentsToClient(comment) {
-    return Object.assign(
+  static adaptCommentToClient(comment) {
+    const adaptedComment = Object.assign(
       {},
       comment,
       {
+        name: comment.author,
+        text: comment.comment,
         date: new Date(comment.date),
       },
     );
+
+    delete adaptedComment['author'];
+    delete adaptedComment['comment'];
+
+    return adaptedComment;
   }
 
   static adaptToServer(film) {

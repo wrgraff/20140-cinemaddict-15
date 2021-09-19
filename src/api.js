@@ -31,7 +31,7 @@ export default class Api {
   getCommentsById({ id }) {
     return this._load({ url: `comments/${id}` })
       .then(Api.toJSON)
-      .then((comments) => comments.map(FilmsModel.adaptCommentsToClient));
+      .then((comments) => comments.map(FilmsModel.adaptCommentToClient));
   }
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
