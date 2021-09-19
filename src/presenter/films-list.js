@@ -160,6 +160,8 @@ export default class FilmsList {
       return;
     }
 
+    this._maxAmount = this._getItems().length;
+
     if (this._shownAmount < this._maxAmount) {
       this._renderShowMore();
     }
