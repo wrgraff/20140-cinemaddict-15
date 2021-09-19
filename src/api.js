@@ -28,6 +28,12 @@ export default class Api {
       .then(FilmsModel.adaptToClient);
   }
 
+  getCommentsById({ id }) {
+    return this._load({ url: `comments/${id}` })
+      .then(Api.toJSON)
+      .then((comments) => comments.map(FilmsModel.adaptCommentsToClient));
+  }
+
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
     headers.append('Authorization', this._authorization);
 

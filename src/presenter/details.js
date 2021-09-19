@@ -4,7 +4,6 @@ import { isEscapeEvent } from '@utils/dom-event.js';
 import DetailsInfoView from '@view/details-info.js';
 import DetailsControlsView from '@view/details-controls.js';
 import DetailsCommentsView from '@view/details-comments.js';
-import DetailsCommentsListView from '@view/details-comments-list.js';
 import DetailsCloseButtonView from '@view/details-close-button.js';
 import DetailsCommentNewView from '@view/details-comment-new.js';
 import DetailsView from '@view/details.js';
@@ -13,9 +12,11 @@ import DetailsTopView from '@view/details-top.js';
 import DetailsBottomView from '@view/details-bottom.js';
 
 export default class Details {
-  constructor(filmsModel) {
+  constructor(filmsModel, api) {
     this._film = null;
+    this._comments = null;
     this._filmsModel = filmsModel;
+    this._api = api;
     this._isOpen = false;
 
     this._popupComponent = new DetailsView();
@@ -24,8 +25,7 @@ export default class Details {
     this._bottomComponent = new DetailsBottomView();
     this._infoComponent = null;
     this._controlsComponent = null;
-    this._commentsComponent = null;
-    this._commentsListComponent = null;
+    this._commentsComponent = new DetailsCommentsView();
     this._closeButtonComponent = new DetailsCloseButtonView();
     this._newCommentComponent = new DetailsCommentNewView();
 
@@ -48,8 +48,6 @@ export default class Details {
     this._film = film;
 
     this._infoComponent = new DetailsInfoView(this._film);
-    this._commentsComponent = new DetailsCommentsView(this._film.comments);
-    this._commentsListComponent = new DetailsCommentsListView(this._film.comments);
     this._controlsComponent = new DetailsControlsView(this._film);
 
     this._controlsComponent.setWatchlistClickHandler(this._onWatchlistClick);
@@ -59,6 +57,16 @@ export default class Details {
     this._newCommentComponent.setFormSubmitHandler(this._onCommentAdd);
 
     this._open();
+
+    this._api.getCommentsById(film)
+      .then((comments) => {
+        this._commentsComponent.updateData( DetailsCommentsView.parseCommentsToData({ comments, isLoading: false }) );
+        render(this._commentsComponent, this._newCommentComponent);
+      })
+      .catch(() => {
+        this._commentsComponent.updateData({ comments: [], amount: 0, isLoading: false });
+        render(this._commentsComponent, this._newCommentComponent);
+      });
   }
 
   update(film) {
@@ -78,7 +86,6 @@ export default class Details {
     render(this._topComponent, this._infoComponent);
     render(this._topComponent, this._controlsComponent);
     render(this._bottomComponent, this._commentsComponent);
-    render(this._commentsComponent, this._commentsListComponent);
     render(this._commentsComponent, this._newCommentComponent);
 
     render(this._formComponent, this._topComponent);
@@ -101,7 +108,6 @@ export default class Details {
     remove(this._infoComponent);
     remove(this._controlsComponent);
     remove(this._commentsComponent);
-    remove(this._commentsListComponent);
     remove(this._closeButtonComponent);
     remove(this._newCommentComponent);
     document.body.classList.remove('hide-overflow');
@@ -109,21 +115,20 @@ export default class Details {
   }
 
   _onWatchlistClick() {
-    this._filmsModel.updateById(
-      UpdateType.MINOR,
+    this._api.updateFilm(
       Object.assign(
         {},
         this._film,
         {
-          isInWatchlist: !this._film.isInWatchlist,
+          sInWatchlist: !this._film.isInWatchlist,
         },
       ),
-    );
+    )
+      .then( (response) => this._filmsModel.updateById(UpdateType.MINOR, response) );
   }
 
   _onWatchedClick() {
-    this._filmsModel.updateById(
-      UpdateType.MINOR,
+    this._api.updateFilm(
       Object.assign(
         {},
         this._film,
@@ -131,12 +136,12 @@ export default class Details {
           isWatched: !this._film.isWatched,
         },
       ),
-    );
+    )
+      .then( (response) => this._filmsModel.updateById(UpdateType.MINOR, response) );
   }
 
   _onFavoriteClick() {
-    this._filmsModel.updateById(
-      UpdateType.MINOR,
+    this._api.updateFilm(
       Object.assign(
         {},
         this._film,
@@ -144,7 +149,8 @@ export default class Details {
           isFavorite: !this._film.isFavorite,
         },
       ),
-    );
+    )
+      .then( (response) => this._filmsModel.updateById(UpdateType.MINOR, response) );
   }
 
   _onCommentAdd(update) {

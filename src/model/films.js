@@ -67,6 +67,16 @@ export default class Films extends AbstractObserver {
     return adaptedFilm;
   }
 
+  static adaptCommentsToClient(comment) {
+    return Object.assign(
+      {},
+      comment,
+      {
+        date: new Date(comment.date),
+      },
+    );
+  }
+
   static adaptToServer(film) {
     return {
       'user_details': {

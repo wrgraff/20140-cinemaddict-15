@@ -33,7 +33,7 @@ export default class Films {
   init() {
     this._model.addObserver(this._onModelEvent);
 
-    this._detailsPresenter = new DetailsPresenter(this._model);
+    this._detailsPresenter = new DetailsPresenter(this._model, this._api);
 
     this._itemsListPresenter.set(FilmListType.DEFAULT, new FilmsListPresenter(this._sectionComponent, this._model, DefaultListSetting, this._filterModel, this._api));
     this._itemsListPresenter.set(FilmListType.RATING, new FilmsListPresenter(this._sectionComponent, this._model, RatingListSetting, this._filterModel, this._api));
