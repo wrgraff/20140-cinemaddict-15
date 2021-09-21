@@ -114,11 +114,12 @@ export default class Details {
     remove(this._newCommentComponent);
     document.body.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this._onEscapeKeyDown);
+    this._newCommentComponent.clearInput();
   }
 
-  _updateComments(comments, isLoading = false) {
+  _updateComments(comments, isLoading = false, isDeleting = false, deletingId = 0) {
     const oldCommentsComponent = this._commentsComponent;
-    this._commentsComponent = new DetailsCommentsView(comments, isLoading);
+    this._commentsComponent = new DetailsCommentsView(comments, isLoading, isDeleting, deletingId);
     this._commentsComponent.setCommentsListClickHandler(this._onCommentDelete);
     replace(this._commentsComponent, oldCommentsComponent);
     render(this._commentsComponent, this._newCommentComponent);
@@ -166,16 +167,24 @@ export default class Details {
   }
 
   _onCommentAdd(update) {
-    this._api.addComment(this._film.id, update).then(({ comments, film }) => {
-      this._updateComments(comments);
-      this._filmsModel.updateById(
-        UpdateType.MAJOR,
-        film,
-      );
-    });
+    this._newCommentComponent.setSaving();
+    this._api.addComment(this._film.id, update)
+      .then(({ comments, film }) => {
+        this._newCommentComponent.clearInput();
+        this._updateComments(comments);
+        this._filmsModel.updateById(
+          UpdateType.MAJOR,
+          film,
+        );
+      })
+      .catch(() => {
+        this._newCommentComponent.shake();
+      });
   }
 
   _onCommentDelete(deletedComment) {
+    this._updateComments(this._comments, false, true, deletedComment);
+
     this._api.deleteComment(deletedComment).then(() => {
       const commentIndex = this._comments.findIndex((comment) => comment.id === deletedComment);
       this._comments = [
