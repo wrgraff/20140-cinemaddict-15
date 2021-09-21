@@ -2,7 +2,7 @@ import he from 'he';
 import dayjs from 'dayjs';
 import AbstractView from '@view/abstract.js';
 
-const createDetailsCommentTemplate = ({ emotion, name, text, date }) => (`
+const createDetailsCommentTemplate = ({ id, emotion, name, text, date }) => (`
   <li class="film-details__comment">
     <span class="film-details__comment-emoji">
       <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
@@ -12,7 +12,7 @@ const createDetailsCommentTemplate = ({ emotion, name, text, date }) => (`
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${name}</span>
         <span class="film-details__comment-day">${date}</span>
-        <button class="film-details__comment-delete">Delete</button>
+        <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
       </p>
     </div>
   </li>
@@ -34,10 +34,24 @@ export default class DetailsComments extends AbstractView {
     this._isLoading = isLoading;
     this._comments = comments.map(DetailsComments.parseCommentsToData);
     this._amount = comments.length;
+
+    this._onCommentsListClick = this._onCommentsListClick.bind(this);
   }
 
   getTemplate() {
     return createDetailsCommentsTemplate(this._isLoading, this._comments, this._amount);
+  }
+
+  setCommentsListClickHandler(callback) {
+    this._callback.clickCommentDelete = callback;
+    this.getElement().querySelector('.film-details__comments-list').addEventListener('click', this._onCommentsListClick);
+  }
+
+  _onCommentsListClick(evt) {
+    if (evt.target.tagName === 'BUTTON') {
+      evt.preventDefault();
+      this._callback.clickCommentDelete(evt.target.dataset.commentId);
+    }
   }
 
   static parseCommentsToData(comment) {

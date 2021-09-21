@@ -35,6 +35,7 @@ export default class Details {
     this._onWatchedClick = this._onWatchedClick.bind(this);
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onCommentAdd = this._onCommentAdd.bind(this);
+    this._onCommentDelete = this._onCommentDelete.bind(this);
     this._onEscapeKeyDown = this._onEscapeKeyDown.bind(this);
 
     this._filmsModel.addObserver(this._onModelEvent);
@@ -46,6 +47,7 @@ export default class Details {
     }
 
     this._film = film;
+    this._comments = [];
 
     this._infoComponent = new DetailsInfoView(this._film);
     this._controlsComponent = new DetailsControlsView(this._film);
@@ -58,18 +60,14 @@ export default class Details {
 
     this._open();
 
-    this._api.getCommentsById(film)
+    this._api.getCommentsById(this._film)
       .then((comments) => {
-        const oldCommentsComponent = this._commentsComponent;
-        this._commentsComponent = new DetailsCommentsView(comments, false);
-        replace(this._commentsComponent, oldCommentsComponent);
-        render(this._commentsComponent, this._newCommentComponent);
+        this._comments = comments;
+        this._updateComments(comments);
       })
       .catch(() => {
-        const oldCommentsComponent = this._commentsComponent;
-        this._commentsComponent = new DetailsCommentsView([], false);
-        replace(this._commentsComponent, oldCommentsComponent);
-        render(this._commentsComponent, this._newCommentComponent);
+        this._comments = [];
+        this._updateComments([]);
       });
   }
 
@@ -118,6 +116,15 @@ export default class Details {
     document.removeEventListener('keydown', this._onEscapeKeyDown);
   }
 
+  _updateComments(comments, isLoading = false) {
+    const oldCommentsComponent = this._commentsComponent;
+    this._commentsComponent = new DetailsCommentsView(comments, isLoading);
+    this._commentsComponent.setCommentsListClickHandler(this._onCommentDelete);
+    replace(this._commentsComponent, oldCommentsComponent);
+    render(this._commentsComponent, this._newCommentComponent);
+    this._newCommentComponent.restoreHandlers();
+  }
+
   _onWatchlistClick() {
     this._api.updateFilm(
       Object.assign(
@@ -159,16 +166,33 @@ export default class Details {
   }
 
   _onCommentAdd(update) {
-    this._filmsModel.updateById(
-      UpdateType.MINOR,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: [...this._film.comments, update],
-        },
-      ),
-    );
+    this._api.addComment(this._film.id, update).then(({ comments, film }) => {
+      this._updateComments(comments);
+      this._filmsModel.updateById(
+        UpdateType.MAJOR,
+        film,
+      );
+    });
+  }
+
+  _onCommentDelete(deletedComment) {
+    this._api.deleteComment(deletedComment).then(() => {
+      const commentIndex = this._comments.findIndex((comment) => comment.id === deletedComment);
+      this._comments = [
+        ...this._comments.slice(0, commentIndex),
+        ...this._comments.slice(commentIndex + 1),
+      ];
+      this._film.comments = this._comments.map((comment) => comment.id);
+
+      this._updateComments(this._comments);
+      this._filmsModel.updateById(
+        UpdateType.MAJOR,
+        Object.assign(
+          {},
+          this._film,
+        ),
+      );
+    });
   }
 
   _onModelEvent(updateType, data) {

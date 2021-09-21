@@ -3,6 +3,8 @@ import FilmsModel from './model/films.js';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export default class Api {
@@ -32,6 +34,27 @@ export default class Api {
     return this._load({ url: `comments/${id}` })
       .then(Api.toJSON)
       .then((comments) => comments.map(FilmsModel.adaptCommentToClient));
+  }
+
+  addComment(filmId, comment) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify( FilmsModel.adaptCommentToServer(comment) ),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    })
+      .then(Api.toJSON)
+      .then(({ comments, movie }) => ({
+        film: FilmsModel.adaptToClient(movie),
+        comments: comments.map(FilmsModel.adaptCommentToClient),
+      }));
+  }
+
+  deleteComment(commentId) {
+    return this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE,
+    });
   }
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {

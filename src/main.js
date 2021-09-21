@@ -11,7 +11,7 @@ import FilmsModel from '@model/films.js';
 import FilterModel from '@model/filter.js';
 import Api from './api.js';
 
-const AUTHORIZATION = 'Basic ZfdSjKRWMnPnaNK0';
+const AUTHORIZATION = 'Basic ZfdSjKRWMnPnwefK0';
 const END_POINT = 'https://15.ecmascript.pages.academy/cinemaddict';
 const api = new Api(END_POINT, AUTHORIZATION);
 
