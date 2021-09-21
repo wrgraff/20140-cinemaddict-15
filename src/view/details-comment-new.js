@@ -3,6 +3,8 @@ import { EMOTIONS, BLANK_COMMENT } from '@const/comments.js';
 import SmartView from '@view/smart.js';
 import { isCommandEnterEvent, isControlEnterEvent } from '@utils/dom-event.js';
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const createDetailsEmotionsList = (activeEmotion) => (
   EMOTIONS
     .map((emotion) => (`
@@ -14,14 +16,14 @@ const createDetailsEmotionsList = (activeEmotion) => (
     .join('')
 );
 
-const createDetailsCommentNewTemplate = ({ isActiveEmotion, emotion, text }) => (`
+const createDetailsCommentNewTemplate = ({ isActiveEmotion, emotion, text, isSaving }) => (`
   <div class="film-details__new-comment">
     <div class="film-details__add-emoji-label">
       ${isActiveEmotion ? `<img src="images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">` : ''}
     </div>
 
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(text)}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${ isSaving ? 'disabled' : ''}>${he.encode(text)}</textarea>
     </label>
 
     <div class="film-details__emoji-list">
@@ -48,6 +50,30 @@ export default class DetailsCommentNew extends SmartView {
 
   setFormSubmitHandler(callback) {
     this._callback.onFormSubmit = callback;
+  }
+
+  setSaving() {
+    this.updateData({
+      isSaving: true,
+    });
+  }
+
+  clearSaving() {
+    this.updateData({
+      isSaving: false,
+    });
+  }
+
+  shake() {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = '';
+      this.clearSaving();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  clearInput() {
+    this.updateData( DetailsCommentNew.parseCommentToData(BLANK_COMMENT) );
   }
 
   restoreHandlers() {
@@ -89,6 +115,7 @@ export default class DetailsCommentNew extends SmartView {
       comment,
       {
         isActiveEmotion: comment.emotion !== '',
+        isSaving: false,
       },
     );
   }

@@ -116,4 +116,12 @@ export default class Films extends AbstractObserver {
       },
     };
   }
+
+  static adaptCommentToServer(comment) {
+    return {
+      'comment': comment.text,
+      'date': comment.date instanceof Date ? comment.date.toISOString(): null,
+      'emotion': comment.emotion,
+    };
+  }
 }
