@@ -53,6 +53,18 @@ export default class FilmsList {
     this._render();
   }
 
+  setDetailsOpenHandler(callback) {
+    this._callback.openDetails = callback;
+  }
+
+  setReplaceListToEmptyHandler(callback) {
+    this._callback.replaceListToEmpty = callback;
+  }
+
+  setReplaceEmptyToListHandler(callback) {
+    this._callback.replaceEmptyToList = callback;
+  }
+
   update({resetShownAmount = false, resetSortType = false} = {}) {
     if (this._getItems().length === 0) {
       if (!this._isRenderedEmpty) {
@@ -101,18 +113,6 @@ export default class FilmsList {
     this._currentSortType = sortType;
     this._clearCards();
     this._renderCards(0, this._shownAmount);
-  }
-
-  setDetailsOpenHandler(callback) {
-    this._callback.openDetails = callback;
-  }
-
-  setReplaceListToEmptyHandler(callback) {
-    this._callback.replaceListToEmpty = callback;
-  }
-
-  setReplaceEmptyToListHandler(callback) {
-    this._callback.replaceEmptyToList = callback;
   }
 
   _replaceListToEmpty() {

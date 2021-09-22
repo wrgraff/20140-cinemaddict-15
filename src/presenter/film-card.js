@@ -30,12 +30,12 @@ export default class FilmCard {
     replace(this._cardComponent, oldCardComponent);
   }
 
-  destroy() {
-    remove(this._cardComponent);
-  }
-
   setCardClickHandler(callback) {
     this._callback.clickCard = callback;
+  }
+
+  destroy() {
+    remove(this._cardComponent);
   }
 
   _createCard() {
