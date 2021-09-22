@@ -52,6 +52,7 @@ export default class Films {
 
   _renderSort() {
     if (this._sortComponent !== null) {
+      remove(this._sortComponent);
       this._sortComponent = null;
     }
 
