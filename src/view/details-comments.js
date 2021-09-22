@@ -40,13 +40,13 @@ export default class DetailsComments extends AbstractView {
     this._onCommentsListClick = this._onCommentsListClick.bind(this);
   }
 
-  getTemplate() {
-    return createDetailsCommentsTemplate(this._isLoading, this._comments, this._amount, this._isDeleting, this._deletingId);
-  }
-
   setCommentsListClickHandler(callback) {
     this._callback.clickCommentDelete = callback;
     this.getElement().querySelector('.film-details__comments-list').addEventListener('click', this._onCommentsListClick);
+  }
+
+  getTemplate() {
+    return createDetailsCommentsTemplate(this._isLoading, this._comments, this._amount, this._isDeleting, this._deletingId);
   }
 
   _onCommentsListClick(evt) {

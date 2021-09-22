@@ -41,10 +41,6 @@ export default class DetailsControls extends SmartView {
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
   }
 
-  getTemplate() {
-    return createDetailsControlsTemplate(this._data);
-  }
-
   setWatchlistClickHandler(callback) {
     this._callback.clickWatchlist = callback;
     this.getElement().querySelector('.film-details__control-button--watchlist').addEventListener('click', this._onWatchlistClick);
@@ -58,6 +54,10 @@ export default class DetailsControls extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.clickFavorite = callback;
     this.getElement().querySelector('.film-details__control-button--favorite').addEventListener('click', this._onFavoriteClick);
+  }
+
+  getTemplate() {
+    return createDetailsControlsTemplate(this._data);
   }
 
   restoreHandlers() {

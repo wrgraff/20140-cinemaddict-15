@@ -19,13 +19,13 @@ export default class Sort extends SmartView {
     this._onListClick = this._onListClick.bind(this);
   }
 
-  getTemplate() {
-    return createSortTemplate(this._data);
-  }
-
   setTypeChangeHandler(callback) {
     this._callback.changeType = callback;
     this.getElement().addEventListener('click', this._onListClick);
+  }
+
+  getTemplate() {
+    return createSortTemplate(this._data);
   }
 
   restoreHandlers() {

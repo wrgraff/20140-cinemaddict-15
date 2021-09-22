@@ -12,13 +12,13 @@ export default class DetailsCloseButton extends AbstractView {
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
-  getTemplate() {
-    return createDetailsCloseButtonTemplate();
-  }
-
   setClickHandler(callback) {
     this._callback.click = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._onCloseButtonClick);
+  }
+
+  getTemplate() {
+    return createDetailsCloseButtonTemplate();
   }
 
   _onCloseButtonClick(evt) {

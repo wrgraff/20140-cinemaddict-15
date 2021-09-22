@@ -45,10 +45,6 @@ export default class DetailsCommentNew extends SmartView {
     this._setInnerHandlers();
   }
 
-  getTemplate() {
-    return createDetailsCommentNewTemplate(this._data);
-  }
-
   setFormSubmitHandler(callback) {
     this._callback.onFormSubmit = callback;
   }
@@ -63,6 +59,10 @@ export default class DetailsCommentNew extends SmartView {
     this.updateData({
       isSaving: false,
     });
+  }
+
+  getTemplate() {
+    return createDetailsCommentNewTemplate(this._data);
   }
 
   shake() {

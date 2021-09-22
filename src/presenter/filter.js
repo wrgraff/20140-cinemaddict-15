@@ -21,6 +21,14 @@ export default class Filter {
     this._filmsModel.addObserver(this._onModelEvent);
   }
 
+  setStatisticsMenuItemClickHandler(callback) {
+    this._callback.clickStatisticsMenuItem = callback;
+  }
+
+  setMenuItemClickHandler(callback) {
+    this._callback.clickFilterMenuItem = callback;
+  }
+
   init() {
     this._createNavigationComponent();
     render(this._container, this._navigationComponent);
@@ -39,14 +47,6 @@ export default class Filter {
     this._navigationComponent = new MainNavigationView( filters, this._model.getType(), this._isStatisticActive );
     this._navigationComponent.setFilterTypeChangeHandler(this._onTypeChange);
     this._navigationComponent.setAdditionalClickHandler(this._onMenuStatisticClick);
-  }
-
-  setStatisticsMenuItemClickHandler(callback) {
-    this._callback.clickStatisticsMenuItem = callback;
-  }
-
-  setMenuItemClickHandler(callback) {
-    this._callback.clickFilterMenuItem = callback;
   }
 
   _onModelEvent() {

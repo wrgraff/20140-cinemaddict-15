@@ -49,10 +49,6 @@ export default class FilmsList {
     this._filterModel.addObserver(this._onModelEvent);
   }
 
-  init() {
-    this._render();
-  }
-
   setDetailsOpenHandler(callback) {
     this._callback.openDetails = callback;
   }
@@ -113,6 +109,10 @@ export default class FilmsList {
     this._currentSortType = sortType;
     this._clearCards();
     this._renderCards(0, this._shownAmount);
+  }
+
+  init() {
+    this._render();
   }
 
   _replaceListToEmpty() {
