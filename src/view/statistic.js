@@ -16,13 +16,17 @@ const createTopGenreTemplate = (topGenreName) => (`
 
 const createStatisticChartTemplate = () => '<div class="statistic__chart-wrap"><canvas class="statistic__chart" width="1000"></canvas></div>';
 
+const createStatisticRankTemplate = (rankTitle) => (`
+  <p class="statistic__rank">
+    Your rank
+    <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
+    <span class="statistic__rank-label">${rankTitle}</span>
+  </p>
+`);
+
 const createStatisticTemplate = ({ rankTitle, watched, runtime, topGenreName, activeFilterType }) => (`
   <section class="statistic">
-    <p class="statistic__rank">
-      Your rank
-      <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">${rankTitle}</span>
-    </p>
+    ${ rankTitle !== '' ? createStatisticRankTemplate(rankTitle) : '' }
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
