@@ -4,6 +4,7 @@ import SmartView from '@view/smart.js';
 import { isCommandEnterEvent, isControlEnterEvent } from '@utils/dom-event.js';
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
+const SHAKE_ANIMATION_SPEED_COEFFICIENT = 0.001;
 
 const createDetailsEmotionsList = (activeEmotion) => (
   EMOTIONS
@@ -65,7 +66,7 @@ export default class DetailsCommentNew extends SmartView {
   }
 
   shake() {
-    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT * SHAKE_ANIMATION_SPEED_COEFFICIENT}s`;
     setTimeout(() => {
       this.getElement().style.animation = '';
       this.clearSaving();
