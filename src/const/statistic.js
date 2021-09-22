@@ -1,5 +1,9 @@
 export const RANK_TITLES = [
   {
+    title: '',
+    rating: 0,
+  },
+  {
     title: 'Novice',
     rating: 1,
   },
