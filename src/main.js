@@ -53,9 +53,11 @@ const filterPresenter = FilterPresenter.create(pageMain, filterModel, filmsModel
 const filmsPresenter = FilmsPresenter.create(pageMain, filmsModel, filterModel, api);
 
 filterPresenter.setStatisticsMenuItemClickHandler(() => {
-  filmsPresenter.destroy();
-  statisticsComponent = new StatisticView( filmsModel.getAll(), rankTitle );
-  render(pageMain, statisticsComponent);
+  if (statisticsComponent === null) {
+    filmsPresenter.destroy();
+    statisticsComponent = new StatisticView( filmsModel.getAll(), rankTitle );
+    render(pageMain, statisticsComponent);
+  }
 });
 
 filterPresenter.setMenuItemClickHandler(() => {
