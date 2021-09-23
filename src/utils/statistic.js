@@ -2,7 +2,7 @@ import { isTodayDate, isWeekAgoDate, isMonthAgoDate, isYearAgoDate } from '@util
 import { RANK_TITLES, StatisticFilter } from '@const/statistic.js';
 
 export const getRankTitle = ( (amount) => {
-  const userRank = RANK_TITLES.find(({ rating }) => rating >= amount) || RANK_TITLES[RANK_TITLES.length - 1];
+  const userRank = RANK_TITLES.find(({ rating }) => amount >= rating) || RANK_TITLES[RANK_TITLES.length - 1];
   return userRank.title;
 });
 

@@ -1,19 +1,19 @@
 export const RANK_TITLES = [
   {
-    title: '',
-    rating: 0,
-  },
-  {
-    title: 'Novice',
-    rating: 1,
+    title: 'Movie Buff',
+    rating: 21,
   },
   {
     title: 'Fan',
     rating: 11,
   },
   {
-    title: 'Movie Buff',
-    rating: 21,
+    title: 'Novice',
+    rating: 1,
+  },
+  {
+    title: '',
+    rating: 0,
   },
 ];
 
